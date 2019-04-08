@@ -1,0 +1,16 @@
+
+https://api.mysportsfeeds.com/v1.2/pull/nhl/current/daily_game_schedule.json?fordate=20190326
+Authorization: Basic d9a32c89-be45-4a21-b331-6f0fe2 mys42sdE
+
+###
+
+https://api.mysportsfeeds.com/v1.2/pull/nhl/current/game_boxscore.json?gameid=47478
+Authorization: Basic d9a32c89-be45-4a21-b331-6f0fe2 mys42sdE
+
+###
+
+
+https://api.mysportsfeeds.com/v1.2/pull/nhl/current/scoreboard.json?fordate=20190326
+Authorization: Basic d9a32c89-be45-4a21-b331-6f0fe2 mys42sdE
+
+

@@ -17,7 +17,6 @@ class CardGameState extends State<CardGame> {
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        height: 100.0,
         child: Row(
           children: <Widget>[
             Container(
@@ -32,39 +31,66 @@ class CardGameState extends State<CardGame> {
                       image: NetworkImage(
                           "https://tsnimages.tsn.ca/ImageProvider/TeamLogo?seoId=san-antonio-spurs&width=128&height=128"))),
             ),
-            Container(
-              height: 100,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(10, 2, 0, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Center(child: Text(
-                      widget.title,
-                    ),),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 2),
-                      child: Container(
-                        width: 250.0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            RaisedButton(
-                              child: Icon(Icons.add),
-                              onPressed: () => {},
-                            ),
-                            SizedBox(
-                              width: 10.0,
-                            ),
-                            RaisedButton(
-                              child: Icon(Icons.add),
-                              onPressed: () => {},
-                            ),
-                          ],
-                        ),
+            Expanded(
+              child: Container(
+                //height: 100,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(10, 2, 0, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text(
+                            '2',
+                            style: Theme.of(context).textTheme.headline,
+                          ),
+                          Text(
+                            widget.title,
+                          ),
+                          Text(
+                            '2',
+                            style: Theme.of(context).textTheme.headline,
+                          ),
+                        ],
                       ),
-                    )
-                  ],
+                      Row(
+                        //smainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          IconButton(
+                            iconSize: 40.0,
+                            onPressed: () => {},
+                            icon: Icon(
+                              Icons.remove_circle,
+                            ),
+                          ),
+                          IconButton(
+                            iconSize: 40.0,
+                            onPressed: () => {},
+                            icon: Icon(
+                              Icons.add_circle,
+                            ),
+                          ),
+                          Spacer(),
+                          IconButton(
+                            iconSize: 40.0,
+                            onPressed: () => {},
+                            icon: Icon(
+                              Icons.remove_circle,
+                            ),
+                          ),
+                          IconButton(
+                            iconSize: 40.0,
+                            onPressed: () => {},
+                            icon: Icon(
+                              Icons.add_circle,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

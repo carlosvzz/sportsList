@@ -11,7 +11,15 @@ class Sports extends StatefulWidget {
 
 class _SportsState extends State<Sports> {
   String _dropdownValue;
-  DateTime _selectedDate = DateTime.now();
+  DateTime now = DateTime.now();
+  DateTime _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+     _selectedDate =  DateTime(now.year, now.month, now.day);
+  }
+
 
   Future<Null> _selectDate(BuildContext context) async {
     DateTime picked = await showDatePicker(
@@ -28,8 +36,7 @@ class _SportsState extends State<Sports> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         DropdownButton<String>(
-          style:
-              TextStyle(fontSize: 18.0, color: Theme.of(context).primaryColor),
+          style: Theme.of(context).textTheme.body2,
           value: _dropdownValue,
           hint: Text('<Seleccionar>'),
           onChanged: (String newValue) {
@@ -45,26 +52,46 @@ class _SportsState extends State<Sports> {
             );
           }).toList(),
         ),
-        Text(
-          formatDate(_selectedDate, [yyyy, '-', mm, '-', dd]),
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
         RaisedButton(
+          //elevation: 0.0,
           onPressed: () => _selectDate(context),
-          child: Text('Fecha'),
-        )
+          color: Theme.of(context).accentColor,
+          child: Text(
+            _formatoFecha(),
+            style: Theme.of(context).textTheme.button,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(17.0),
+          ),
+        ),
       ],
     );
   }
 
+  String _formatoFecha() {
+     DateTime hoy = DateTime(now.year, now.month, now.day);
+     DateTime ayer = DateTime(now.year, now.month, now.day-1);
+     DateTime manana = DateTime(now.year, now.month, now.day+1);
+
+    if (_selectedDate == hoy) {
+      return 'HOY';
+    } else if (_selectedDate == manana) {
+      return 'MAÑANA';
+    } else if (_selectedDate == ayer) {
+      return 'AYER';
+    } else {
+      return formatDate(_selectedDate, [yyyy, '-', mm, '-', dd]);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(  
+    return Column(
       children: <Widget>[
         rowFilters(context),
         Divider(),
         Expanded(
-          child:ListGames(),
+          child: ListGames(),
         )
       ],
     );

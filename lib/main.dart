@@ -9,10 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
-        accentColor:  Color(0xFFFFEA00) ,         
-      ),
+      theme:_myTheme(),
       home: MyHomePage(title: 'Sports List'),
     );
   }
@@ -36,4 +33,24 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Sports(),
     );
   }
+}
+
+ThemeData _myTheme() {
+  return ThemeData(
+    brightness: Brightness.dark,
+    //Texans
+    // primaryColor: Color(0xFF001331),
+    // accentColor: Color(0xFFB82633),
+    //Tigres
+    primaryColor: Color(0xFF005DAB),
+    accentColor: Color(0xFFFCB034),
+    //fontFamily: 'Roboto',
+    textTheme: TextTheme(
+      headline: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold, color: Color(0xFFFCB034)),
+      title: TextStyle(fontSize: 30.0, fontStyle: FontStyle.italic, color: Colors.green),
+      body1: TextStyle(fontSize: 15.0,),
+      body2: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
+      button: TextStyle(fontSize: 17.0,),
+    ),
+  );
 }
