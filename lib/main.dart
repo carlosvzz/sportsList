@@ -45,12 +45,17 @@ ThemeData _myTheme() {
     primaryColor: Color(0xFF005DAB),
     accentColor: Color(0xFFFCB034),
     //fontFamily: 'Roboto',
+    buttonColor:  Color(0xFF005DAB),
     textTheme: TextTheme(
-      headline: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold, color: Color(0xFFFCB034)),
+      headline: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold, color: Color(0xFFFCB034)),
       title: TextStyle(fontSize: 30.0, fontStyle: FontStyle.italic, color: Colors.green),
-      body1: TextStyle(fontSize: 15.0,),
+      body1: TextStyle(fontSize: 18.0,),
       body2: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
       button: TextStyle(fontSize: 17.0,),
     ),
+    accentTextTheme: TextTheme(
+      body1: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold, color: Color(0xFFFCB034)),
+      body2: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold, color: Colors.green),
+    )
   );
 }
