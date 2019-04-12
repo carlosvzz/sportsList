@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Sports Consensus',
       theme: _myTheme(),
-      home: MyHomePage('Sports Consensus'),
+      home: MyHomePage(),
     );
   }
 }
