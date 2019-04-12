@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sports_list/api/mysportsfeed.dart';
-import '../widgets/card_game.dart';
+//import '../widgets/card_game.dart';
 import 'package:http/http.dart' as http;
 
 class ListGames extends StatefulWidget {

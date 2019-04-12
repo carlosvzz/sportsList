@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import './pages/sports.dart';
+import 'package:sports_list/pages/homepage.dart';
+//import 'package:sports_list/widgets/main_drawer.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,58 +9,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Sports Consensus',
       theme: _myTheme(),
-      home: MyHomePage(title: 'Sports List'),
+      home: MyHomePage('Sports Consensus'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      drawer: new Drawer(
-          child: new ListView(
-        children: <Widget>[
-         const DrawerHeader(child: Center(child: Text('SPORTS'))),
-          new ListTile(
-            leading: Icon(Icons.screen_lock_portrait),
-            title: new Text('MLB'),
-            onTap: () {},
-          ),
-          new ListTile(
-            leading: Icon(Icons.screen_lock_portrait),
-             title: new Text('NHL'),
-            onTap: () {},
-          ),
-          new ListTile(
-            leading: Icon(Icons.screen_lock_portrait),
-             title: new Text('NBA'),
-            onTap: () {},
-          ),
-          new ListTile(
-            leading: Icon(Icons.screen_lock_portrait),
-             title: new Text('NFL'),
-            onTap: () {},
-          ),
-        ],
-      )),
-      body: Sports(),
-    );
-  }
-}
 
 ThemeData _myTheme() {
   return ThemeData(

@@ -1,15 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:date_format/date_format.dart';
-import '../widgets/list_games.dart';
+import 'package:sports_list/widgets/main_drawer.dart';
+//import 'package:date_format/date_format.dart';
+//import '../widgets/list_games.dart';
 
-class Sports extends StatefulWidget {
+
+class MyHomePage extends StatefulWidget {
+  final String titulo;
+
+  MyHomePage(this.titulo);
+
   @override
   State<StatefulWidget> createState() {
-    return _SportsState();
+    return _MyHomePageState();
   }
 }
 
-class _SportsState extends State<Sports> with TickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  @override
+  Widget build(BuildContext context) {
+    TabController tabctl = new TabController(length: 7, vsync: this);
+    double width = MediaQuery.of(context).size.width;
+    double yourWidth = width  /10;
+
+      return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.titulo),
+
+      ),
+      drawer: MainDrawer(),
+      body: TabBar(
+      controller: tabctl,
+      indicatorColor: Colors.red,
+      indicatorWeight: 2.0,
+      isScrollable: true,
+      labelPadding: EdgeInsets.only(left: yourWidth, right: yourWidth),
+      tabs: <Widget>[
+        Tab(icon: Icon(Icons.calendar_today), text: "lun, 08/04",),
+        Tab(icon: Icon(Icons.calendar_today, color: Theme.of(context).primaryColor), text: "AYER",),
+        Tab(icon: Icon(Icons.today, color: Theme.of(context).accentColor), text: "HOY",),
+        Tab(icon: Icon(Icons.date_range, color: Theme.of(context).primaryColor), text: "MANANA",),
+        Tab(icon: Icon(Icons.calendar_today), text: "vie, 12/04",),
+        Tab(icon: Icon(Icons.calendar_today), text: "sab, 13/04",),
+        Tab(icon: Icon(Icons.calendar_today), text: "dom, 14/04",),
+       ],
+    ),
+    );
+  }
+
   // String _dropdownValue;
   // DateTime now = DateTime.now();
   // DateTime _selectedDate;
@@ -96,27 +133,7 @@ class _SportsState extends State<Sports> with TickerProviderStateMixin {
   //   );
   // }
 
-  @override
-  Widget build(BuildContext context) {
-    TabController tabctl = new TabController(length: 7, vsync: this);
-    double width = MediaQuery.of(context).size.width;
-    double yourWidth = width  /10;
+ 
+    
 
-    return TabBar(
-      controller: tabctl,
-      indicatorColor: Colors.red,
-      indicatorWeight: 2.0,
-      isScrollable: true,
-      labelPadding: EdgeInsets.only(left: yourWidth, right: yourWidth),
-      tabs: <Widget>[
-        Tab(icon: Icon(Icons.calendar_today), text: "lun, 08/04",),
-        Tab(icon: Icon(Icons.calendar_today, color: Theme.of(context).primaryColor), text: "AYER",),
-        Tab(icon: Icon(Icons.today, color: Theme.of(context).accentColor), text: "HOY",),
-        Tab(icon: Icon(Icons.date_range, color: Theme.of(context).primaryColor), text: "MANANA",),
-        Tab(icon: Icon(Icons.calendar_today), text: "vie, 12/04",),
-        Tab(icon: Icon(Icons.calendar_today), text: "sab, 13/04",),
-        Tab(icon: Icon(Icons.calendar_today), text: "dom, 14/04",),
-       ],
-    );
-  }
 }
