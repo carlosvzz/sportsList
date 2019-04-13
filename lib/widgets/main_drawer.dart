@@ -1,48 +1,49 @@
 import 'package:flutter/material.dart';
 
-class ItemMenu {
+class CustomMenu {
   final String nombre;
   final IconData icono;
-
-  ItemMenu(this.nombre, this.icono);
+  CustomMenu(this.nombre, this.icono);
 }
 
 class MainDrawer extends StatelessWidget {
+  MainDrawer(this.fnSetActualSports);
   final Function fnSetActualSports;
 
-  MainDrawer(this.fnSetActualSports);
-
-  static final List<ItemMenu> _listViewData = [
-    new ItemMenu('Liga MX (ml)', Icons.ac_unit),
-    new ItemMenu('Liga MX (ou)', Icons.ac_unit),
-    new ItemMenu('MLB', Icons.backspace),
-    new ItemMenu('NBA', Icons.cached),
-    new ItemMenu('NBA (ou)', Icons.cached),
-    new ItemMenu('NHL', Icons.dashboard),
-    new ItemMenu('NFL', Icons.edit),
-    new ItemMenu('NFL (ou)', Icons.edit),
+  static final List<CustomMenu> _listMenuData = [
+    new CustomMenu('Liga MX', Icons.ac_unit),
+    new CustomMenu('MLB', Icons.backspace),
+    new CustomMenu('NBA', Icons.cached),
+    new CustomMenu('NHL', Icons.dashboard),
+    new CustomMenu('NFL', Icons.edit),
   ];
 
   @override
   Widget build(BuildContext context) {
     return new Drawer(
-        child: Container(
-      color: Theme.of(context).primaryColor,
-      child: ListView(
-        padding: EdgeInsets.all(10.0),
-        children: _listViewData
-            .map(
-              (data) => ListTile(
-                    leading: Icon(data.icono),
-                    title: Text(data.nombre),
-                    onTap: () {
-                      this.fnSetActualSports(data.nombre);
-                      Navigator.pop(context);
-                    },
-                  ),
-            )
-            .toList(),
+      child: new ListView(
+        children: <Widget>[
+          DrawerHeader(
+            child: new Text("X-Sports"),
+            decoration: new BoxDecoration(color: Theme.of(context).accentColor),
+          ),
+          Column(
+            children:
+                _listMenuData.map((data) => customTile(context, data)).toList(),
+          ),
+        ],
       ),
-    ));
+    );
+  }
+
+  ListTile customTile(BuildContext context, CustomMenu data) {
+    return ListTile(
+      leading: Icon(data.icono),
+      title: Text(data.nombre),
+      onTap: () {
+        this.fnSetActualSports(data.nombre);
+        Navigator.pop(context);
+      },
+    );
   }
 }
