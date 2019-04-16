@@ -1,12 +1,12 @@
-class ApiGameSchedule {
+class FeedGames {
   Dailygameschedule dailygameschedule;
 
-  ApiGameSchedule({Dailygameschedule dailygameschedule}) {
+  FeedGames({Dailygameschedule dailygameschedule}) {
     this.dailygameschedule = dailygameschedule;
   }
 
 
-  ApiGameSchedule.fromJson(Map<String, dynamic> json) {
+  FeedGames.fromJson(Map<String, dynamic> json) {
     dailygameschedule = json['dailygameschedule'] != null
         ? new Dailygameschedule.fromJson(json['dailygameschedule'])
         : null;
@@ -54,9 +54,9 @@ class Dailygameschedule {
 class Gameentry {
   String iD;
   String scheduleStatus;
-  Null originalDate;
-  Null originalTime;
-  Null delayedOrPostponedReason;
+  String originalDate;
+  String originalTime;
+  String delayedOrPostponedReason;
   String date;
   String time;
   AwayTeam awayTeam;
@@ -66,9 +66,9 @@ class Gameentry {
   Gameentry(
       {String id,
       String scheduleStatus,
-      Null originalDate,
-      Null originalTime,
-      Null delayedOrPostponedReason,
+      String originalDate,
+      String originalTime,
+      String delayedOrPostponedReason,
       String date,
       String time,
       AwayTeam awayTeam,

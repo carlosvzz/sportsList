@@ -1,5 +1,5 @@
 
-https://api.mysportsfeeds.com/v1.2/pull/mlb/current/daily_game_schedule.json?fordate=20190409
+https://api.mysportsfeeds.com/v1.2/pull/mlb/current/daily_game_schedule.json?fordate=20190413
 Authorization: Basic d9a32c89-be45-4a21-b331-6f0fe2 mys42sdE
 
 ###

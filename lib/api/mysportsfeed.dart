@@ -1,43 +1,30 @@
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
+import 'package:date_format/date_format.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'dart:convert';
+import 'package:sports_list/models/feed_games.dart';
+import '../internals/keys.dart' as keys;
 
-List<Post> parsePosts(String responseBody) {
-  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
- 
-  return parsed.map<Post>((json) => Post.fromJson(json)).toList();
-}
+Future<List<Gameentry>> fetchGames(String id, DateTime date) async {
+  ///String username = 'd9a32c89-be45-4a21-b331-6f0fe2';
+  String username = keys.SportsFeedApi;
+  String password = keys.SportsFeedPwd;
+  String basicAuth =
+      'Basic ' + base64Encode(utf8.encode('$username:$password'));
 
-Future<List<Post>> fetchPosts(http.Client client) async {
-  final response = await client.get('https://jsonplaceholder.typicode.com/posts');
- 
+  String miUrl =
+      '${keys.SportsFeedUrl}/$id/current/daily_game_schedule.json?fordate=' +
+          formatDate(date, ['yyyy', 'mm', 'dd']);
+
+  http.Response response =
+      await http.get(miUrl, headers: {'authorization': basicAuth});
+
   if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON
-    // compute function to run parsePosts in a separate isolate
-    return compute(parsePosts, response.body);
+    //print(response.body);
+    final responseJson = json.decode(response.body);
+    return FeedGames.fromJson(responseJson).dailygameschedule.gameentry;
   } else {
-    // If that call was not successful, throw an error.
-    throw Exception('No se pudo obtener los datos del feed');
-  }
-}
-
-
-
-class Post {
-  final int userId;
-  final int id;
-  final String title;
-  final String body;
-
-  Post({this.userId, this.id, this.title, this.body});
-
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
-      body: json['body'],
-    );
+    throw Exception(
+        'No se pudo obtener los datos del feed. ${response.statusCode.toString()} - ${response.reasonPhrase}');
   }
 }

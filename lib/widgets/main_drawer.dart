@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:sports_list/models/custom_menu.dart';
+import 'custom_icons.dart';
 
-class CustomMenu {
-  final String nombre;
-  final IconData icono;
-  CustomMenu(this.nombre, this.icono);
-}
+
 
 class MainDrawer extends StatelessWidget {
   MainDrawer(this.fnSetActualSports);
   final Function fnSetActualSports;
 
   static final List<CustomMenu> _listMenuData = [
-    new CustomMenu('Liga MX', Icons.ac_unit),
-    new CustomMenu('MLB', Icons.backspace),
-    new CustomMenu('NBA', Icons.cached),
-    new CustomMenu('NHL', Icons.dashboard),
-    new CustomMenu('NFL', Icons.edit),
+    new CustomMenu('Liga MX', CustomIcons.soccer_ball),
+    new CustomMenu('MLB', CustomIcons.baseball),
+    new CustomMenu('NBA', CustomIcons.dribbble),
+    new CustomMenu('NHL', CustomIcons.hockey),
+    new CustomMenu('NFL', CustomIcons.football),
   ];
 
   @override
@@ -41,7 +39,7 @@ class MainDrawer extends StatelessWidget {
       leading: Icon(data.icono),
       title: Text(data.nombre),
       onTap: () {
-        this.fnSetActualSports(data.nombre);
+        this.fnSetActualSports(data);
         Navigator.pop(context);
       },
     );
