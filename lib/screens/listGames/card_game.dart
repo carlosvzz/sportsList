@@ -1,75 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:sports_list/models/contadores.dart';
-import 'package:sports_list/models/feed_games.dart';
+import 'package:sports_list/models/game.dart';
 import 'package:sports_list/widgets/stepper_touch.dart';
 
-class CardGame extends StatefulWidget {
-  CardGame(this._selectedDate, this.gameData);
-
-  final DateTime _selectedDate;
-  final Gameentry gameData;
-
-  @override
-  State<StatefulWidget> createState() {
-    return CardGameState();
-  }
-}
-
-class CardGameState extends State<CardGame> {
-  Color colorGanador = Colors.green;
-  Contadores contador;
-
-  @override
-  void initState() {
-    super.initState();
-    contador = new Contadores();
-  }
-
-  void setContadores(String id, int value) {
-    switch (id) {
-      case 'away':
-        contador.away = value;
-        break;
-      case 'home':
-        contador.home = value;
-        break;
-      case 'draw':
-        contador.draw = value;
-        break;
-      case 'over':
-        contador.over = value;
-        break;
-      case 'under':
-        contador.under = value;
-        break;
-      default:
-    }
-
-    // Colores
-    if (id == 'away' || id == 'home' || id == 'draw') {
-      setState(() {
-        contador.colorAway =
-            (contador.away > contador.home && contador.away > contador.draw)
-                ? Colors.green
-                : Colors.white;
-        contador.colorHome =
-            (contador.home > contador.away && contador.home > contador.draw)
-                ? Colors.green
-                : Colors.white;
-        contador.colorDraw =
-            (contador.draw > contador.home && contador.away > contador.away)
-                ? Colors.green
-                : Colors.white;
-      });
-    } else {
-      setState(() {
-        contador.colorOver =
-            (contador.over > contador.under) ? Colors.green : Colors.white;
-        contador.colorUnder =
-            (contador.under > contador.over) ? Colors.green : Colors.white;
-      });
-    }
-  }
+class CardGame extends StatelessWidget {
+  CardGame(this.index,  this.gameData, this.setContadores);
+  
+  final Game gameData;
+  final Function setContadores;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -83,15 +21,15 @@ class CardGameState extends State<CardGame> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Text(
-                  '${widget.gameData.awayTeam.abbreviation} ${widget.gameData.awayTeam.name}',
+                  '${gameData.awayTeam.abbreviation} ${gameData.awayTeam.name}',
                   style: Theme.of(context).textTheme.display1,
                 ),
                 Text(
-                  '${widget.gameData.scheduleStatus == 'Normal' ? widget.gameData.time : widget.gameData.originalTime}',
+                  '${gameData.scheduleStatus == 'Normal' ? gameData.time : gameData.originalTime}',
                   style: Theme.of(context).textTheme.display2,
                 ),
                 Text(
-                  '${widget.gameData.homeTeam.abbreviation} ${widget.gameData.homeTeam.name}',
+                  '${gameData.homeTeam.abbreviation} ${gameData.homeTeam.name}',
                   style: Theme.of(context).textTheme.display1,
                 ),
               ],
@@ -112,46 +50,49 @@ class CardGameState extends State<CardGame> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       StepperTouch(
-                        initialValue: contador.away,
+                        initialValue: gameData.countAway,
                         direction: Axis.horizontal,
                         withSpring: true,
-                        mainColor: contador.colorAway,
-                        onChanged: (int value) => setContadores('away', value),
+                        mainColor: gameData.colorAway,
+                        onChanged: (int value) => setContadores(index, 'away', value),
                       ),
                       SizedBox(width: 8.0),
                       StepperTouch(
-                        initialValue: contador.home,
+                        initialValue: gameData.countHome,
                         direction: Axis.horizontal,
                         withSpring: true,
-                        mainColor: contador.colorHome,
-                        onChanged: (int value) => setContadores('home', value),
+                        mainColor: gameData.colorHome,
+                        onChanged: (int value) => setContadores(index, 'home', value),
                       ),
                     ],
                   ),
                   // OVER / UNDER
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('over / under',style: Theme.of(context).textTheme.display1,),
+                    child: Text(
+                      'over / under',
+                      style: Theme.of(context).textTheme.display1,
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       // OVER
                       StepperTouch(
-                        initialValue: contador.over,
+                        initialValue: gameData.countOver,
                         direction: Axis.horizontal,
                         withSpring: true,
-                        mainColor: contador.colorOver,
-                        onChanged: (int value) => setContadores('over', value),
+                        mainColor: gameData.colorOver,
+                        onChanged: (int value) => setContadores(index, 'over', value),
                       ),
                       SizedBox(width: 10.0),
                       // UNDER
                       StepperTouch(
-                        initialValue: contador.under,
+                        initialValue: gameData.countUnder,
                         direction: Axis.horizontal,
                         withSpring: true,
-                        mainColor: contador.colorUnder,
-                        onChanged: (int value) => setContadores('under', value),
+                        mainColor: gameData.colorUnder,
+                        onChanged: (int value) => setContadores(index, 'under', value),
                       ),
                     ],
                   ),

@@ -6,6 +6,8 @@ class Game {
   String id;
   String date;
   String time;
+  String scheduleStatus;
+  String originalTime;
   AwayTeam awayTeam;
   HomeTeam homeTeam;
   String location;
@@ -24,6 +26,8 @@ class Game {
       {this.id,
       this.date,
       this.time,
+      this.scheduleStatus,
+      this.originalTime,
       this.awayTeam,
       this.homeTeam,
       this.location,

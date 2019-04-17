@@ -1,63 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:sports_list/api/mysportsfeed.dart';
-import 'package:sports_list/models/feed_games.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:sports_list/models/game_model.dart';
 import 'package:sports_list/screens/listGames/card_game.dart';
 
 class ListGames extends StatefulWidget {
-  ListGames(this._actualSport, this._selectedDate);
-
+  ListGames(this._actualSport, this._selectedDate, this.model);
   final String _actualSport;
   final DateTime _selectedDate;
+  final GameScopedModel model;
 
   @override
-  State<StatefulWidget> createState() {
-    return ListGamesState();
-  }
+  _ListGamesState createState() => _ListGamesState();
 }
 
-class ListGamesState extends State<ListGames>
-    with AutomaticKeepAliveClientMixin<ListGames> {
-  Future<List<Gameentry>> _games;
-
-  @override
-  bool get wantKeepAlive => true; // Para el AutomaticKeepAliveClientMixin
-
+class _ListGamesState extends State<ListGames> {
   @override
   void initState() {
     super.initState();
-  
-    if (widget._actualSport != '' && widget._actualSport != 'X-Sports') {
-       print(widget._actualSport);
-      _games =
-          fetchGames(widget._actualSport.toLowerCase(), widget._selectedDate);
+    if (widget._actualSport != 'X-Sports') {
+      widget.model.fetchGames(widget._actualSport, widget._selectedDate);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // para el AutomaticKeepAliveClientMixin
+    Widget modelBuilder = ScopedModelDescendant<GameScopedModel>(
+      builder: (context, child, gameModel) {
+        Widget content;
 
-    var futureBuilder = FutureBuilder<List<Gameentry>>(
-      future: _games,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) return Text("${snapshot.error}");
-
-        return !snapshot.hasData
-            ? CircularProgressIndicator()
-            : ListView.builder(
-                itemCount: snapshot.data.length,
-                padding: const EdgeInsets.all(15.0),
-                itemBuilder: (context, index) {
-                  return CardGame(widget._selectedDate, snapshot.data[index]);
-                },
-              );
+        if (gameModel.isLoading) {
+          content = CircularProgressIndicator();
+        } else if (gameModel.getListCount() == 0) {
+          content = Center(
+            child: Text('NO GAMES FOUND!!'),
+          );
+        } else {
+          content = ListView.builder(
+            itemCount: gameModel.getListCount(),
+            padding: const EdgeInsets.all(15.0),
+            itemBuilder: (context, index) {
+              return CardGame(index, gameModel.getGameByIndex(index),
+                  gameModel.setContadores);
+            },
+          );
+        }
+        return content;
       },
     );
-    
-    return Center(
-      child: (widget._actualSport == '' || widget._actualSport == 'X-Sports') ? Container() : futureBuilder,
-    );
 
-   
+    return Center(
+      child: (widget._actualSport == '' || widget._actualSport == 'X-Sports')
+          ? Container()
+          : modelBuilder,
+    );
   }
 }
