@@ -3,14 +3,14 @@ import 'package:sports_list/models/game.dart';
 import 'package:sports_list/widgets/stepper_touch.dart';
 
 class CardGame extends StatelessWidget {
-  CardGame(this.index,  this.gameData, this.setContadores);
-  
+  CardGame(this.gameData, this.setContadores);
+
   final Game gameData;
   final Function setContadores;
-  final int index;
 
   @override
   Widget build(BuildContext context) {
+
     return Card(
       child: Column(
         children: <Widget>[
@@ -54,7 +54,8 @@ class CardGame extends StatelessWidget {
                         direction: Axis.horizontal,
                         withSpring: true,
                         mainColor: gameData.colorAway,
-                        onChanged: (int value) => setContadores(index, 'away', value),
+                        onChanged: (int value) =>
+                            setContadores(gameData.idGame, 'away', value),
                       ),
                       SizedBox(width: 8.0),
                       StepperTouch(
@@ -62,7 +63,8 @@ class CardGame extends StatelessWidget {
                         direction: Axis.horizontal,
                         withSpring: true,
                         mainColor: gameData.colorHome,
-                        onChanged: (int value) => setContadores(index, 'home', value),
+                        onChanged: (int value) =>
+                            setContadores(gameData.idGame, 'home', value),
                       ),
                     ],
                   ),
@@ -83,7 +85,8 @@ class CardGame extends StatelessWidget {
                         direction: Axis.horizontal,
                         withSpring: true,
                         mainColor: gameData.colorOver,
-                        onChanged: (int value) => setContadores(index, 'over', value),
+                        onChanged: (int value) =>
+                            setContadores(gameData.idGame, 'over', value),
                       ),
                       SizedBox(width: 10.0),
                       // UNDER
@@ -92,7 +95,8 @@ class CardGame extends StatelessWidget {
                         direction: Axis.horizontal,
                         withSpring: true,
                         mainColor: gameData.colorUnder,
-                        onChanged: (int value) => setContadores(index, 'under', value),
+                        onChanged: (int value) =>
+                            setContadores(gameData.idGame, 'under', value),
                       ),
                     ],
                   ),

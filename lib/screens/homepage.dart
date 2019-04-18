@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double yourWidth = width / 10;
+    double yourWidth = width / 20;
 
     void setActualSport(CustomMenu valor) {
       setState(() {
@@ -53,16 +53,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
     Widget regularTab(CustomDate data, bool enabled) {
       return Tab(
-        icon: Icon(data.icon, color: enabled ? Colors.white : Colors.grey,),
+        icon: Icon(
+          data.icon,
+          color: enabled ? Colors.white : Colors.grey,
+        ),
         text: data.label,
       );
     }
 
-  
     Widget disabledTab(CustomDate data) {
       return InkWell(
         child: Container(
-          child: regularTab(data,false),
+          child: regularTab(data, false),
           //width: double.infinity,
         ),
         onTap: () => {},
@@ -109,21 +111,21 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               tabs: _listDates.map((data) {
                 if (actualSport == 'X-Sports') {
                   return disabledTab(data);
-                  //return regularTab(data);
                 } else {
-                  return regularTab(data,true);
+                  return regularTab(data, true);
                 }
-                //return (actualSport == 'X-Sports') ? disabledTab(data) :regularTab(data);
-                //return regularTab(data);
               }).toList(),
             ),
           ),
-          body: TabBarView(
-            physics: NeverScrollableScrollPhysics(),
-            children: _listDates
-                .map((data) => ListGames(actualSport, data.date, gameModel))
-                .toList(),
-          ),
+          body: actualSport == 'X-Sports'
+              ? Container()
+              : TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
+                  children: _listDates
+                      .map((data) =>
+                          ListGames(actualSport, data.date, gameModel))
+                      .toList(),
+                ),
         ),
       ),
     );

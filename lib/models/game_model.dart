@@ -11,15 +11,26 @@ import '../internals/keys.dart' as keys;
 class GameScopedModel extends Model {
   List<Game> _gameList = [];
   bool _isLoading = false;
+  //String _idSport;
+  //int _idGame;
 
-  List<Game> get getGameList => _gameList;
+  //set idSport(String value) => _idSport = value;
+  //set idGame(int value) => _idGame = value;
   bool get isLoading => _isLoading;
 
-  int getListCount() {
-    return _gameList.length;
+  List<Game> getGameList(String idSport, DateTime date) {
+    return _gameList
+        .where((Game g) => g.idSport == idSport && g.date == date)
+        .toList();
   }
 
-  Game getGameByIndex(int index) {
+  int getListCount(String idSport, DateTime date) {
+    return _gameList
+        .where((Game g) => g.idSport == idSport && g.date == date)
+        .length;
+  }
+
+  Game getGameById(int idGame) {
     if (_gameList == null) {
       return null;
     }
@@ -28,11 +39,14 @@ class GameScopedModel extends Model {
       return null;
     }
 
-    return _gameList[index];
+    return _gameList.singleWhere((Game g) => g.idGame == idGame);
   }
 
-  void setContadores(int index, String id, int value) {
-    switch (id) {
+  void setContadores(int idGame, String typeCount, int value) {
+    // Buscar index del Game
+    int index = _gameList.indexWhere((Game g) => g.idGame == idGame);
+
+    switch (typeCount) {
       case 'away':
         _gameList[index].countAway = value;
         break;
@@ -52,7 +66,7 @@ class GameScopedModel extends Model {
     }
 
     // Colores
-    if (id == 'away' || id == 'home' || id == 'draw') {
+    if (typeCount == 'away' || typeCount == 'home' || typeCount == 'draw') {
       _gameList[index].colorAway =
           (_gameList[index].countAway > _gameList[index].countHome &&
                   _gameList[index].countAway > _gameList[index].countDraw)
@@ -82,14 +96,14 @@ class GameScopedModel extends Model {
     notifyListeners();
   }
 
-  Future<dynamic> _getGames(String id, DateTime date) async {
+  Future<dynamic> _getGames(String idSport, DateTime date) async {
     String _username = keys.SportsFeedApi;
     String _password = keys.SportsFeedPwd;
     String _basicAuth =
         'Basic ' + base64Encode(utf8.encode('$_username:$_password'));
 
     String miUrl =
-        '${keys.SportsFeedUrl}/$id/current/daily_game_schedule.json?fordate=' +
+        '${keys.SportsFeedUrl}/$idSport/current/daily_game_schedule.json?fordate=' +
             formatDate(date, ['yyyy', 'mm', 'dd']);
 
     http.Response response = await http
@@ -98,7 +112,7 @@ class GameScopedModel extends Model {
     });
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       return json.decode(response.body);
     } else {
       throw Exception(
@@ -106,30 +120,40 @@ class GameScopedModel extends Model {
     }
   }
 
-  Future fetchGames(String id, DateTime date) async {
-    _isLoading = true;
-    _gameList = [];
-    notifyListeners();
+  Future fetchGames(String idSport, DateTime date) async {
+    // Revisar si ya esta cargada la lista (deporte - fecha)
+    var query;
 
-    var dataFromResponse = await _getGames(id, date);
-    List<Gameentry> lista =
-        FeedGames.fromJson(dataFromResponse).dailygameschedule.gameentry;
+    if (_gameList.length > 0) {
+      print('entro aqui $idSport = $date' );
+      query = _gameList
+          .firstWhere((Game g) => g.idSport == idSport && g.date == date,orElse: () => null);
+    }
+    if (query == null) {
+      _isLoading = true;
+      notifyListeners();
 
-    //Agregar respuesta a lista final de games
-    lista.forEach((game) {
-      Game newGame = new Game(
-        id: game.iD,
-        date: game.date,
-        time: game.time,
-        scheduleStatus: game.scheduleStatus,
-        originalTime: game.originalTime,
-        location: game.location,
-        homeTeam: game.homeTeam,
-        awayTeam: game.awayTeam,
-      );
+      var dataFromResponse = await _getGames(idSport, date);
+      List<Gameentry> lista =
+          FeedGames.fromJson(dataFromResponse).dailygameschedule.gameentry;
 
-      _gameList.add(newGame);
-    });
+      //Agregar respuesta a lista final de games
+      lista.forEach((game) {
+        Game newGame = new Game(
+          idSport: idSport,
+          idGame: int.parse(game.iD),
+          date: date,
+          time: game.time,
+          scheduleStatus: game.scheduleStatus,
+          originalTime: game.originalTime,
+          location: game.location,
+          homeTeam: game.homeTeam,
+          awayTeam: game.awayTeam,
+        );
+
+        _gameList.add(newGame);
+      });
+    }
 
     _isLoading = false;
     notifyListeners();

@@ -3,8 +3,8 @@ import 'package:sports_list/models/feed_games.dart';
 
 class Game {
   String idSport;
-  String id;
-  String date;
+  int idGame;
+  DateTime date;
   String time;
   String scheduleStatus;
   String originalTime;
@@ -23,7 +23,8 @@ class Game {
   Color colorUnder;
 
   Game(
-      {this.id,
+      {this.idSport,
+      this.idGame,
       this.date,
       this.time,
       this.scheduleStatus,
