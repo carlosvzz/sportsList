@@ -25,7 +25,7 @@ class CardGame extends StatelessWidget {
                   style: Theme.of(context).textTheme.display1,
                 ),
                 Text(
-                  '${gameData.scheduleStatus == 'Normal' ? gameData.time : gameData.originalTime}',
+                  '${gameData.time}',
                   style: Theme.of(context).textTheme.display2,
                 ),
                 Text(
@@ -55,7 +55,7 @@ class CardGame extends StatelessWidget {
                         withSpring: true,
                         mainColor: gameData.colorAway,
                         onChanged: (int value) =>
-                            setContadores(gameData.idGame, 'away', value),
+                            setContadores(gameData.id, 'away', value),
                       ),
                       SizedBox(width: 8.0),
                       StepperTouch(
@@ -64,7 +64,7 @@ class CardGame extends StatelessWidget {
                         withSpring: true,
                         mainColor: gameData.colorHome,
                         onChanged: (int value) =>
-                            setContadores(gameData.idGame, 'home', value),
+                            setContadores(gameData.id, 'home', value),
                       ),
                     ],
                   ),
@@ -86,7 +86,7 @@ class CardGame extends StatelessWidget {
                         withSpring: true,
                         mainColor: gameData.colorOver,
                         onChanged: (int value) =>
-                            setContadores(gameData.idGame, 'over', value),
+                            setContadores(gameData.id, 'over', value),
                       ),
                       SizedBox(width: 10.0),
                       // UNDER
@@ -96,7 +96,7 @@ class CardGame extends StatelessWidget {
                         withSpring: true,
                         mainColor: gameData.colorUnder,
                         onChanged: (int value) =>
-                            setContadores(gameData.idGame, 'under', value),
+                            setContadores(gameData.id, 'under', value),
                       ),
                     ],
                   ),

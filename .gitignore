@@ -72,3 +72,4 @@
 lib/rest/
 lib/internals/
 
+android/app/google-services.json

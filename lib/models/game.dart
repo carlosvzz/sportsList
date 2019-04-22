@@ -1,45 +1,117 @@
 import 'package:flutter/material.dart';
+import 'package:sports_list/models/basemodel.dart';
 import 'package:sports_list/models/feed_games.dart';
 
-class Game {
-  String idSport;
-  int idGame;
-  DateTime date;
-  String time;
-  String scheduleStatus;
-  String originalTime;
-  AwayTeam awayTeam;
-  HomeTeam homeTeam;
-  String location;
-  int countHome;
-  int countAway;
-  int countDraw;
-  int countOver;
-  int countUnder;
-  Color colorHome;
-  Color colorAway;
-  Color colorDraw;
-  Color colorOver;
-  Color colorUnder;
+class Game extends BaseModel {
+  String _idSport;
+  int _idGame;
+  DateTime _date;
+  String _time;
+  AwayTeam _awayTeam;
+  HomeTeam _homeTeam;
+  String _location;
+  int countHome = 0;
+  int countAway = 0;
+  int countDraw = 0;
+  int countOver = 0;
+  int countUnder = 0;
+  Color colorHome = Colors.white;
+  Color colorAway = Colors.white;
+  Color colorDraw = Colors.white;
+  Color colorOver = Colors.white;
+  Color colorUnder = Colors.white;
 
-  Game(
-      {this.idSport,
-      this.idGame,
-      this.date,
-      this.time,
-      this.scheduleStatus,
-      this.originalTime,
-      this.awayTeam,
-      this.homeTeam,
-      this.location,
-      this.countHome = 0,
-      this.countAway = 0,
-      this.countDraw = 0,
-      this.countOver = 0,
-      this.countUnder = 0,
-      this.colorHome = Colors.white,
-      this.colorAway = Colors.white,
-      this.colorDraw = Colors.white,
-      this.colorOver = Colors.white,
-      this.colorUnder = Colors.white});
-}
+  Game();
+
+  Game.fromValues(
+    this._idSport,
+    this._idGame,
+    this._date,
+    this._time,
+    this._awayTeam,
+    this._homeTeam,
+    this._location,
+  );
+
+  Game.fromValuesWithId(
+    String id,
+    this._idSport,
+    this._idGame,
+    this._date,
+    this._time,
+    this._awayTeam,
+    this._homeTeam,
+    this._location,
+  ) {
+    super.id = id;
+  }
+
+  String get idSport => _idSport;
+  int get idGame => _idGame;
+  DateTime get date => _date;
+  String get time => _time;
+  AwayTeam get awayTeam => _awayTeam;
+  HomeTeam get homeTeam => _homeTeam;
+  String get location => _location;
+ 
+  Map<String, dynamic> toMap() {
+    var map = new Map<String, dynamic>();
+    if (id != null) {
+      map['id'] = id;
+    }
+    map['idSport'] = _idSport;
+    map['idGame'] = _idGame;
+    map['date'] = _date;
+    map['time'] = _time;
+    map['awayTeam'] = _awayTeam.toJson();
+    map['HomeTeam'] = _homeTeam.toJson();
+    map['location'] = _location;
+    map['countHome'] = countHome;
+    map['countAway'] = countAway;
+    map['countDraw'] = countDraw;
+    map['countOver'] = countOver;
+    map['countUnder'] = countUnder;
+
+    return map;
+  }
+
+  Game.fromMap(Map<String, dynamic> map) {
+    this.id = map['id'];
+    this._idSport = map['idSport'];
+    this._idGame = map['idGame'];
+    this._date = map['date'];
+    this._time = map['time'];
+    this._awayTeam = new AwayTeam.fromJson(map['awayTeam']);
+    this._homeTeam = new HomeTeam.fromJson(map['HomeTeam']);
+    this._location = map['location'];
+    this.countHome = map['countHome'];
+    this.countAway = map['countAway'];
+    this.countDraw = map['countDraw'];
+    this.countOver = map['countOver'];
+    this.countUnder = map['countUnder'];
+  }
+
+  Game fromMap(Map<String, dynamic> map) {
+    var game = new Game();
+
+    game.id = map['id'];
+    game._idSport = map['idSport'];
+    game._idGame = map['idGame'];
+    game._date = map['date'];
+    game._time = map['time'];
+    game._awayTeam = new AwayTeam.fromJson(map['awayTeam']);
+    game._homeTeam = new HomeTeam.fromJson(map['HomeTeam']);
+    game._location = map['location'];
+    game.countHome = map['countHome'];
+    game.countAway = map['countAway'];
+    game.countDraw = map['countDraw'];
+    game.countOver = map['countOver'];
+    game.countUnder = map['countUnder'];
+
+    return game;
+  }
+
+  Game createNew() {
+    return Game();
+  }
+} // Fin clase

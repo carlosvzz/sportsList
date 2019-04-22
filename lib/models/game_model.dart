@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:date_format/date_format.dart';
 import 'package:http/http.dart' as http;
+import 'package:sports_list/services/firestore_service.dart';
 import 'game.dart';
 import 'package:sports_list/models/feed_games.dart';
 import '../internals/keys.dart' as keys;
@@ -11,11 +12,8 @@ import '../internals/keys.dart' as keys;
 class GameScopedModel extends Model {
   List<Game> _gameList = [];
   bool _isLoading = false;
-  //String _idSport;
-  //int _idGame;
+  FirestoreService<Game> db = new FirestoreService<Game>('games');
 
-  //set idSport(String value) => _idSport = value;
-  //set idGame(int value) => _idGame = value;
   bool get isLoading => _isLoading;
 
   List<Game> getGameList(String idSport, DateTime date) {
@@ -42,9 +40,9 @@ class GameScopedModel extends Model {
     return _gameList.singleWhere((Game g) => g.idGame == idGame);
   }
 
-  void setContadores(int idGame, String typeCount, int value) {
+  void setContadores(String idFireStore, String typeCount, int value) {
     // Buscar index del Game
-    int index = _gameList.indexWhere((Game g) => g.idGame == idGame);
+    int index = _gameList.indexWhere((Game g) => g.id == idFireStore);
 
     switch (typeCount) {
       case 'away':
@@ -64,6 +62,10 @@ class GameScopedModel extends Model {
         break;
       default:
     }
+
+    //Actualizar db
+     db.updateObject(_gameList[index]);
+
 
     // Colores
     if (typeCount == 'away' || typeCount == 'home' || typeCount == 'draw') {
@@ -125,9 +127,10 @@ class GameScopedModel extends Model {
     var query;
 
     if (_gameList.length > 0) {
-      print('entro aqui $idSport = $date' );
-      query = _gameList
-          .firstWhere((Game g) => g.idSport == idSport && g.date == date,orElse: () => null);
+      print('entro aqui $idSport = $date');
+      query = _gameList.firstWhere(
+          (Game g) => g.idSport == idSport && g.date == date,
+          orElse: () => null);
     }
     if (query == null) {
       _isLoading = true;
@@ -139,19 +142,19 @@ class GameScopedModel extends Model {
 
       //Agregar respuesta a lista final de games
       lista.forEach((game) {
-        Game newGame = new Game(
-          idSport: idSport,
-          idGame: int.parse(game.iD),
-          date: date,
-          time: game.time,
-          scheduleStatus: game.scheduleStatus,
-          originalTime: game.originalTime,
-          location: game.location,
-          homeTeam: game.homeTeam,
-          awayTeam: game.awayTeam,
-        );
+        Game newGame = new Game.fromValues(
+            idSport,
+            int.parse(game.iD),
+            date,
+            game.scheduleStatus == 'Normal' ? game.time : game.originalTime,
+            game.awayTeam,
+            game.homeTeam,
+            game.location);
 
+        //Agregar a DB y lista local
+        db.createObject(newGame);
         _gameList.add(newGame);
+
       });
     }
 

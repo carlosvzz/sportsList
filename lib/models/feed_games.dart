@@ -136,7 +136,7 @@ class AwayTeam {
     this.abbreviation = abbreviation;
   }
 
-  AwayTeam.fromJson(Map<String, dynamic> json) {
+  AwayTeam.fromJson(Map json) {
     iD = json['ID'];
     city = json['City'];
     name = json['Name'];
@@ -166,7 +166,8 @@ class HomeTeam {
     this.abbreviation = abbreviation;
   }
 
-  HomeTeam.fromJson(Map<String, dynamic> json) {
+  //HomeTeam.fromJson(Map<String, dynamic> json) {
+  HomeTeam.fromJson(Map json) {
     iD = json['ID'];
     city = json['City'];
     name = json['Name'];

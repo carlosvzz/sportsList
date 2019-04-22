@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sports_list/screens/homepage.dart';
-//import 'package:sports_list/widgets/main_drawer.dart';
 
 void main() => runApp(MyApp());
 
