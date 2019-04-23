@@ -53,7 +53,7 @@ class Game extends BaseModel {
   AwayTeam get awayTeam => _awayTeam;
   HomeTeam get homeTeam => _homeTeam;
   String get location => _location;
- 
+
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
     if (id != null) {
@@ -79,7 +79,7 @@ class Game extends BaseModel {
     this.id = map['id'];
     this._idSport = map['idSport'];
     this._idGame = map['idGame'];
-    this._date = map['date'];
+    this._date = map['date'].toDate(); // Viene como TimeStamp
     this._time = map['time'];
     this._awayTeam = new AwayTeam.fromJson(map['awayTeam']);
     this._homeTeam = new HomeTeam.fromJson(map['HomeTeam']);

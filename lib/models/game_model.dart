@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:date_format/date_format.dart';
@@ -64,8 +65,7 @@ class GameScopedModel extends Model {
     }
 
     //Actualizar db
-     db.updateObject(_gameList[index]);
-
+    db.updateObject(_gameList[index]);
 
     // Colores
     if (typeCount == 'away' || typeCount == 'home' || typeCount == 'draw') {
@@ -98,7 +98,7 @@ class GameScopedModel extends Model {
     notifyListeners();
   }
 
-  Future<dynamic> _getGames(String idSport, DateTime date) async {
+  Future<dynamic> _getGamesFeed(String idSport, DateTime date) async {
     String _username = keys.SportsFeedApi;
     String _password = keys.SportsFeedPwd;
     String _basicAuth =
@@ -122,12 +122,32 @@ class GameScopedModel extends Model {
     }
   }
 
+  Future<List<Game>> _getGamesFirestore(String idSport, DateTime date) async {
+    List<DocumentSnapshot> templist;
+    List<Game> list = new List();
+
+    CollectionReference collectionRef = Firestore.instance.collection("games");
+    QuerySnapshot collectionSnapshot = await collectionRef
+        .where('idSport', isEqualTo: idSport)
+        .where('date', isEqualTo: date)
+        .orderBy('time')
+        .getDocuments();
+
+    templist = collectionSnapshot.documents;
+
+    list = templist.map((DocumentSnapshot docSnapshot) {
+      //print('data -> ${docSnapshot.data}');
+      return new Game.fromMap(docSnapshot.data);
+    }).toList();
+
+    return list;
+  }
+
   Future fetchGames(String idSport, DateTime date) async {
     // Revisar si ya esta cargada la lista (deporte - fecha)
     var query;
 
     if (_gameList.length > 0) {
-      print('entro aqui $idSport = $date');
       query = _gameList.firstWhere(
           (Game g) => g.idSport == idSport && g.date == date,
           orElse: () => null);
@@ -136,26 +156,37 @@ class GameScopedModel extends Model {
       _isLoading = true;
       notifyListeners();
 
-      var dataFromResponse = await _getGames(idSport, date);
-      List<Gameentry> lista =
-          FeedGames.fromJson(dataFromResponse).dailygameschedule.gameentry;
+      List<Game> listaDB;
+      listaDB = await _getGamesFirestore(idSport, date);
 
-      //Agregar respuesta a lista final de games
-      lista.forEach((game) {
-        Game newGame = new Game.fromValues(
-            idSport,
-            int.parse(game.iD),
-            date,
-            game.scheduleStatus == 'Normal' ? game.time : game.originalTime,
-            game.awayTeam,
-            game.homeTeam,
-            game.location);
+      if (listaDB != null && listaDB.length > 0) {
+        //Encontro datos ya en DB firestore
+        // Agregarlo a _gameList
+        listaDB.forEach((game) {
+          _gameList.add(game);
+        });
+      } else {
+        // No se encontro datos en DB, buscarlo en sportsfeed
+        var dataFromResponse = await _getGamesFeed(idSport, date);
+        List<Gameentry> lista =
+            FeedGames.fromJson(dataFromResponse).dailygameschedule.gameentry;
 
-        //Agregar a DB y lista local
-        db.createObject(newGame);
-        _gameList.add(newGame);
+        //Agregar respuesta a lista final de games
+        lista.forEach((game) {
+          Game newGame = new Game.fromValues(
+              idSport,
+              int.parse(game.iD),
+              date,
+              game.scheduleStatus == 'Normal' ? game.time : game.originalTime,
+              game.awayTeam,
+              game.homeTeam,
+              game.location);
 
-      });
+          //Agregar a DB y lista local
+          db.createObject(newGame);
+          _gameList.add(newGame);
+        });
+      }
     }
 
     _isLoading = false;
