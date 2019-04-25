@@ -67,8 +67,16 @@ class GameScopedModel extends Model {
     //Actualizar db
     db.updateObject(_gameList[index]);
 
+    setColores(idFireStore, typeCount);
+    
+  }
+
+  void setColores(String idFireStore, String typeCount) {
+    // Buscar index del Game
+    int index = _gameList.indexWhere((Game g) => g.id == idFireStore);
+    
     // Colores
-    if (typeCount == 'away' || typeCount == 'home' || typeCount == 'draw') {
+    if (typeCount == 'initial' ||  typeCount == 'away' || typeCount == 'home' || typeCount == 'draw') {
       _gameList[index].colorAway =
           (_gameList[index].countAway > _gameList[index].countHome &&
                   _gameList[index].countAway > _gameList[index].countDraw)
@@ -84,7 +92,9 @@ class GameScopedModel extends Model {
                   _gameList[index].countDraw > _gameList[index].countAway)
               ? Colors.green
               : Colors.white;
-    } else {
+    } 
+
+    if (typeCount == 'initial' ||  typeCount == 'over' || typeCount == 'under')  {
       _gameList[index].colorOver =
           (_gameList[index].countOver > _gameList[index].countUnder)
               ? Colors.green
@@ -94,9 +104,10 @@ class GameScopedModel extends Model {
               ? Colors.green
               : Colors.white;
     }
-
     notifyListeners();
   }
+
+
 
   Future<dynamic> _getGamesFeed(String idSport, DateTime date) async {
     String _username = keys.SportsFeedApi;
@@ -143,6 +154,30 @@ class GameScopedModel extends Model {
     return list;
   }
 
+  String _addLeadingZero(int value) {
+    if (value < 10) return '0$value';
+    return value.toString();
+  }
+
+  String convertirHora24(String hora) {
+    //hora viene como 7:00AM o 5:30PM
+    final int pos = hora.indexOf(':');
+    int parteHora = int.parse(hora.substring(0, pos));
+    int parteMin = int.parse(hora.substring(pos + 1, pos + 3));
+
+    //Convertir hora a 24 H (AM se queda igual)
+    if (hora.contains('PM') == true) {
+      if (parteHora < 12) parteHora += 12;
+    }
+    //Restar 1 hora para Central Time
+    parteHora -= 1;
+
+    String horaTexto =  _addLeadingZero(parteHora);
+    String minTexto = _addLeadingZero(parteMin);
+   
+    return horaTexto + ':' +  minTexto;
+  }
+
   Future fetchGames(String idSport, DateTime date) async {
     // Revisar si ya esta cargada la lista (deporte - fecha)
     var query;
@@ -164,6 +199,7 @@ class GameScopedModel extends Model {
         // Agregarlo a _gameList
         listaDB.forEach((game) {
           _gameList.add(game);
+          setColores(game.id, 'initial');
         });
       } else {
         // No se encontro datos en DB, buscarlo en sportsfeed
@@ -173,14 +209,13 @@ class GameScopedModel extends Model {
 
         //Agregar respuesta a lista final de games
         lista.forEach((game) {
-          Game newGame = new Game.fromValues(
-              idSport,
-              int.parse(game.iD),
-              date,
-              game.scheduleStatus == 'Normal' ? game.time : game.originalTime,
-              game.awayTeam,
-              game.homeTeam,
-              game.location);
+          // Convertir hora string a hora 24
+          String horaGame =
+              game.scheduleStatus == 'Normal' ? game.time : game.originalTime;
+          String hora24 = convertirHora24(horaGame);
+
+          Game newGame = new Game.fromValues(idSport, int.parse(game.iD), date,
+              hora24, game.awayTeam, game.homeTeam, game.location);
 
           //Agregar a DB y lista local
           db.createObject(newGame);

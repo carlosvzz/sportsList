@@ -6,7 +6,7 @@ class Game extends BaseModel {
   String _idSport;
   int _idGame;
   DateTime _date;
-  String _time;
+  String _time;  // formato 24H 00:00
   AwayTeam _awayTeam;
   HomeTeam _homeTeam;
   String _location;
@@ -32,19 +32,6 @@ class Game extends BaseModel {
     this._homeTeam,
     this._location,
   );
-
-  Game.fromValuesWithId(
-    String id,
-    this._idSport,
-    this._idGame,
-    this._date,
-    this._time,
-    this._awayTeam,
-    this._homeTeam,
-    this._location,
-  ) {
-    super.id = id;
-  }
 
   String get idSport => _idSport;
   int get idGame => _idGame;

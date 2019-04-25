@@ -10,7 +10,6 @@ class CardGame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Card(
       child: Column(
         children: <Widget>[
@@ -24,7 +23,7 @@ class CardGame extends StatelessWidget {
                   '${gameData.awayTeam.abbreviation} ${gameData.awayTeam.name}',
                   style: Theme.of(context).textTheme.display1,
                 ),
-                Text(
+              Text(
                   '${gameData.time}',
                   style: Theme.of(context).textTheme.display2,
                 ),
