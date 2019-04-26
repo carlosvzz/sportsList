@@ -48,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       setState(() {
         actualSport = valor.nombre;
         actualIcon = valor.icono;
+
       });
     }
 

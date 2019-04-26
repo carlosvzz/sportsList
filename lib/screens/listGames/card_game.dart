@@ -8,6 +8,25 @@ class CardGame extends StatelessWidget {
   final Game gameData;
   final Function setContadores;
 
+  Widget circleText(BuildContext context, String texto) {
+    return Container(
+      width: 80.0,
+      height: 80.0,
+      decoration: new BoxDecoration(
+        color: Theme.of(context).highlightColor,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+          child: Text(
+        '$texto',
+        style: TextStyle(
+            color: Theme.of(context).accentColor,
+            fontSize: 17.0,
+            fontWeight: FontWeight.bold),
+      )),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -20,15 +39,15 @@ class CardGame extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Text(
-                  '${gameData.awayTeam.abbreviation} ${gameData.awayTeam.name}',
+                  '${gameData.awayTeam.name}',
                   style: Theme.of(context).textTheme.display1,
                 ),
-              Text(
+                Text(
                   '${gameData.time}',
                   style: Theme.of(context).textTheme.display2,
                 ),
                 Text(
-                  '${gameData.homeTeam.abbreviation} ${gameData.homeTeam.name}',
+                  '${gameData.homeTeam.name}',
                   style: Theme.of(context).textTheme.display1,
                 ),
               ],
@@ -37,12 +56,13 @@ class CardGame extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              CircleAvatar(
-                maxRadius: 27.0,
-                backgroundColor: Theme.of(context).accentColor,
-                backgroundImage: NetworkImage(
-                    "https://tsnimages.tsn.ca/ImageProvider/TeamLogo?seoId=san-antonio-spurs&width=128&height=128"),
-              ),
+              circleText(context, '${gameData.awayTeam.abbreviation}'),
+              // CircleAvatar(
+              //   maxRadius: 27.0,
+              //   backgroundColor: Theme.of(context).accentColor,
+              //   backgroundImage: NetworkImage(
+              //       "https://tsnimages.tsn.ca/ImageProvider/TeamLogo?seoId=san-antonio-spurs&width=128&height=128"),
+              // ),
               Column(
                 children: <Widget>[
                   Row(
@@ -102,12 +122,13 @@ class CardGame extends StatelessWidget {
                   SizedBox(height: 8.0),
                 ],
               ),
-              CircleAvatar(
-                maxRadius: 27.0,
-                backgroundColor: Theme.of(context).accentColor,
-                backgroundImage: NetworkImage(
-                    "https://d1si3tbndbzwz9.cloudfront.net/basketball/team/22/logo.png"),
-              ),
+              circleText(context, '${gameData.homeTeam.abbreviation}'),
+              // CircleAvatar(
+              //   maxRadius: 27.0,
+              //   backgroundColor: Theme.of(context).accentColor,
+              //   backgroundImage: NetworkImage(
+              //       "https://d1si3tbndbzwz9.cloudfront.net/basketball/team/22/logo.png"),
+              // ),
             ],
           )
         ],

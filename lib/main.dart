@@ -50,7 +50,7 @@ ThemeData _myTheme() {
         body2: TextStyle(
             fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
         display1: TextStyle(
-            fontSize: 16.0, fontWeight: FontWeight.bold,color: Colors.white70),
+            fontSize: 18.0, fontWeight: FontWeight.bold,color: Colors.white70),
         display2: TextStyle(
             fontSize: 16.0,  color: myAccentColor),
         display3: TextStyle(
