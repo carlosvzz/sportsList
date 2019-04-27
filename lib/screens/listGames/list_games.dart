@@ -17,8 +17,8 @@ class ListGames extends StatefulWidget {
 class _ListGamesState extends State<ListGames> {
   @override
   void initState() {
-    super.initState();
-    //print('initState ${widget._selectedDate.toString()}');
+    super.initState();   
+    print("entro a initState ${widget._actualSport} , ${widget._selectedDate.toIso8601String()}");
     widget.model.fetchGames(widget._actualSport, widget._selectedDate);
   }
 
