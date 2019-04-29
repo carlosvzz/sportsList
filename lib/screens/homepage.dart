@@ -44,14 +44,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     double width = MediaQuery.of(context).size.width;
     double yourWidth = width / 20;
 
-    void setActualSport(CustomMenu valor) {               
-      if (valor.nombre !=actualSport) {
-        GameScopedModel model = ScopedModel.of<GameScopedModel>(context);
-        model.fetchGames(valor.nombre, new DateTime(2019, 4, 27));        
-      }
-      setState(() {                
+    void setActualSport(CustomMenu valor) {
+      setState(() {
         actualSport = valor.nombre;
-        actualIcon = valor.icono;        
+        actualIcon = valor.icono;
       });
     }
 
@@ -100,12 +96,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             iconTheme: IconThemeData(color: Theme.of(context).accentColor),
             actions: <Widget>[
               IconButton(
-                icon: Icon(
-                  Icons.refresh,
-                  size: 25.0,
-                ),
-                onPressed: () => {},
-              )
+                  icon: Icon(
+                    Icons.refresh,
+                    size: 25.0,
+                  ),
+                  onPressed: () =>
+                      setActualSport(new CustomMenu('X-Sports', Icons.star)))
             ],
             bottom: TabBar(
               indicatorColor: Theme.of(context).accentColor,

@@ -18,7 +18,6 @@ class _ListGamesState extends State<ListGames> {
   @override
   void initState() {
     super.initState();   
-    print("entro a initState ${widget._actualSport} , ${widget._selectedDate.toIso8601String()}");
     widget.model.fetchGames(widget._actualSport, widget._selectedDate);
   }
 
@@ -27,7 +26,6 @@ class _ListGamesState extends State<ListGames> {
     Widget modelBuilder = ScopedModelDescendant<GameScopedModel>(
       builder: (context, child, gameModel) {
         Widget content;
-
         if (gameModel.isLoading) {
           content = Center(child:CircularProgressIndicator());
         } else {
@@ -36,7 +34,7 @@ class _ListGamesState extends State<ListGames> {
 
           if (listaFiltrada.length == 0) {
             content = Center(
-              child: Text('NO GAMES FOUND!!'),
+              child: Text('NO GAMES!!'),
             );
           } else {
             content = ListView.builder(

@@ -9,7 +9,7 @@ class MainDrawer extends StatelessWidget {
   final Function fnSetActualSports;
 
   static final List<CustomMenu> _listMenuData = [
-    new CustomMenu('Liga MX', CustomIcons.soccer_ball),
+    //new CustomMenu('Liga MX', CustomIcons.soccer_ball),
     new CustomMenu('MLB', CustomIcons.baseball),
     new CustomMenu('NBA', CustomIcons.dribbble),
     new CustomMenu('NHL', CustomIcons.hockey),
