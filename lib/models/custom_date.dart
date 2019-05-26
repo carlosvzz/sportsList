@@ -1,10 +1,8 @@
 import 'package:date_format/date_format.dart';
-import 'package:flutter/material.dart';
 
 class CustomDate {
   DateTime date;
   String label;
-  IconData icon;
   //
   DateTime _now;
   DateTime _today;
@@ -16,11 +14,9 @@ class CustomDate {
 
     date = DateTime(date.year, date.month, date.day); // Solo fecha
     label = _formatName();
-    icon = _customIcon();
   }
 
   void initDates() {
-
     _now = DateTime.now();
     _today = DateTime(_now.year, _now.month, _now.day);
     _yesterday = DateTime(_today.year, _today.month, _today.day - 1);
@@ -39,13 +35,5 @@ class CustomDate {
     }
   }
 
-  IconData _customIcon() {
-    if (date == _today) {
-      return Icons.today;
-    } else if (date == _tomorrow || date == _yesterday) {
-      return Icons.date_range;
-    } else {
-      return Icons.exit_to_app;
-    }
-  }
+  
 }
