@@ -81,7 +81,7 @@ class FirestoreService<T extends BaseModel> {
         .runTransaction(deleteTransaction)
         .then((result) => result['deleted'])
         .catchError((error) {
-      print({'error: $error'});
+      //print({'error: ${error}'});
       return false;
     });
   }

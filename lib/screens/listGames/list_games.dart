@@ -5,11 +5,12 @@ import 'package:sports_list/models/game_model.dart';
 import 'package:sports_list/screens/listGames/card_game.dart';
 
 class ListGames extends StatefulWidget {
-  ListGames(this._actualSport, this._selectedDate, this.model);
-  final String _actualSport;
-  final DateTime _selectedDate;
-  final GameScopedModel model;
+  final String _sport;
+  final DateTime _date;
+  final GameScopedModel _model;
 
+  ListGames(this._sport, this._date, this._model);
+  
   @override
   _ListGamesState createState() => _ListGamesState();
 }
@@ -18,7 +19,7 @@ class _ListGamesState extends State<ListGames> {
   @override
   void initState() {
     super.initState();   
-    widget.model.fetchGames(widget._actualSport, widget._selectedDate);
+    widget._model.fetchGames(widget._sport, widget._date);
   }
 
   @override
@@ -30,7 +31,7 @@ class _ListGamesState extends State<ListGames> {
           content = Center(child:CircularProgressIndicator());
         } else {
           List<Game> listaFiltrada =
-              gameModel.getGameList(widget._actualSport, widget._selectedDate);
+              gameModel.getGameList(widget._sport, widget._date);
 
           if (listaFiltrada.length == 0) {
             content = Center(

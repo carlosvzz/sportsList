@@ -6,6 +6,8 @@ import 'package:sports_list/models/game_model.dart';
 import 'package:sports_list/screens/my_appbar.dart';
 import 'package:sports_list/screens/my_bottombar.dart';
 
+import 'my_body.dart';
+
 class MyHomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -40,8 +42,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         bottomNavigationBar: MyBottomBar(setActualSport,setActualDate, selectedDate),
          body: selectedSport.nombre == 'X-Sports'
             ? Container()
-            : Container(child: Text('Datos'),)
-            //: MyBody(actualSport, _listDates, gameModel)
+            : MyBody(selectedSport.nombre, selectedDate.date, gameModel)
       ),
     );
   }
