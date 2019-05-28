@@ -13,13 +13,13 @@ class Game extends BaseModel {
   int countHome = 0;
   int countAway = 0;
   int countDraw = 0;
-  int countOver = 0;
-  int countUnder = 0;
+  int countOverUnder = 0;    // over / under
+  int countExtra = 0;   // Extra segun sports (BTTS , Spread , etc)
   Color colorHome = Colors.white;
   Color colorAway = Colors.white;
   Color colorDraw = Colors.white;
-  Color colorOver = Colors.white;
-  Color colorUnder = Colors.white;
+  Color colorOverUnder = Colors.white;
+  Color colorExtra = Colors.white;
 
   Game();
 
@@ -56,8 +56,8 @@ class Game extends BaseModel {
     map['countHome'] = countHome;
     map['countAway'] = countAway;
     map['countDraw'] = countDraw;
-    map['countOver'] = countOver;
-    map['countUnder'] = countUnder;
+    map['countOverUnder'] = countOverUnder;
+    map['countExtra'] = countExtra;
 
     return map;
   }
@@ -74,8 +74,8 @@ class Game extends BaseModel {
     this.countHome = map['countHome'];
     this.countAway = map['countAway'];
     this.countDraw = map['countDraw'];
-    this.countOver = map['countOver'];
-    this.countUnder = map['countUnder'];
+    this.countOverUnder = map['countOverUnder'];
+    this.countExtra = map['countExtra'];
   }
 
   Game fromMap(Map<String, dynamic> map) {
@@ -92,8 +92,8 @@ class Game extends BaseModel {
     game.countHome = map['countHome'];
     game.countAway = map['countAway'];
     game.countDraw = map['countDraw'];
-    game.countOver = map['countOver'];
-    game.countUnder = map['countUnder'];
+    game.countOverUnder = map['countOverUnder'];
+    game.countExtra = map['countExtra'];
 
     return game;
   }

@@ -12,11 +12,14 @@ import '../internals/keys.dart' as keys;
 
 class GameScopedModel extends Model {
   List<Game> _gameList = [];
-  bool _isLoading = false;
+  bool isLoading = false;
   FirestoreService<Game> db = new FirestoreService<Game>('games');
 
-  bool get isLoading => _isLoading;
-
+  // List<Game> getGameList(String idSport, DateTime date) {
+  //   return _gameList
+  //       .where((Game g) => g.idSport == idSport && g.date == date)
+  //       .toList();
+  // }
   List<Game> getGameList(String idSport, DateTime date) {
     return _gameList
         .where((Game g) => g.idSport == idSport && g.date == date)
@@ -55,11 +58,11 @@ class GameScopedModel extends Model {
       case 'draw':
         _gameList[index].countDraw = value;
         break;
-      case 'over':
-        _gameList[index].countOver = value;
+      case 'overunder':
+        _gameList[index].countOverUnder = value;
         break;
-      case 'under':
-        _gameList[index].countUnder = value;
+      case 'extra':
+        _gameList[index].countExtra = value;
         break;
       default:
     }
@@ -68,46 +71,61 @@ class GameScopedModel extends Model {
     db.updateObject(_gameList[index]);
 
     setColores(idFireStore, typeCount);
-    
   }
 
   void setColores(String idFireStore, String typeCount) {
     // Buscar index del Game
     int index = _gameList.indexWhere((Game g) => g.id == idFireStore);
-    
-    // Colores
-    if (typeCount == 'initial' ||  typeCount == 'away' || typeCount == 'home' || typeCount == 'draw') {
-      _gameList[index].colorAway =
-          (_gameList[index].countAway > _gameList[index].countHome &&
-                  _gameList[index].countAway > _gameList[index].countDraw)
-              ? Colors.green
-              : Colors.white;
-      _gameList[index].colorHome =
-          (_gameList[index].countHome > _gameList[index].countAway &&
-                  _gameList[index].countHome > _gameList[index].countDraw)
-              ? Colors.green
-              : Colors.white;
-      _gameList[index].colorDraw =
-          (_gameList[index].countDraw > _gameList[index].countHome &&
-                  _gameList[index].countDraw > _gameList[index].countAway)
-              ? Colors.green
-              : Colors.white;
-    } 
 
-    if (typeCount == 'initial' ||  typeCount == 'over' || typeCount == 'under')  {
-      _gameList[index].colorOver =
-          (_gameList[index].countOver > _gameList[index].countUnder)
+    // Colores
+    if (typeCount == 'initial' ||
+        typeCount == 'away' ||
+        typeCount == 'home' ||
+        typeCount == 'draw') {
+      // 3+ para ser verde
+      _gameList[index].colorAway =
+          (_gameList[index].countAway - _gameList[index].countHome > 2 &&
+                  _gameList[index].countAway - _gameList[index].countDraw > 2)
               ? Colors.green
               : Colors.white;
-      _gameList[index].colorUnder =
-          (_gameList[index].countUnder > _gameList[index].countOver)
+
+      _gameList[index].colorHome =
+          (_gameList[index].countHome - _gameList[index].countAway > 2 &&
+                  _gameList[index].countHome - _gameList[index].countDraw > 2)
+              ? Colors.green
+              : Colors.white;
+
+      _gameList[index].colorDraw =
+          (_gameList[index].countDraw - _gameList[index].countHome > 2 &&
+                  _gameList[index].countDraw - _gameList[index].countAway > 2)
               ? Colors.green
               : Colors.white;
     }
+
+    if (typeCount == 'initial' ||
+        typeCount == 'overunder' ||
+        typeCount == 'extra') {
+      // 3+ Verde / -3 Rojo
+      print('${_gameList[index].countOverUnder}');
+      if (_gameList[index].countOverUnder > 2) {
+        _gameList[index].colorOverUnder = Colors.green;
+      } else if (_gameList[index].countOverUnder < -2) {
+        _gameList[index].colorOverUnder = Colors.red.shade600;
+      } else {
+        _gameList[index].colorOverUnder = Colors.white;
+      }
+
+      if (_gameList[index].countExtra > 2) {
+        _gameList[index].colorExtra = Colors.green;
+      } else if (_gameList[index].countExtra < -2) {
+        _gameList[index].colorExtra = Colors.red.shade600;
+      } else {
+        _gameList[index].colorExtra = Colors.white;
+      }
+    }
+    
     notifyListeners();
   }
-
-
 
   Future<dynamic> _getGamesFeed(String idSport, DateTime date) async {
     String _username = keys.SportsFeedApi;
@@ -172,10 +190,10 @@ class GameScopedModel extends Model {
     //Restar 1 hora para Central Time
     parteHora -= 1;
 
-    String horaTexto =  _addLeadingZero(parteHora);
+    String horaTexto = _addLeadingZero(parteHora);
     String minTexto = _addLeadingZero(parteMin);
-   
-    return horaTexto + ':' +  minTexto;
+
+    return horaTexto + ':' + minTexto;
   }
 
   Future fetchGames(String idSport, DateTime date) async {
@@ -188,7 +206,7 @@ class GameScopedModel extends Model {
           orElse: () => null);
     }
     if (query == null) {
-      _isLoading = true;
+      isLoading = true;
       notifyListeners();
 
       List<Game> listaDB;
@@ -224,7 +242,7 @@ class GameScopedModel extends Model {
       }
     }
 
-    _isLoading = false;
+    isLoading = false;
     notifyListeners();
   }
 }

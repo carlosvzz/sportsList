@@ -13,6 +13,7 @@ class StepperTouch extends StatefulWidget {
     this.direction = Axis.horizontal,
     this.withSpring = true,
     this.mainColor = Colors.white,
+    this.labels = '++'
   }) : super(key: key);
 
   /// the orientation of the stepper its horizontal or vertical.
@@ -30,7 +31,9 @@ class StepperTouch extends StatefulWidget {
 
   // BackColor
   final Color mainColor;
-  
+
+  // labels
+  final String labels;
 
   @override
   _Stepper2State createState() => _Stepper2State();
@@ -99,12 +102,12 @@ class _Stepper2State extends State<StepperTouch>
               Positioned(
                 left: widget.direction == Axis.horizontal ? 10.0 : null,
                 bottom: widget.direction == Axis.horizontal ? null : 10.0,
-                child: Icon(Icons.remove, size: 20.0, color: Colors.white),
+                child: Text('${widget.labels.substring(0,1)}'),
               ),
               Positioned(
                 right: widget.direction == Axis.horizontal ? 10.0 : null,
                 top: widget.direction == Axis.horizontal ? null : 10.0,
-                child: Icon(Icons.add, size: 20.0, color: Colors.white),
+                child: Text('${widget.labels.substring(1,2)}'),
               ),
               GestureDetector(
                 onHorizontalDragStart: _onPanStart,
@@ -128,7 +131,7 @@ class _Stepper2State extends State<StepperTouch>
                           '$_value',
                           key: ValueKey<int>(_value),
                           style: TextStyle(
-                              color: Color(0xFF6D72FF), fontSize: 25.0),
+                              color: Color(0xFF6D72FF), fontSize: 22.0),
                         ),
                       ),
                     ),
@@ -165,19 +168,36 @@ class _Stepper2State extends State<StepperTouch>
 
   void _onPanEnd(DragEndDetails details) {
     _controller.stop();
-    bool isHor = widget.direction == Axis.horizontal;
+    //bool isHor = widget.direction == Axis.horizontal;
     bool changed = false;
+    
     if (_controller.value <= -0.20) {
-      if (isHor == false || (isHor == true && _value > 0)) {
-        setState(() => isHor ? _value-- : _value++);
+        // LEFT
+        setState(() {
+          if (widget.labels == '++'){
+            _value++;
+          } else if (widget.labels == '+-'){
+            _value++;
+          } else {    // over/under 0 y/n
+            _value++;
+          }
+        });
         changed = true;
-      }
+      
     } else if (_controller.value >= 0.20) {
-      if (isHor == true || (isHor == false && _value >0)) {
-        setState(() => isHor ? _value++ : _value--);
+         // RIGHT
+        setState(() {
+          if (widget.labels == '++'){
+            _value++;
+          } else if (widget.labels == '+-'){
+            _value--;
+          } else {    // over/under 0 y/n
+            _value--;
+          }
+        });
         changed = true;
-      }
     }
+    
     if (widget.withSpring) {
       final SpringDescription _kDefaultSpring =
       new SpringDescription.withDampingRatio(

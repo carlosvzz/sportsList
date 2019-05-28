@@ -10,12 +10,12 @@ class CardGame extends StatelessWidget {
 
   Widget circleText(BuildContext context, String texto) {
     return Container(
-      width: 80.0,
-      height: 80.0,
+      width: 60.0,
+      height: 30.0,
       decoration: new BoxDecoration(
-        color: Theme.of(context).highlightColor,
-        shape: BoxShape.circle,
-      ),
+          color: Theme.of(context).highlightColor,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(10.0)),
       child: Center(
           child: Text(
         '$texto',
@@ -27,112 +27,124 @@ class CardGame extends StatelessWidget {
     );
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Card(
-      child: Column(
+            child: Column(
         children: <Widget>[
+          // Renglon de Abreviaciones
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                circleText(context, '${gameData.awayTeam.abbreviation}'),
+                Text(
+                  '${gameData.time}',
+                  style: Theme.of(context).textTheme.display1,
+                ),
+                circleText(context, '${gameData.homeTeam.abbreviation}'),
+              ],
+            ),
+          ),
           // Renglon de Equipos y Hora //
           Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
                   '${gameData.awayTeam.name}',
-                  style: Theme.of(context).textTheme.display1,
-                ),
-                Text(
-                  '${gameData.time}',
-                  style: Theme.of(context).textTheme.display2,
+                  style: Theme.of(context).textTheme.display4,
+                  textAlign: TextAlign.left,
                 ),
                 Text(
                   '${gameData.homeTeam.name}',
-                  style: Theme.of(context).textTheme.display1,
+                  style: Theme.of(context).textTheme.display4,
+                  textAlign: TextAlign.right,
                 ),
               ],
             ),
           ),
+
+          // Steppers
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              circleText(context, '${gameData.awayTeam.abbreviation}'),
-              // CircleAvatar(
-              //   maxRadius: 27.0,
-              //   backgroundColor: Theme.of(context).accentColor,
-              //   backgroundImage: NetworkImage(
-              //       "https://tsnimages.tsn.ca/ImageProvider/TeamLogo?seoId=san-antonio-spurs&width=128&height=128"),
-              // ),
-              Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      StepperTouch(
-                        initialValue: gameData.countAway,
-                        direction: Axis.horizontal,
-                        withSpring: true,
-                        mainColor: gameData.colorAway,
-                        onChanged: (int value) =>
-                            setContadores(gameData.id, 'away', value),
-                      ),
-                      SizedBox(width: 8.0),
-                      StepperTouch(
-                        initialValue: gameData.countHome,
-                        direction: Axis.horizontal,
-                        withSpring: true,
-                        mainColor: gameData.colorHome,
-                        onChanged: (int value) =>
-                            setContadores(gameData.id, 'home', value),
-                      ),
-                    ],
-                  ),
-                  // OVER / UNDER
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'over / under',
-                      style: Theme.of(context).textTheme.display1,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      // OVER
-                      StepperTouch(
-                        initialValue: gameData.countOver,
-                        direction: Axis.horizontal,
-                        withSpring: true,
-                        mainColor: gameData.colorOver,
-                        onChanged: (int value) =>
-                            setContadores(gameData.id, 'over', value),
-                      ),
-                      SizedBox(width: 10.0),
-                      // UNDER
-                      StepperTouch(
-                        initialValue: gameData.countUnder,
-                        direction: Axis.horizontal,
-                        withSpring: true,
-                        mainColor: gameData.colorUnder,
-                        onChanged: (int value) =>
-                            setContadores(gameData.id, 'under', value),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8.0),
-                ],
+              Container(
+                width: 40,
+                child: Text(
+                  'ML',
+                  style: Theme.of(context).textTheme.display4,
+                  textAlign: TextAlign.center,
+                ),
               ),
-              circleText(context, '${gameData.homeTeam.abbreviation}'),
-              // CircleAvatar(
-              //   maxRadius: 27.0,
-              //   backgroundColor: Theme.of(context).accentColor,
-              //   backgroundImage: NetworkImage(
-              //       "https://d1si3tbndbzwz9.cloudfront.net/basketball/team/22/logo.png"),
-              // ),
+              CustomStep(gameData.id, 'away', gameData.countAway, gameData.colorAway,setContadores),
+              SizedBox(width: 10.0),
+              CustomStep(gameData.id, 'draw', gameData.countDraw, gameData.colorDraw,setContadores),
+              SizedBox(width: 10.0),
+              CustomStep(gameData.id, 'home', gameData.countHome, gameData.colorHome,setContadores),
             ],
-          )
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Container(
+                width: 40,
+                child: Text(
+                  'O/U',
+                  style: Theme.of(context).textTheme.display4,
+                  textAlign: TextAlign.center,
+                  
+                ),
+              ),
+              CustomStep(gameData.id, 'overunder', gameData.countOverUnder, gameData.colorOverUnder,setContadores),
+              Container(
+                width: 130,
+                child: Text(
+                  'BTTS Y/N',
+                  style: Theme.of(context).textTheme.display4,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              CustomStep(gameData.id, 'extra', gameData.countExtra, gameData.colorExtra,setContadores),
+            ],
+          ),
+          SizedBox(height: 8.0),
         ],
       ),
+    );
+  }
+}
+
+class CustomStep extends StatelessWidget {
+  final String id;
+  final String custType;
+  final int custValue;
+  final Color custColor;
+  final Function fnContadores;
+  CustomStep(this.id, this.custType, this.custValue, this.custColor, this.fnContadores );
+
+  @override
+  Widget build(BuildContext context) {
+    String _label = '++';
+    if (custType == 'overunder') {
+      _label = 'OU';
+    } else if (custType == 'extra') {
+      _label = 'YN';
+    }
+
+    
+    return StepperTouch(
+      initialValue: custValue,
+      direction: Axis.horizontal,
+      labels: _label,
+      withSpring: true,
+      mainColor: custColor,
+      onChanged: (int value) => fnContadores(id, custType, value)
     );
   }
 }

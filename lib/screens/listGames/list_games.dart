@@ -19,6 +19,7 @@ class _ListGamesState extends State<ListGames> {
   @override
   void initState() {
     super.initState();   
+    print('${widget._sport} y ${widget._date.toIso8601String()}');
     widget._model.fetchGames(widget._sport, widget._date);
   }
 
@@ -40,7 +41,7 @@ class _ListGamesState extends State<ListGames> {
           } else {
             content = ListView.builder(
               itemCount: listaFiltrada.length,
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(3.0),
               itemBuilder: (context, index) {
                 return CardGame(listaFiltrada[index], gameModel.setContadores);
               },
