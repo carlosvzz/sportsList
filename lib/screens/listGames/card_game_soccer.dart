@@ -2,120 +2,131 @@ import 'package:flutter/material.dart';
 import 'package:sports_list/models/game.dart';
 import 'package:sports_list/widgets/stepper_touch.dart';
 
+import 'circle_text.dart';
+
 class CardGameSoccer extends StatelessWidget {
   CardGameSoccer(this.gameData, this.setContadores);
 
   final Game gameData;
   final Function setContadores;
 
-  Widget circleText(BuildContext context, String texto) {
-    return Container(
-      width: 60.0,
-      height: 30.0,
-      decoration: new BoxDecoration(
-          color: Theme.of(context).highlightColor,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(10.0)),
-      child: Center(
-          child: Text(
-        '$texto',
-        style: TextStyle(
-            color: Theme.of(context).accentColor,
-            fontSize: 17.0,
-            fontWeight: FontWeight.bold),
-      )),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
+    String labelMain = 'ML';
+    String labelOverUnder = 'O/U';
+    String labelExtra = 'BTTS';
+
     return Card(
       child: Column(
         children: <Widget>[
-          // Renglon de Abreviaciones
+           // Renglon de Equipos //
           Padding(
-            padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+            padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 3.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                circleText(context, '${gameData.awayTeam.abbreviation}'),
-                Text(
-                  '${gameData.time}',
-                  style: Theme.of(context).textTheme.display1,
+                SizedBox(                 
+                  width: 120,
+                                  child: Text(
+                    '${gameData.homeTeam.name}',
+                    style: Theme.of(context).textTheme.display4,
+                    textAlign: TextAlign.right,
+                  ),
                 ),
-                circleText(context, '${gameData.homeTeam.abbreviation}'),
+                SizedBox(
+                  width: 45,
+                  child: Text(
+                    '${gameData.time}',
+                    style: Theme.of(context).textTheme.display2,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(
+                  width: 120,
+                                  child: Text(
+                    '${gameData.awayTeam.name}',
+                    style: Theme.of(context).textTheme.display4,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
               ],
             ),
           ),
-          // Renglon de Equipos y Hora //
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  '${gameData.awayTeam.name}',
-                  style: Theme.of(context).textTheme.display4,
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  '${gameData.homeTeam.name}',
-                  style: Theme.of(context).textTheme.display4,
-                  textAlign: TextAlign.right,
-                ),
-              ],
-            ),
+         
+          // Renglon de Abreviaciones
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              SizedBox(
+                width: 40,
+              ),
+              CircleText( '${gameData.homeTeam.abbreviation}'),
+              SizedBox(
+                width: 5,
+              ),
+              CircleText( '${gameData.awayTeam.abbreviation}'),
+              SizedBox(
+                width: 40,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 8.0,
           ),
 
           // Steppers
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Container(
+              SizedBox(
                 width: 40,
                 child: Text(
-                  'ML',
+                  '$labelMain',
                   style: Theme.of(context).textTheme.display4,
                   textAlign: TextAlign.center,
                 ),
               ),
-              CustomStep(gameData.id, 'away', gameData.countAway,
-                  gameData.colorAway, setContadores),
-              SizedBox(width: 10.0),
-              CustomStep(gameData.id, 'draw', gameData.countDraw,
-                  gameData.colorDraw, setContadores),
-              SizedBox(width: 10.0),
               CustomStep(gameData.id, 'home', gameData.countHome,
                   gameData.colorHome, setContadores),
+              
+              CustomStep(gameData.id, 'draw', gameData.countDraw,
+                  gameData.colorDraw, setContadores),
+              CustomStep(gameData.id, 'away', gameData.countAway,
+                  gameData.colorAway, setContadores),
+              SizedBox(
+                width: 40),
             ],
           ),
           SizedBox(
             height: 8,
           ),
+
+          /////////////////// STEPPERS RENGLON 2 O/U  BTTS
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Container(
+              SizedBox(
                 width: 40,
                 child: Text(
-                  'O/U',
+                  '$labelOverUnder',
                   style: Theme.of(context).textTheme.display4,
                   textAlign: TextAlign.center,
                 ),
               ),
               CustomStep(gameData.id, 'overunder', gameData.countOverUnder,
                   gameData.colorOverUnder, setContadores),
-              Container(
-                width: 130,
+              SizedBox(width: 100,),
+              CustomStep(gameData.id, 'extra', gameData.countExtra,
+                  gameData.colorExtra, setContadores),
+              SizedBox(
+                width: 40,
                 child: Text(
-                  'BTTS Y/N',
+                  '$labelExtra',
                   style: Theme.of(context).textTheme.display4,
                   textAlign: TextAlign.center,
                 ),
               ),
-              CustomStep(gameData.id, 'extra', gameData.countExtra,
-                  gameData.colorExtra, setContadores),
             ],
           ),
           SizedBox(height: 8.0),

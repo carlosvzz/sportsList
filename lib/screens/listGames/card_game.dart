@@ -2,30 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:sports_list/models/game.dart';
 import 'package:sports_list/widgets/stepper_touch.dart';
 
+import 'circle_text.dart';
+
 class CardGame extends StatelessWidget {
   CardGame(this.gameData, this.setContadores);
 
   final Game gameData;
   final Function setContadores;
-
-  Widget circleText(BuildContext context, String texto) {
-    return Container(
-      width: 100.0,
-      height: 30.0,
-      decoration: new BoxDecoration(
-          color: Theme.of(context).highlightColor,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(10.0)),
-      child: Center(
-          child: Text(
-        '$texto',
-        style: TextStyle(
-            color: Theme.of(context).accentColor,
-            fontSize: 17.0,
-            fontWeight: FontWeight.bold),
-      )),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +24,8 @@ class CardGame extends StatelessWidget {
     }
 
     Widget extraStep() {
-      if (gameData.idSport.contains('NFL')) {
+      if (gameData.idSport.contains('NFL') ||
+          gameData.idSport.contains('NBA')) {
         return CustomStep(gameData.id, 'extra', gameData.countExtra,
             gameData.colorExtra, setContadores);
       } else {
@@ -56,29 +40,36 @@ class CardGame extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 3.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text(
-                  '${gameData.awayTeam.name}',
-                  style: Theme.of(context).textTheme.display4,
-                  textAlign: TextAlign.left,
+                SizedBox(
+                  width: 120,
+                  child: Text(
+                    '${gameData.awayTeam.name}',
+                    style: Theme.of(context).textTheme.display4,
+                    textAlign: TextAlign.right,
+                  ),
                 ),
-                Container(
-                  width: 130,
+                SizedBox(
+                  width: 45,
                   child: Text(
                     '${gameData.time}',
-                    style: Theme.of(context).textTheme.display1,
+                    style: Theme.of(context).textTheme.display2,
                     textAlign: TextAlign.center,
                   ),
                 ),
-                Text(
-                  '${gameData.homeTeam.name}',
-                  style: Theme.of(context).textTheme.display4,
-                  textAlign: TextAlign.right,
+                SizedBox(
+                  width: 120,
+                  child: Text(
+                    '${gameData.homeTeam.name}',
+                    style: Theme.of(context).textTheme.display4,
+                    textAlign: TextAlign.left,
+                  ),
                 ),
               ],
             ),
           ),
+
           // Renglon de Abreviaciones
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -86,11 +77,11 @@ class CardGame extends StatelessWidget {
               SizedBox(
                 width: 40,
               ),
-              circleText(context, '${gameData.awayTeam.abbreviation}'),
+              CircleText('${gameData.awayTeam.abbreviation}'),
               SizedBox(
                 width: 5,
               ),
-              circleText(context, '${gameData.homeTeam.abbreviation}'),
+              CircleText('${gameData.homeTeam.abbreviation}'),
               SizedBox(
                 width: 40,
               ),

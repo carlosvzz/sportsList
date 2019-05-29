@@ -6,7 +6,7 @@ import 'package:sports_list/models/game_model.dart';
 import 'package:sports_list/screens/my_appbar.dart';
 import 'package:sports_list/screens/my_bottombar.dart';
 
-import 'my_body.dart';
+import 'listGames/list_games.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -17,32 +17,41 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   CustomMenu selectedSport = new CustomMenu('X-Sports', Icons.stars);
-  CustomDate selectedDate = new CustomDate( DateTime.now());
+  CustomDate selectedDate = new CustomDate(DateTime.now());
   GameScopedModel gameModel = GameScopedModel();
 
- void setActualSport(CustomMenu valor) {
-      setState(() {
-        selectedSport.nombre = valor.nombre;
-        selectedSport.icono = valor.icono;
-      });
-    }
+  void setActualSport(CustomMenu valor) {
+    setState(() {
+      selectedSport.nombre = valor.nombre;
+      selectedSport.icono = valor.icono;
+    });
+    fetchNewGames();
+  }
 
-    void setActualDate(DateTime date) {
-      setState(() {
-       selectedDate = new CustomDate(date);
-      });
+  void setActualDate(DateTime date) {
+    setState(() {
+      selectedDate = new CustomDate(date);
+    });
+    fetchNewGames();
+  }
+
+  void fetchNewGames() {
+    if (selectedSport.nombre != 'X-Sports') {
+      gameModel.fetchGames(selectedSport.nombre, selectedDate.date);
     }
+  }
 
   @override
   Widget build(BuildContext context) {
-        return ScopedModel<GameScopedModel>(
+    return ScopedModel<GameScopedModel>(
       model: gameModel,
       child: Scaffold(
         appBar: MyAppBar(selectedSport),
-        bottomNavigationBar: MyBottomBar(setActualSport,setActualDate, selectedDate),
-         body: selectedSport.nombre == 'X-Sports'
+        bottomNavigationBar:
+            MyBottomBar(setActualSport, setActualDate, selectedDate),
+        body: selectedSport.nombre == 'X-Sports'
             ? Container()
-            : MyBody(selectedSport.nombre, selectedDate.date, gameModel)
+            : ListGames(selectedSport.nombre, selectedDate.date),
       ),
     );
   }
