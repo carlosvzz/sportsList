@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:sports_list/models/game.dart';
 import 'package:sports_list/widgets/stepper_touch.dart';
 
-class CardGame extends StatelessWidget {
-  CardGame(this.gameData, this.setContadores);
+class CardGameSoccer extends StatelessWidget {
+  CardGameSoccer(this.gameData, this.setContadores);
 
   final Game gameData;
   final Function setContadores;
 
   Widget circleText(BuildContext context, String texto) {
     return Container(
-      width: 100.0,
+      width: 60.0,
       height: 30.0,
       decoration: new BoxDecoration(
           color: Theme.of(context).highlightColor,
@@ -29,47 +29,35 @@ class CardGame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String labelMain = 'ML';
-    String labelOverUnder = 'O/U';
-    String labelExtra = '';
-
-    // MAIN  >> NFL y NBA = Spread || NHL y MLB es ML
-    // EXTRA >> NFL y NBA = ML || NHL y MLB no aplica
-    if (gameData.idSport.contains('NFL') || gameData.idSport.contains('NBA')) {
-      labelMain = 'SP +/-';
-      labelExtra = 'ML';
-    }
-
-    Widget extraStep() {
-      if (gameData.idSport.contains('NFL')) {
-        return CustomStep(gameData.id, 'extra', gameData.countExtra,
-            gameData.colorExtra, setContadores);
-      } else {
-        return SizedBox(width: 110.0);
-      }
-    }
-
     return Card(
       child: Column(
         children: <Widget>[
-          // Renglon de Equipos //
+          // Renglon de Abreviaciones
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 3.0),
+            padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                circleText(context, '${gameData.awayTeam.abbreviation}'),
+                Text(
+                  '${gameData.time}',
+                  style: Theme.of(context).textTheme.display1,
+                ),
+                circleText(context, '${gameData.homeTeam.abbreviation}'),
+              ],
+            ),
+          ),
+          // Renglon de Equipos y Hora //
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
                   '${gameData.awayTeam.name}',
                   style: Theme.of(context).textTheme.display4,
                   textAlign: TextAlign.left,
-                ),
-                Container(
-                  width: 130,
-                  child: Text(
-                    '${gameData.time}',
-                    style: Theme.of(context).textTheme.display1,
-                    textAlign: TextAlign.center,
-                  ),
                 ),
                 Text(
                   '${gameData.homeTeam.name}',
@@ -79,76 +67,55 @@ class CardGame extends StatelessWidget {
               ],
             ),
           ),
-          // Renglon de Abreviaciones
+
+          // Steppers
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              SizedBox(
-                width: 40,
-              ),
-              circleText(context, '${gameData.awayTeam.abbreviation}'),
-              SizedBox(
-                width: 5,
-              ),
-              circleText(context, '${gameData.homeTeam.abbreviation}'),
-              SizedBox(
-                width: 40,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 8.0,
-          ),
-          ////////////////////////////////////////////////////////
-          // STEPPERS MAIN --
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              SizedBox(
+              Container(
                 width: 40,
                 child: Text(
-                  '$labelMain',
+                  'ML',
                   style: Theme.of(context).textTheme.display4,
                   textAlign: TextAlign.center,
                 ),
               ),
               CustomStep(gameData.id, 'away', gameData.countAway,
                   gameData.colorAway, setContadores),
-              SizedBox(width: 5.0),
+              SizedBox(width: 10.0),
+              CustomStep(gameData.id, 'draw', gameData.countDraw,
+                  gameData.colorDraw, setContadores),
+              SizedBox(width: 10.0),
               CustomStep(gameData.id, 'home', gameData.countHome,
                   gameData.colorHome, setContadores),
-              SizedBox(
-                width: 40,
-              ),
             ],
           ),
           SizedBox(
             height: 8,
           ),
-          ////////// STEPPERS RENGLON 2 O/U + EXTRA
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              SizedBox(
+              Container(
                 width: 40,
                 child: Text(
-                  '$labelOverUnder',
+                  'O/U',
                   style: Theme.of(context).textTheme.display4,
                   textAlign: TextAlign.center,
                 ),
               ),
               CustomStep(gameData.id, 'overunder', gameData.countOverUnder,
                   gameData.colorOverUnder, setContadores),
-              SizedBox(width: 5.0),
-              extraStep(),
-              SizedBox(
-                width: 40,
+              Container(
+                width: 130,
                 child: Text(
-                  '$labelExtra',
+                  'BTTS Y/N',
                   style: Theme.of(context).textTheme.display4,
                   textAlign: TextAlign.center,
                 ),
               ),
+              CustomStep(gameData.id, 'extra', gameData.countExtra,
+                  gameData.colorExtra, setContadores),
             ],
           ),
           SizedBox(height: 8.0),
@@ -173,7 +140,7 @@ class CustomStep extends StatelessWidget {
     if (custType == 'overunder') {
       _label = 'OU';
     } else if (custType == 'extra') {
-      _label = '12';
+      _label = 'YN';
     }
 
     return StepperTouch(
