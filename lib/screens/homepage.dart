@@ -5,6 +5,7 @@ import 'package:sports_list/models/custom_menu.dart';
 import 'package:sports_list/models/game_model.dart';
 import 'package:sports_list/screens/my_appbar.dart';
 import 'package:sports_list/screens/my_bottombar.dart';
+import 'package:sports_list/widgets/main_drawer.dart';
 
 import 'listGames/list_games.dart';
 
@@ -47,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       model: gameModel,
       child: Scaffold(
         appBar: MyAppBar(selectedSport),
+        drawer: MainDrawer(),
         bottomNavigationBar:
             MyBottomBar(setActualSport, setActualDate, selectedDate),
         body: selectedSport.nombre == 'X-Sports'

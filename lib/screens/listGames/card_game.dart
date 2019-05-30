@@ -16,6 +16,8 @@ class CardGame extends StatelessWidget {
     String labelOverUnder = 'O/U';
     String labelExtra = '';
 
+    print('el sport es ${gameData.idSport} y el id es ${gameData.id}');
+
     // MAIN  >> NFL y NBA = Spread || NHL y MLB es ML
     // EXTRA >> NFL y NBA = ML || NHL y MLB no aplica
     if (gameData.idSport.contains('NFL') || gameData.idSport.contains('NBA')) {
@@ -160,7 +162,9 @@ class CustomStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _label = '++';
+    print('el id del step es $id');
+
+    String _label = '+-';
     if (custType == 'overunder') {
       _label = 'OU';
     } else if (custType == 'extra') {

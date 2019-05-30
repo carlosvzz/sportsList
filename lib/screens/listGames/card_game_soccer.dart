@@ -10,7 +10,6 @@ class CardGameSoccer extends StatelessWidget {
   final Game gameData;
   final Function setContadores;
 
-
   @override
   Widget build(BuildContext context) {
     String labelMain = 'ML';
@@ -20,15 +19,15 @@ class CardGameSoccer extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-           // Renglon de Equipos //
+          // Renglon de Equipos //
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 3.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                SizedBox(                 
+                SizedBox(
                   width: 120,
-                                  child: Text(
+                  child: Text(
                     '${gameData.homeTeam.name}',
                     style: Theme.of(context).textTheme.display4,
                     textAlign: TextAlign.right,
@@ -44,7 +43,7 @@ class CardGameSoccer extends StatelessWidget {
                 ),
                 SizedBox(
                   width: 120,
-                                  child: Text(
+                  child: Text(
                     '${gameData.awayTeam.name}',
                     style: Theme.of(context).textTheme.display4,
                     textAlign: TextAlign.left,
@@ -53,7 +52,7 @@ class CardGameSoccer extends StatelessWidget {
               ],
             ),
           ),
-         
+
           // Renglon de Abreviaciones
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -61,11 +60,11 @@ class CardGameSoccer extends StatelessWidget {
               SizedBox(
                 width: 40,
               ),
-              CircleText( '${gameData.homeTeam.abbreviation}'),
+              CircleText('${gameData.homeTeam.abbreviation}'),
               SizedBox(
                 width: 5,
               ),
-              CircleText( '${gameData.awayTeam.abbreviation}'),
+              CircleText('${gameData.awayTeam.abbreviation}'),
               SizedBox(
                 width: 40,
               ),
@@ -89,13 +88,11 @@ class CardGameSoccer extends StatelessWidget {
               ),
               CustomStep(gameData.id, 'home', gameData.countHome,
                   gameData.colorHome, setContadores),
-              
               CustomStep(gameData.id, 'draw', gameData.countDraw,
                   gameData.colorDraw, setContadores),
               CustomStep(gameData.id, 'away', gameData.countAway,
                   gameData.colorAway, setContadores),
-              SizedBox(
-                width: 40),
+              SizedBox(width: 40),
             ],
           ),
           SizedBox(
@@ -116,7 +113,9 @@ class CardGameSoccer extends StatelessWidget {
               ),
               CustomStep(gameData.id, 'overunder', gameData.countOverUnder,
                   gameData.colorOverUnder, setContadores),
-              SizedBox(width: 100,),
+              SizedBox(
+                width: 100,
+              ),
               CustomStep(gameData.id, 'extra', gameData.countExtra,
                   gameData.colorExtra, setContadores),
               SizedBox(
@@ -147,7 +146,7 @@ class CustomStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _label = '++';
+    String _label = '+-';
     if (custType == 'overunder') {
       _label = 'OU';
     } else if (custType == 'extra') {

@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 
-
 /// the concept of the widget inspired
 /// from [Nikolay Kuchkarov](https://dribbble.com/shots/3368130-Stepper-Touch).
 /// i extended  the functionality to be more useful in real world applications
 class StepperTouch extends StatefulWidget {
-  const StepperTouch({
-    Key key,
-    this.initialValue,
-    this.onChanged,
-    this.direction = Axis.horizontal,
-    this.withSpring = true,
-    this.mainColor = Colors.white,
-    this.labels = '++'
-  }) : super(key: key);
+  const StepperTouch(
+      {Key key,
+      this.initialValue,
+      this.onChanged,
+      this.direction = Axis.horizontal,
+      this.withSpring = true,
+      this.mainColor = Colors.white,
+      this.labels = '++'})
+      : super(key: key);
 
   /// the orientation of the stepper its horizontal or vertical.
   final Axis direction;
@@ -83,6 +82,56 @@ class _Stepper2State extends State<StepperTouch>
     }
   }
 
+  void _updateValue(String side) {
+    int newValue = _value;
+
+    if (side == 'L') {
+      // LEFT
+      switch (widget.labels) {
+        case '++':
+          newValue++;
+          break;
+
+        case '+-':
+          newValue++;
+          break;
+
+        case '-+':
+          newValue--;
+          break;
+
+        default:
+          newValue++;
+      }
+    } else {
+      // RIGHT
+      switch (widget.labels) {
+        case '++':
+          newValue++;
+          break;
+
+        case '+-':
+          newValue--;
+          break;
+
+        case '-+':
+          newValue++;
+          break;
+
+        default:
+          newValue--;
+      }
+    }
+
+    setState(() {
+      _value = newValue;
+    });
+
+    if (widget.onChanged != null) {
+      widget.onChanged(_value);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FittedBox(
@@ -102,12 +151,22 @@ class _Stepper2State extends State<StepperTouch>
               Positioned(
                 left: widget.direction == Axis.horizontal ? 10.0 : null,
                 bottom: widget.direction == Axis.horizontal ? null : 10.0,
-                child: Text('${widget.labels.substring(0,1)}'),
+                child: GestureDetector(
+                    onTap: () => _updateValue('L'),
+                    child: Text(
+                      '${widget.labels.substring(0, 1)}',
+                      style: TextStyle(fontSize: 20.0),
+                    )),
               ),
               Positioned(
                 right: widget.direction == Axis.horizontal ? 10.0 : null,
                 top: widget.direction == Axis.horizontal ? null : 10.0,
-                child: Text('${widget.labels.substring(1,2)}'),
+                child: GestureDetector(
+                    onTap: () => _updateValue('R'),
+                    child: Text(
+                      '${widget.labels.substring(1, 2)}',
+                      style: TextStyle(fontSize: 20.0),
+                    )),
               ),
               GestureDetector(
                 onHorizontalDragStart: _onPanStart,
@@ -131,7 +190,7 @@ class _Stepper2State extends State<StepperTouch>
                           '$_value',
                           key: ValueKey<int>(_value),
                           style: TextStyle(
-                              color: Color(0xFF6D72FF), fontSize: 22.0),
+                              color: Color(0xFF6D72FF), fontSize: 18.0),
                         ),
                       ),
                     ),
@@ -169,38 +228,17 @@ class _Stepper2State extends State<StepperTouch>
   void _onPanEnd(DragEndDetails details) {
     _controller.stop();
     //bool isHor = widget.direction == Axis.horizontal;
-    bool changed = false;
-    
+    //bool changed = false;
+
     if (_controller.value <= -0.20) {
-        // LEFT
-        setState(() {
-          if (widget.labels == '++'){
-            _value++;
-          } else if (widget.labels == '+-'){
-            _value++;
-          } else {    // over/under 0 y/n
-            _value++;
-          }
-        });
-        changed = true;
-      
+      _updateValue('L');
     } else if (_controller.value >= 0.20) {
-         // RIGHT
-        setState(() {
-          if (widget.labels == '++'){
-            _value++;
-          } else if (widget.labels == '+-'){
-            _value--;
-          } else {    // over/under 0 y/n
-            _value--;
-          }
-        });
-        changed = true;
+      _updateValue('R');
     }
-    
+
     if (widget.withSpring) {
       final SpringDescription _kDefaultSpring =
-      new SpringDescription.withDampingRatio(
+          new SpringDescription.withDampingRatio(
         mass: 0.9,
         stiffness: 250.0,
         ratio: 0.6,
@@ -215,10 +253,6 @@ class _Stepper2State extends State<StepperTouch>
     } else {
       _controller.animateTo(0.0,
           curve: Curves.bounceOut, duration: Duration(milliseconds: 500));
-    }
-
-    if (changed && widget.onChanged != null) {
-      widget.onChanged(_value);
     }
   }
 }

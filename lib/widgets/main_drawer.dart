@@ -1,21 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sports_list/models/custom_menu.dart';
-import 'custom_icons.dart';
-
-
+import 'package:scoped_model/scoped_model.dart';
+import 'package:sports_list/models/game_model.dart';
 
 class MainDrawer extends StatelessWidget {
-  MainDrawer(this.fnSetActualSports);
-  final Function fnSetActualSports;
-
-  static final List<CustomMenu> _listMenuData = [
-    //new CustomMenu('Liga MX', CustomIcons.soccer_ball),
-    new CustomMenu('MLB', CustomIcons.baseball),
-    new CustomMenu('NBA', CustomIcons.dribbble),
-    new CustomMenu('NHL', CustomIcons.hockey),
-    new CustomMenu('NFL', CustomIcons.football),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return new Drawer(
@@ -26,21 +13,51 @@ class MainDrawer extends StatelessWidget {
             decoration: new BoxDecoration(color: Theme.of(context).accentColor),
           ),
           Column(
-            children:
-                _listMenuData.map((data) => customTile(context, data)).toList(),
+            children: <Widget>[
+              ScopedModelDescendant<GameScopedModel>(
+                  builder: (context, child, gameModel) {
+                return ListTile(
+                    leading: Icon(Icons.disc_full),
+                    title: Text('Limpiar DB'),
+                    onTap: () {
+                      _showDialog(context, gameModel);
+                    });
+              }),
+            ],
           ),
         ],
       ),
     );
   }
 
-  ListTile customTile(BuildContext context, CustomMenu data) {
-    return ListTile(
-      leading: Icon(data.icono),
-      title: Text(data.nombre),
-      onTap: () {
-        this.fnSetActualSports(data);
-        Navigator.pop(context);
+  void _showDialog(BuildContext context, GameScopedModel model) async {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (
+        BuildContext context,
+      ) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Limpiar DB"),
+          content: new Text("Limpiamos firestore, seguro ? "),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("NO"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            new FlatButton(
+              child: new Text("SI"),
+              onPressed: () {
+                model.deleteCollection();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
       },
     );
   }
