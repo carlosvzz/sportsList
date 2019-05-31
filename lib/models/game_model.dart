@@ -209,7 +209,6 @@ class GameScopedModel extends Model {
         typeCount == 'overunder' ||
         typeCount == 'extra') {
       // 3+ Verde / -3 Rojo
-      print('${_gameList[index].countOverUnder}');
       if (_gameList[index].countOverUnder > 2) {
         _gameList[index].colorOverUnder = Colors.green;
       } else if (_gameList[index].countOverUnder < -2) {
@@ -268,7 +267,6 @@ class GameScopedModel extends Model {
     templist = collectionSnapshot.documents;
 
     list = templist.map((DocumentSnapshot docSnapshot) {
-      //print('data -> ${docSnapshot.data}');
       return new Game.fromMap(docSnapshot.data);
     }).toList();
 
@@ -277,8 +275,15 @@ class GameScopedModel extends Model {
 
   Future deleteCollection() async {
     Firestore.instance.collection("games").getDocuments().then((snapshot) {
+      DateTime _now = DateTime.now();
+      DateTime _today = DateTime(_now.year, _now.month, _now.day);
+
       for (DocumentSnapshot ds in snapshot.documents) {
-        ds.reference.delete();
+        DateTime _docDate = ds.data['date'].toDate();
+        // Borrar solo si es antes de Hoy
+        if (_docDate.isBefore(_today)) {
+          ds.reference.delete();
+        }
       }
     });
     _gameList = [];

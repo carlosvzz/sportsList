@@ -139,7 +139,7 @@ class _Stepper2State extends State<StepperTouch>
         //width: widget.direction == Axis.horizontal ? 280.0 : 120.0,
         //height: widget.direction == Axis.horizontal ? 120.0 : 280.0,
         width: widget.direction == Axis.horizontal ? 100.0 : 120.0,
-        height: widget.direction == Axis.horizontal ? 35.0 : 280.0,
+        height: widget.direction == Axis.horizontal ? 40.0 : 280.0,
         child: Material(
           type: MaterialType.canvas,
           clipBehavior: Clip.antiAlias,
@@ -149,24 +149,42 @@ class _Stepper2State extends State<StepperTouch>
             alignment: Alignment.center,
             children: <Widget>[
               Positioned(
-                left: widget.direction == Axis.horizontal ? 10.0 : null,
+                left: widget.direction == Axis.horizontal ? 4.0 : null,
                 bottom: widget.direction == Axis.horizontal ? null : 10.0,
                 child: GestureDetector(
-                    onTap: () => _updateValue('L'),
-                    child: Text(
-                      '${widget.labels.substring(0, 1)}',
-                      style: TextStyle(fontSize: 20.0),
-                    )),
+                  onTap: () => _updateValue('L'),
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    child: Center(
+                      child: Text(
+                        '${widget.labels.substring(0, 1)}',
+                        style: TextStyle(
+                          fontSize: 17.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
               Positioned(
-                right: widget.direction == Axis.horizontal ? 10.0 : null,
+                right: widget.direction == Axis.horizontal ? 4.0 : null,
                 top: widget.direction == Axis.horizontal ? null : 10.0,
                 child: GestureDetector(
-                    onTap: () => _updateValue('R'),
-                    child: Text(
-                      '${widget.labels.substring(1, 2)}',
-                      style: TextStyle(fontSize: 20.0),
-                    )),
+                  onTap: () => _updateValue('R'),
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    child: Center(
+                      child: Text(
+                        '${widget.labels.substring(1, 2)}',
+                        style: TextStyle(
+                          fontSize: 17.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
               GestureDetector(
                 onHorizontalDragStart: _onPanStart,

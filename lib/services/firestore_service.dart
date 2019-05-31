@@ -14,7 +14,6 @@ class FirestoreService<T extends BaseModel> {
     final TransactionHandler createTransaction = (Transaction tx) async {
       final DocumentSnapshot ds = await tx.get(_objectCollection.document());
 
-      print('el doc es ${ds.documentID}');
       obj.id = ds.documentID;
       final Map<String, dynamic> data = obj.toMap();
 
@@ -28,10 +27,8 @@ class FirestoreService<T extends BaseModel> {
           .then((mapData) {
         //var objNew = obj.createNew();
         //return objNew.fromMap(mapData);
-        print('${mapData['id']}');
         return mapData['id'];
       }).catchError((error) {
-        print('error : $error');
         return null;
       });
     } catch (e) {

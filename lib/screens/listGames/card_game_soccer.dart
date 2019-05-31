@@ -146,7 +146,7 @@ class CustomStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _label = '+-';
+    String _label = '++';
     if (custType == 'overunder') {
       _label = 'OU';
     } else if (custType == 'extra') {
