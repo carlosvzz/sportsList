@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sports_list/models/game.dart';
-import 'package:sports_list/widgets/stepper_touch.dart';
-
+import 'package:sports_list/widgets/custom_step.dart';
 import 'circle_text.dart';
 
 class CardGame extends StatelessWidget {
@@ -26,10 +25,22 @@ class CardGame extends StatelessWidget {
     Widget extraStep() {
       if (gameData.idSport.contains('NFL') ||
           gameData.idSport.contains('NBA')) {
-        return CustomStep(gameData.id, 'extra', gameData.countExtra,
-            gameData.colorExtra, setContadores);
+        return Row(
+          children: <Widget>[
+            SizedBox(
+              width: 40,
+              child: Text(
+                '$labelExtra',
+                style: Theme.of(context).textTheme.display4,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            CustomStep(gameData.id, 'extra', gameData.countExtra,
+                gameData.colorExtra, setContadores),
+          ],
+        );
       } else {
-        return SizedBox(width: 110.0);
+        return Container();
       }
     }
 
@@ -79,7 +90,12 @@ class CardGame extends StatelessWidget {
               ),
               CircleText('${gameData.awayTeam.abbreviation}'),
               SizedBox(
-                width: 5,
+                width: 40,
+                child: Text(
+                  '$labelMain',
+                  style: Theme.of(context).textTheme.display4,
+                  textAlign: TextAlign.center,
+                ),
               ),
               CircleText('${gameData.homeTeam.abbreviation}'),
               SizedBox(
@@ -95,22 +111,13 @@ class CardGame extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              SizedBox(
-                width: 40,
-                child: Text(
-                  '$labelMain',
-                  style: Theme.of(context).textTheme.display4,
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              SizedBox(width: 5),
               CustomStep(gameData.id, 'away', gameData.countAway,
                   gameData.colorAway, setContadores),
-              SizedBox(width: 5.0),
+              SizedBox(width: 10),
               CustomStep(gameData.id, 'home', gameData.countHome,
                   gameData.colorHome, setContadores),
-              SizedBox(
-                width: 40,
-              ),
+              SizedBox(width: 5),
             ],
           ),
           SizedBox(
@@ -118,7 +125,7 @@ class CardGame extends StatelessWidget {
           ),
           ////////// STEPPERS RENGLON 2 O/U + EXTRA
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               SizedBox(
                 width: 40,
@@ -130,49 +137,14 @@ class CardGame extends StatelessWidget {
               ),
               CustomStep(gameData.id, 'overunder', gameData.countOverUnder,
                   gameData.colorOverUnder, setContadores),
-              SizedBox(width: 5.0),
+              Spacer(),
+              // extra solo en NFL y NBA > NHL y MLB se muestra vacío
               extraStep(),
-              SizedBox(
-                width: 40,
-                child: Text(
-                  '$labelExtra',
-                  style: Theme.of(context).textTheme.display4,
-                  textAlign: TextAlign.center,
-                ),
-              ),
             ],
           ),
           SizedBox(height: 8.0),
         ],
       ),
     );
-  }
-}
-
-class CustomStep extends StatelessWidget {
-  final String id;
-  final String custType;
-  final int custValue;
-  final Color custColor;
-  final Function fnContadores;
-  CustomStep(this.id, this.custType, this.custValue, this.custColor,
-      this.fnContadores);
-
-  @override
-  Widget build(BuildContext context) {
-    String _label = '++';
-    if (custType == 'overunder') {
-      _label = 'OU';
-    } else if (custType == 'extra') {
-      _label = 'AH';
-    }
-
-    return StepperTouch(
-        initialValue: custValue,
-        direction: Axis.horizontal,
-        labels: _label,
-        withSpring: true,
-        mainColor: custColor,
-        onChanged: (int value) => fnContadores(id, custType, value));
   }
 }

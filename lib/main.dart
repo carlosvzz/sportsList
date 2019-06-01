@@ -5,7 +5,7 @@ import 'package:sports_list/screens/homepage.dart';
 void main() async {
   final Firestore firestore = Firestore();
   await firestore.settings(timestampsInSnapshotsEnabled: true);
-  
+
   runApp(MyApp());
 }
 
@@ -22,10 +22,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-
 ThemeData _myTheme() {
-  const Color myPrimaryColor =  Color(0xFF005DAB);
+  const Color myPrimaryColor = Color(0xFF005DAB);
   const Color myAccentColor = Color(0xFFFCB034);
 
   return ThemeData(
@@ -38,11 +36,8 @@ ThemeData _myTheme() {
       accentColor: myAccentColor,
       buttonColor: myPrimaryColor,
       textTheme: TextTheme(
-
         headline: TextStyle(
-            fontSize: 25.0,
-            fontWeight: FontWeight.bold,
-            color: myAccentColor),
+            fontSize: 25.0, fontWeight: FontWeight.bold, color: myAccentColor),
         title: TextStyle(
             fontSize: 30.0, fontStyle: FontStyle.italic, color: Colors.green),
         body1: TextStyle(
@@ -51,13 +46,15 @@ ThemeData _myTheme() {
         body2: TextStyle(
             fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
         display1: TextStyle(
-            fontSize: 18.0, fontWeight: FontWeight.bold,color: Colors.white70),
-        display2: TextStyle(
-            fontSize: 16.0,  color: myAccentColor),
-        display3: TextStyle(
-            fontSize: 14.0, color: myAccentColor),
-         display4: TextStyle(fontSize: 15.0, color: Colors.white70, fontWeight: FontWeight.bold),
-
+            fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white70),
+        display2: TextStyle(fontSize: 16.0, color: myAccentColor),
+        display3: TextStyle(fontSize: 14.0, color: myAccentColor),
+        display4: TextStyle(
+            fontSize: 15.0, color: Colors.white70, fontWeight: FontWeight.bold),
+        caption: TextStyle(
+            fontSize: 25.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey.shade800),
         button: TextStyle(
           fontSize: 17.0,
         ),

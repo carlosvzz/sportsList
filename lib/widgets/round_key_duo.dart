@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'contador_texto.dart';
+
 class RoundKeyDuo extends StatefulWidget {
   final String label;
   final Color color;
@@ -23,8 +25,6 @@ class _RoundKeyDuoState extends State<RoundKeyDuo> {
 
   @override
   Widget build(BuildContext context) {
-    Widget content;
-
     void _updateValue(bool isSum) {
       setState(() {
         if (isSum) {
@@ -51,7 +51,7 @@ class _RoundKeyDuoState extends State<RoundKeyDuo> {
           backgroundColor: Theme.of(context).highlightColor,
           onPressed: () => _updateValue(true),
         ),
-        ContadorTexto(_value),
+        ContadorTexto(_value, widget.color),
         FloatingActionButton(
           mini: true,
           child: Text(
@@ -62,32 +62,6 @@ class _RoundKeyDuoState extends State<RoundKeyDuo> {
           onPressed: () => _updateValue(false),
         ),
       ],
-    );
-  }
-}
-
-class ContadorTexto extends StatelessWidget {
-  final int value;
-
-  const ContadorTexto(this.value);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 50.0,
-      height: 50.0,
-      decoration: new BoxDecoration(
-          color: Theme.of(context).buttonColor,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(10.0)),
-      child: Center(
-          child: Text(
-        '$value',
-        style: TextStyle(
-            color: Theme.of(context).accentColor,
-            fontSize: 17.0,
-            fontWeight: FontWeight.bold),
-      )),
     );
   }
 }

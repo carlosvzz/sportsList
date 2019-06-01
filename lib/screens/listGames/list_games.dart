@@ -39,7 +39,7 @@ class _ListGamesState extends State<ListGames> {
                 if (listaFiltrada[index]
                     .idSport
                     .toUpperCase()
-                    .contains('NBA')) {
+                    .contains('SOCCER')) {
                   // TODO SOCCER
                   return CardGameSoccer(
                       listaFiltrada[index], gameModel.setContadores);

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sports_list/models/game.dart';
-import 'package:sports_list/widgets/round_key.dart';
-import 'package:sports_list/widgets/round_key_duo.dart';
-import 'package:sports_list/widgets/stepper_touch.dart';
-
+import 'package:sports_list/widgets/custom_step.dart';
 import 'circle_text.dart';
 
 class CardGameSoccer extends StatelessWidget {
@@ -81,6 +78,7 @@ class CardGameSoccer extends StatelessWidget {
             height: 8.0,
           ),
 
+////////////////////////////////////////////////////////
           // Steppers MAIN
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,7 +99,7 @@ class CardGameSoccer extends StatelessWidget {
 
           /////////////////// STEPPERS RENGLON 2 O/U  BTTS
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               SizedBox(
                 width: 40,
@@ -113,9 +111,7 @@ class CardGameSoccer extends StatelessWidget {
               ),
               CustomStep(gameData.id, 'overunder', gameData.countOverUnder,
                   gameData.colorOverUnder, setContadores),
-              SizedBox(
-                width: 8,
-              ),
+              Spacer(),
               SizedBox(
                 width: 40,
                 child: Text(
@@ -132,72 +128,5 @@ class CardGameSoccer extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class ContadorTexto extends StatelessWidget {
-  final int value;
-
-  const ContadorTexto(this.value);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 40.0,
-      height: 40.0,
-      decoration: new BoxDecoration(
-          color: Theme.of(context).buttonColor,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(10.0)),
-      child: Center(
-          child: Text(
-        '$value',
-        style: TextStyle(
-            color: Theme.of(context).accentColor,
-            fontSize: 17.0,
-            fontWeight: FontWeight.bold),
-      )),
-    );
-  }
-}
-
-class CustomStep extends StatelessWidget {
-  final String id;
-  final String custType;
-  final int custValue;
-  final Color custColor;
-  final Function fnContadores;
-  CustomStep(this.id, this.custType, this.custValue, this.custColor,
-      this.fnContadores);
-
-  @override
-  Widget build(BuildContext context) {
-    bool _isMini;
-    String _finalLabel;
-
-//Datos Main
-    _isMini = false;
-    _finalLabel = custValue.toString();
-
-// Datos Extras
-    switch (custType) {
-      case 'overunder':
-        _isMini = true;
-        break;
-      case 'extra':
-        _isMini = true;
-        break;
-
-      default:
-    }
-    //print('valor es $_isMini y $_finalLabel y ${custValue.toString()}');
-
-    if (_isMini) {
-      return RoundKeyDuo(_finalLabel, custColor, custValue,
-          (int value) => fnContadores(id, custType, value));
-    } else {
-      return RoundKey(_finalLabel, custColor, custValue,
-          (int value) => fnContadores(id, custType, value));
-    }
   }
 }

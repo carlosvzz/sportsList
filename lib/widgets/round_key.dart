@@ -40,7 +40,7 @@ class _RoundKeyState extends State<RoundKey> {
       mini: false,
       child: Text(
         '${_value.toString()}',
-        style: Theme.of(context).textTheme.headline,
+        style: Theme.of(context).textTheme.caption,
       ),
       backgroundColor: widget.color,
       onPressed: () => _updateValue(),

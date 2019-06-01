@@ -83,9 +83,9 @@ class GameScopedModel extends Model {
       bool hayMax = false;
       Game game = _gameList[index];
 
-      _gameList[index].colorAway = Colors.white;
-      _gameList[index].colorDraw = Colors.white;
-      _gameList[index].colorHome = Colors.white;
+      _gameList[index].colorAway = Colors.blueGrey.shade700;
+      _gameList[index].colorDraw = Colors.blueGrey.shade700;
+      _gameList[index].colorHome = Colors.blueGrey.shade700;
 
       // Valor maximo
       if (game.countAway > valorMax) valorMax = game.countAway;
@@ -96,19 +96,19 @@ class GameScopedModel extends Model {
       if (game.countAway - game.countHome > 2 &&
           game.countAway - game.countDraw > 2) {
         hayMax = true;
-        _gameList[index].colorAway = Colors.green;
+        _gameList[index].colorAway = Colors.green.shade800;
       }
 
       if (game.countHome - game.countAway > 2 &&
           game.countHome - game.countDraw > 2) {
         hayMax = true;
-        _gameList[index].colorHome = Colors.green;
+        _gameList[index].colorHome = Colors.green.shade800;
       }
 
       if (game.countDraw - game.countAway > 2 &&
           game.countDraw - game.countHome > 2) {
         hayMax = true;
-        _gameList[index].colorDraw = Colors.green;
+        _gameList[index].colorDraw = Colors.green.shade800;
       }
 
       ///////////////////////
@@ -118,25 +118,25 @@ class GameScopedModel extends Model {
         if (game.idSport.toLowerCase().contains('soccer') == false) {
           // Juegos USA , no hay empate, solo poner amarillo el mayor
           if (game.countAway == game.countHome) {
-            _gameList[index].colorAway = Colors.yellowAccent.shade400;
-            _gameList[index].colorHome = Colors.yellowAccent.shade400;
+            _gameList[index].colorAway = Colors.yellowAccent.shade700;
+            _gameList[index].colorHome = Colors.yellowAccent.shade700;
           } else if (game.countAway > game.countHome) {
-            _gameList[index].colorAway = Colors.yellowAccent.shade400;
+            _gameList[index].colorAway = Colors.yellowAccent.shade700;
           } else {
-            _gameList[index].colorHome = Colors.yellowAccent.shade400;
+            _gameList[index].colorHome = Colors.yellowAccent.shade700;
           }
         } else {
           // Juegos Soccer, considera EMPATE
           //// Maximo AWAY
           if (game.countAway == valorMax) {
-            _gameList[index].colorAway = Colors.yellowAccent.shade400;
+            _gameList[index].colorAway = Colors.yellowAccent.shade700;
 
             //2do lugar
             if (game.countDraw == game.countAway)
-              _gameList[index].colorDraw = Colors.yellowAccent.shade400;
+              _gameList[index].colorDraw = Colors.yellowAccent.shade700;
 
             if (game.countHome == game.countAway)
-              _gameList[index].colorHome = Colors.yellowAccent.shade400;
+              _gameList[index].colorHome = Colors.yellowAccent.shade700;
 
             if (game.countDraw < game.countAway &&
                 game.countDraw == game.countHome) {
@@ -157,11 +157,11 @@ class GameScopedModel extends Model {
 
           //// MAXIMO DRAW
           if (game.countDraw == valorMax) {
-            _gameList[index].colorDraw = Colors.yellowAccent.shade400;
+            _gameList[index].colorDraw = Colors.yellowAccent.shade700;
 
             //2do lugar
             if (game.countHome == game.countDraw)
-              _gameList[index].colorHome = Colors.yellowAccent.shade400;
+              _gameList[index].colorHome = Colors.yellowAccent.shade700;
 
             if (game.countAway < game.countDraw &&
                 game.countAway == game.countHome) {
@@ -182,7 +182,7 @@ class GameScopedModel extends Model {
 
           //// MAXIMO HOME
           if (game.countHome == valorMax) {
-            _gameList[index].colorHome = Colors.yellowAccent.shade400;
+            _gameList[index].colorHome = Colors.yellowAccent.shade700;
 
             //2do lugar
             if (game.countAway < game.countHome &&
@@ -210,19 +210,19 @@ class GameScopedModel extends Model {
         typeCount == 'extra') {
       // 3+ Verde / -3 Rojo
       if (_gameList[index].countOverUnder > 2) {
-        _gameList[index].colorOverUnder = Colors.green;
+        _gameList[index].colorOverUnder = Colors.green.shade800;
       } else if (_gameList[index].countOverUnder < -2) {
         _gameList[index].colorOverUnder = Colors.red.shade600;
       } else {
-        _gameList[index].colorOverUnder = Colors.white;
+        _gameList[index].colorOverUnder = Colors.blueGrey.shade700;
       }
 
       if (_gameList[index].countExtra > 2) {
-        _gameList[index].colorExtra = Colors.green;
+        _gameList[index].colorExtra = Colors.green.shade800;
       } else if (_gameList[index].countExtra < -2) {
-        _gameList[index].colorExtra = Colors.red.shade600;
+        _gameList[index].colorExtra = Colors.red.shade800;
       } else {
-        _gameList[index].colorExtra = Colors.white;
+        _gameList[index].colorExtra = Colors.blueGrey.shade700;
       }
     }
 
