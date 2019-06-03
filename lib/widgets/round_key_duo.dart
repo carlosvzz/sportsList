@@ -45,7 +45,7 @@ class _RoundKeyDuoState extends State<RoundKeyDuo> {
         FloatingActionButton(
           mini: true,
           child: Text(
-            'O',
+            '${widget.label.substring(0, 1)}',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Theme.of(context).highlightColor,
@@ -55,7 +55,7 @@ class _RoundKeyDuoState extends State<RoundKeyDuo> {
         FloatingActionButton(
           mini: true,
           child: Text(
-            'U',
+            '${widget.label.substring(1, 2)}',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Theme.of(context).highlightColor,

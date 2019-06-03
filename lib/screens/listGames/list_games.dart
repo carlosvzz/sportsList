@@ -29,7 +29,7 @@ class _ListGamesState extends State<ListGames> {
 
           if (listaFiltrada.length == 0) {
             content = Center(
-              child: Text('NO GAMES =('),
+              child: Text('NO GAMES / FETCHING ... '),
             );
           } else {
             content = ListView.builder(

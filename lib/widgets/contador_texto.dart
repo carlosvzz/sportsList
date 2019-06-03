@@ -19,7 +19,7 @@ class ContadorTexto extends StatelessWidget {
           child: Text(
         '$value',
         style: TextStyle(
-            color: Theme.of(context).accentColor,
+            color: Colors.white, //Theme.of(context).accentColor,
             fontSize: 17.0,
             fontWeight: FontWeight.bold),
       )),

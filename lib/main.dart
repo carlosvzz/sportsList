@@ -51,10 +51,6 @@ ThemeData _myTheme() {
         display3: TextStyle(fontSize: 14.0, color: myAccentColor),
         display4: TextStyle(
             fontSize: 15.0, color: Colors.white70, fontWeight: FontWeight.bold),
-        caption: TextStyle(
-            fontSize: 25.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey.shade800),
         button: TextStyle(
           fontSize: 17.0,
         ),

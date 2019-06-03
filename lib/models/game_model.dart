@@ -74,159 +74,161 @@ class GameScopedModel extends Model {
     // Buscar index del Game
     int index = _gameList.indexWhere((Game g) => g.id == idFireStore);
 
-    // Colores
-    if (typeCount == 'initial' ||
-        typeCount == 'away' ||
-        typeCount == 'home' ||
-        typeCount == 'draw') {
-      int valorMax = -1;
-      bool hayMax = false;
-      Game game = _gameList[index];
+    if (index != null && index != -1) {
+      // Colores
+      if (typeCount == 'initial' ||
+          typeCount == 'away' ||
+          typeCount == 'home' ||
+          typeCount == 'draw') {
+        int valorMax = -1;
+        bool hayMax = false;
+        Game game = _gameList[index];
 
-      _gameList[index].colorAway = Colors.blueGrey.shade700;
-      _gameList[index].colorDraw = Colors.blueGrey.shade700;
-      _gameList[index].colorHome = Colors.blueGrey.shade700;
+        _gameList[index].colorAway = Colors.blueGrey.shade700;
+        _gameList[index].colorDraw = Colors.blueGrey.shade700;
+        _gameList[index].colorHome = Colors.blueGrey.shade700;
 
-      // Valor maximo
-      if (game.countAway > valorMax) valorMax = game.countAway;
-      if (game.countDraw > valorMax) valorMax = game.countDraw;
-      if (game.countHome > valorMax) valorMax = game.countHome;
+        // Valor maximo
+        if (game.countAway > valorMax) valorMax = game.countAway;
+        if (game.countDraw > valorMax) valorMax = game.countDraw;
+        if (game.countHome > valorMax) valorMax = game.countHome;
 
-      // 3+ para ser verde
-      if (game.countAway - game.countHome > 2 &&
-          game.countAway - game.countDraw > 2) {
-        hayMax = true;
-        _gameList[index].colorAway = Colors.green.shade800;
-      }
+        // 3+ para ser verde
+        if (game.countAway - game.countHome > 2 &&
+            game.countAway - game.countDraw > 2) {
+          hayMax = true;
+          _gameList[index].colorAway = Colors.green.shade600;
+        }
 
-      if (game.countHome - game.countAway > 2 &&
-          game.countHome - game.countDraw > 2) {
-        hayMax = true;
-        _gameList[index].colorHome = Colors.green.shade800;
-      }
+        if (game.countHome - game.countAway > 2 &&
+            game.countHome - game.countDraw > 2) {
+          hayMax = true;
+          _gameList[index].colorHome = Colors.green.shade600;
+        }
 
-      if (game.countDraw - game.countAway > 2 &&
-          game.countDraw - game.countHome > 2) {
-        hayMax = true;
-        _gameList[index].colorDraw = Colors.green.shade800;
-      }
+        if (game.countDraw - game.countAway > 2 &&
+            game.countDraw - game.countHome > 2) {
+          hayMax = true;
+          _gameList[index].colorDraw = Colors.green.shade600;
+        }
 
-      ///////////////////////
-      /// No se encontro un maximo. Poner amarillo  al maximo y rojo al segundo
+        ///////////////////////
+        /// No se encontro un maximo. Poner amarillo  al maximo y rojo al segundo
 
-      if (hayMax == false && valorMax > 0) {
-        if (game.idSport.toLowerCase().contains('soccer') == false) {
-          // Juegos USA , no hay empate, solo poner amarillo el mayor
-          if (game.countAway == game.countHome) {
-            _gameList[index].colorAway = Colors.yellowAccent.shade700;
-            _gameList[index].colorHome = Colors.yellowAccent.shade700;
-          } else if (game.countAway > game.countHome) {
-            _gameList[index].colorAway = Colors.yellowAccent.shade700;
+        if (hayMax == false && valorMax > 0) {
+          if (game.idSport.toLowerCase().contains('soccer') == false) {
+            // Juegos USA , no hay empate, solo poner amarillo el mayor
+            if (game.countAway == game.countHome) {
+              _gameList[index].colorAway = Colors.yellowAccent.shade700;
+              _gameList[index].colorHome = Colors.yellowAccent.shade700;
+            } else if (game.countAway > game.countHome) {
+              _gameList[index].colorAway = Colors.yellowAccent.shade700;
+            } else {
+              _gameList[index].colorHome = Colors.yellowAccent.shade700;
+            }
           } else {
-            _gameList[index].colorHome = Colors.yellowAccent.shade700;
-          }
-        } else {
-          // Juegos Soccer, considera EMPATE
-          //// Maximo AWAY
-          if (game.countAway == valorMax) {
-            _gameList[index].colorAway = Colors.yellowAccent.shade700;
+            // Juegos Soccer, considera EMPATE
+            //// Maximo AWAY
+            if (game.countAway == valorMax) {
+              _gameList[index].colorAway = Colors.yellowAccent.shade700;
 
-            //2do lugar
-            if (game.countDraw == game.countAway)
+              //2do lugar
+              if (game.countDraw == game.countAway)
+                _gameList[index].colorDraw = Colors.yellowAccent.shade700;
+
+              if (game.countHome == game.countAway)
+                _gameList[index].colorHome = Colors.yellowAccent.shade700;
+
+              if (game.countDraw < game.countAway &&
+                  game.countDraw == game.countHome) {
+                _gameList[index].colorDraw = Colors.red.shade600;
+                _gameList[index].colorHome = Colors.red.shade600;
+              }
+
+              if (game.countDraw < game.countAway &&
+                  game.countDraw > game.countHome) {
+                _gameList[index].colorDraw = Colors.red.shade600;
+              }
+
+              if (game.countHome < game.countAway &&
+                  game.countHome > game.countDraw) {
+                _gameList[index].colorHome = Colors.red.shade600;
+              }
+            }
+
+            //// MAXIMO DRAW
+            if (game.countDraw == valorMax) {
               _gameList[index].colorDraw = Colors.yellowAccent.shade700;
 
-            if (game.countHome == game.countAway)
+              //2do lugar
+              if (game.countHome == game.countDraw)
+                _gameList[index].colorHome = Colors.yellowAccent.shade700;
+
+              if (game.countAway < game.countDraw &&
+                  game.countAway == game.countHome) {
+                _gameList[index].colorAway = Colors.red.shade600;
+                _gameList[index].colorHome = Colors.red.shade600;
+              }
+
+              if (game.countAway < game.countDraw &&
+                  game.countAway > game.countHome) {
+                _gameList[index].colorAway = Colors.red.shade600;
+              }
+
+              if (game.countHome < game.countDraw &&
+                  game.countHome > game.countAway) {
+                _gameList[index].colorHome = Colors.red.shade600;
+              }
+            }
+
+            //// MAXIMO HOME
+            if (game.countHome == valorMax) {
               _gameList[index].colorHome = Colors.yellowAccent.shade700;
 
-            if (game.countDraw < game.countAway &&
-                game.countDraw == game.countHome) {
-              _gameList[index].colorDraw = Colors.red.shade600;
-              _gameList[index].colorHome = Colors.red.shade600;
-            }
+              //2do lugar
+              if (game.countAway < game.countHome &&
+                  game.countAway == game.countDraw) {
+                _gameList[index].colorAway = Colors.red.shade600;
+                _gameList[index].colorDraw = Colors.red.shade600;
+              }
 
-            if (game.countDraw < game.countAway &&
-                game.countDraw > game.countHome) {
-              _gameList[index].colorDraw = Colors.red.shade600;
-            }
+              if (game.countAway < game.countHome &&
+                  game.countAway > game.countDraw) {
+                _gameList[index].colorAway = Colors.red.shade600;
+              }
 
-            if (game.countHome < game.countAway &&
-                game.countHome > game.countDraw) {
-              _gameList[index].colorHome = Colors.red.shade600;
-            }
-          }
-
-          //// MAXIMO DRAW
-          if (game.countDraw == valorMax) {
-            _gameList[index].colorDraw = Colors.yellowAccent.shade700;
-
-            //2do lugar
-            if (game.countHome == game.countDraw)
-              _gameList[index].colorHome = Colors.yellowAccent.shade700;
-
-            if (game.countAway < game.countDraw &&
-                game.countAway == game.countHome) {
-              _gameList[index].colorAway = Colors.red.shade600;
-              _gameList[index].colorHome = Colors.red.shade600;
-            }
-
-            if (game.countAway < game.countDraw &&
-                game.countAway > game.countHome) {
-              _gameList[index].colorAway = Colors.red.shade600;
-            }
-
-            if (game.countHome < game.countDraw &&
-                game.countHome > game.countAway) {
-              _gameList[index].colorHome = Colors.red.shade600;
-            }
-          }
-
-          //// MAXIMO HOME
-          if (game.countHome == valorMax) {
-            _gameList[index].colorHome = Colors.yellowAccent.shade700;
-
-            //2do lugar
-            if (game.countAway < game.countHome &&
-                game.countAway == game.countDraw) {
-              _gameList[index].colorAway = Colors.red.shade600;
-              _gameList[index].colorDraw = Colors.red.shade600;
-            }
-
-            if (game.countAway < game.countHome &&
-                game.countAway > game.countDraw) {
-              _gameList[index].colorAway = Colors.red.shade600;
-            }
-
-            if (game.countDraw < game.countHome &&
-                game.countDraw > game.countAway) {
-              _gameList[index].colorDraw = Colors.red.shade600;
+              if (game.countDraw < game.countHome &&
+                  game.countDraw > game.countAway) {
+                _gameList[index].colorDraw = Colors.red.shade600;
+              }
             }
           }
         }
       }
-    }
 
-    if (typeCount == 'initial' ||
-        typeCount == 'overunder' ||
-        typeCount == 'extra') {
-      // 3+ Verde / -3 Rojo
-      if (_gameList[index].countOverUnder > 2) {
-        _gameList[index].colorOverUnder = Colors.green.shade800;
-      } else if (_gameList[index].countOverUnder < -2) {
-        _gameList[index].colorOverUnder = Colors.red.shade600;
-      } else {
-        _gameList[index].colorOverUnder = Colors.blueGrey.shade700;
+      if (typeCount == 'initial' ||
+          typeCount == 'overunder' ||
+          typeCount == 'extra') {
+        // 3+ Verde / -3 Rojo
+        if (_gameList[index].countOverUnder > 2) {
+          _gameList[index].colorOverUnder = Colors.green.shade600;
+        } else if (_gameList[index].countOverUnder < -2) {
+          _gameList[index].colorOverUnder = Colors.red.shade600;
+        } else {
+          _gameList[index].colorOverUnder = Colors.blueGrey.shade700;
+        }
+
+        if (_gameList[index].countExtra > 2) {
+          _gameList[index].colorExtra = Colors.green.shade600;
+        } else if (_gameList[index].countExtra < -2) {
+          _gameList[index].colorExtra = Colors.red.shade800;
+        } else {
+          _gameList[index].colorExtra = Colors.blueGrey.shade700;
+        }
       }
 
-      if (_gameList[index].countExtra > 2) {
-        _gameList[index].colorExtra = Colors.green.shade800;
-      } else if (_gameList[index].countExtra < -2) {
-        _gameList[index].colorExtra = Colors.red.shade800;
-      } else {
-        _gameList[index].colorExtra = Colors.blueGrey.shade700;
-      }
+      notifyListeners();
     }
-
-    notifyListeners();
   }
 
   Future<dynamic> _getGamesFeed(String idSport, DateTime date) async {
@@ -358,9 +360,8 @@ class GameScopedModel extends Model {
             //Agregar a DB y lista local
             String newId = await db.createObject(newGame);
             newGame.id = newId;
-            print(
-                'despues de createObject ${newGame.idSport} y el id es ${newGame.id} y tambien $newId');
             _gameList.add(newGame);
+            setColores(newId, 'initial');
           });
           //isLoading = false;
           //notifyListeners();

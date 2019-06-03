@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
 class RoundKey extends StatefulWidget {
-  final String label;
   final Color color;
   final int initialValue;
   final ValueChanged<int> onChanged;
 
-  RoundKey(this.label, this.color, this.initialValue, this.onChanged);
+  RoundKey(this.color, this.initialValue, this.onChanged);
 
   @override
   _RoundKeyState createState() => _RoundKeyState();
@@ -40,7 +39,12 @@ class _RoundKeyState extends State<RoundKey> {
       mini: false,
       child: Text(
         '${_value.toString()}',
-        style: Theme.of(context).textTheme.caption,
+        style: TextStyle(
+            fontSize: 25.0,
+            fontWeight: FontWeight.bold,
+            color: widget.color == Colors.yellowAccent.shade700
+                ? Colors.grey.shade600
+                : Colors.white),
       ),
       backgroundColor: widget.color,
       onPressed: () => _updateValue(),

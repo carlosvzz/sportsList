@@ -12,7 +12,7 @@ class CardGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String labelMain = 'ML';
-    String labelOverUnder = 'O/U';
+    String labelOverUnder = 'o/u';
     String labelExtra = '';
 
     // MAIN  >> NFL y NBA = Spread || NHL y MLB es ML
@@ -35,7 +35,7 @@ class CardGame extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            CustomStep(gameData.id, 'extra', gameData.countExtra,
+            CustomStep(gameData.id, 'extra', 'AH', gameData.countExtra,
                 gameData.colorExtra, setContadores),
           ],
         );
@@ -112,10 +112,10 @@ class CardGame extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               SizedBox(width: 5),
-              CustomStep(gameData.id, 'away', gameData.countAway,
+              CustomStep(gameData.id, 'away', '', gameData.countAway,
                   gameData.colorAway, setContadores),
               SizedBox(width: 10),
-              CustomStep(gameData.id, 'home', gameData.countHome,
+              CustomStep(gameData.id, 'home', '', gameData.countHome,
                   gameData.colorHome, setContadores),
               SizedBox(width: 5),
             ],
@@ -135,8 +135,13 @@ class CardGame extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              CustomStep(gameData.id, 'overunder', gameData.countOverUnder,
-                  gameData.colorOverUnder, setContadores),
+              CustomStep(
+                  gameData.id,
+                  'overunder',
+                  'OU',
+                  gameData.countOverUnder,
+                  gameData.colorOverUnder,
+                  setContadores),
               Spacer(),
               // extra solo en NFL y NBA > NHL y MLB se muestra vacío
               extraStep(),
