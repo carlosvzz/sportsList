@@ -3,9 +3,11 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sports_list/models/custom_date.dart';
 import 'package:sports_list/models/custom_menu.dart';
 import 'package:sports_list/models/game_model.dart';
+import 'package:sports_list/models/user_model.dart';
 import 'package:sports_list/screens/my_appbar.dart';
 import 'package:sports_list/screens/my_bottombar.dart';
 import 'package:sports_list/widgets/main_drawer.dart';
+import '../internals/keys.dart';
 
 import 'listGames/list_games.dart';
 
@@ -20,6 +22,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   CustomMenu selectedSport = new CustomMenu('X-Sports', Icons.stars);
   CustomDate selectedDate = new CustomDate(DateTime.now());
   GameScopedModel gameModel = GameScopedModel();
+  UserScopedModel userModel = UserScopedModel();
+
+  @override
+  void initState() {
+    super.initState();
+    userModel.verifyUser(Key_FirebaseEmail, Key_FirebasePwd);
+  }
 
   void setActualSport(CustomMenu valor) {
     setState(() {
@@ -44,16 +53,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<GameScopedModel>(
-      model: gameModel,
-      child: Scaffold(
-        appBar: MyAppBar(selectedSport),
-        drawer: MainDrawer(),
-        bottomNavigationBar:
-            MyBottomBar(setActualSport, setActualDate, selectedDate),
-        body: selectedSport.nombre == 'X-Sports'
-            ? Container()
-            : ListGames(selectedSport.nombre, selectedDate.date),
+    return ScopedModel<UserScopedModel>(
+      model: userModel,
+      child: ScopedModel<GameScopedModel>(
+        model: gameModel,
+        child: Scaffold(
+          appBar: MyAppBar(selectedSport),
+          drawer: MainDrawer(),
+          bottomNavigationBar:
+              MyBottomBar(setActualSport, setActualDate, selectedDate),
+          body: selectedSport.nombre == 'X-Sports'
+              ? Container()
+              : ListGames(selectedSport.nombre, selectedDate.date),
+        ),
       ),
     );
   }

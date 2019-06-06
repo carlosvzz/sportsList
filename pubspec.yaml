@@ -27,7 +27,10 @@ dependencies:
   http: ^0.12.0+2
   scoped_model: ^1.0.1
   # cloud_firestore: ^0.9.13+1
-  cloud_firestore: ^0.8.2+3
+  #pre-AndroidX
+  cloud_firestore: ^0.8.2+3  
+  #pre-AndroidX
+  firebase_auth: any
 
 dev_dependencies:
   flutter_test:

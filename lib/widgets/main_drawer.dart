@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sports_list/models/game_model.dart';
+import 'package:sports_list/models/user_model.dart';
+import '../internals/keys.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
@@ -15,14 +17,26 @@ class MainDrawer extends StatelessWidget {
           Column(
             children: <Widget>[
               ScopedModelDescendant<GameScopedModel>(
-                  builder: (context, child, gameModel) {
-                return ListTile(
-                    leading: Icon(Icons.disc_full),
-                    title: Text('Limpiar DB'),
-                    onTap: () {
-                      _showDialog(context, gameModel);
-                    });
-              }),
+                builder: (context, child, gameModel) {
+                  return ListTile(
+                      leading: Icon(Icons.disc_full),
+                      title: Text('Limpiar DB'),
+                      onTap: () async {
+                        _showDialog(context, gameModel);
+                      });
+                },
+              ),
+              ScopedModelDescendant<UserScopedModel>(
+                builder: (context, child, userModel) {
+                  return ListTile(
+                    leading: Icon(Icons.verified_user),
+                    title: Text('Iniciar sesión'),
+                    onTap: () async {
+                      userModel.verifyUser(Key_FirebaseEmail, Key_FirebasePwd);
+                    },
+                  );
+                },
+              ),
             ],
           ),
         ],
