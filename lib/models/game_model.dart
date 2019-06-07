@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:date_format/date_format.dart';
 import 'package:http/http.dart' as http;
+import 'package:sports_list/helpers/rutinas.dart' as rutinas;
 import 'package:sports_list/services/firestore_service.dart';
 import 'game.dart';
 import 'package:sports_list/models/feed_games.dart';
@@ -37,6 +38,22 @@ class GameScopedModel extends Model {
     }
 
     return _gameList.singleWhere((Game g) => g.idGame == idGame);
+  }
+
+  Future deleteCollection() async {
+    Firestore.instance.collection("games").getDocuments().then((snapshot) {
+      DateTime _now = DateTime.now();
+      DateTime _today = DateTime(_now.year, _now.month, _now.day);
+
+      for (DocumentSnapshot ds in snapshot.documents) {
+        DateTime _docDate = ds.data['date'].toDate();
+        // Borrar solo si es antes de Hoy
+        if (_docDate.isBefore(_today)) {
+          ds.reference.delete();
+        }
+      }
+    });
+    _gameList = [];
   }
 
   void setContadores(String idFireStore, String typeCount, int value) {
@@ -231,7 +248,8 @@ class GameScopedModel extends Model {
     }
   }
 
-  Future<dynamic> _getGamesFeed(String idSport, DateTime date) async {
+  //para deportes USA > NFL, NHL, NBA, MLB
+  Future<dynamic> _getFixturesSportsFeed(String idSport, DateTime date) async {
     String _username = keys.SportsFeedApi;
     String _password = keys.SportsFeedPwd;
     String _basicAuth =
@@ -255,69 +273,62 @@ class GameScopedModel extends Model {
     }
   }
 
-  Future<List<Game>> _getGamesFirestore(String idSport, DateTime date) async {
+  // para deportes Soccer
+  Future<dynamic> _getFixturesFirestore(String idSport, DateTime date) async {
     List<DocumentSnapshot> templist;
     List<Game> list = new List();
 
-    CollectionReference collectionRef = Firestore.instance.collection("games");
-    QuerySnapshot collectionSnapshot = await collectionRef
-        .where('idSport', isEqualTo: idSport)
-        .where('date', isEqualTo: date)
-        .orderBy('time')
-        .getDocuments();
+    try {
+      CollectionReference collectionRef =
+          Firestore.instance.collection("games");
+      QuerySnapshot collectionSnapshot = await collectionRef
+          .where('idSport', isEqualTo: idSport)
+          .where('date', isEqualTo: date)
+          .orderBy('time')
+          .getDocuments();
 
-    templist = collectionSnapshot.documents;
+      templist = collectionSnapshot.documents;
 
-    list = templist.map((DocumentSnapshot docSnapshot) {
-      return new Game.fromMap(docSnapshot.data);
-    }).toList();
+      list = templist.map((DocumentSnapshot docSnapshot) {
+        return new Game.fromMap(docSnapshot.data);
+      }).toList();
+    } catch (e) {
+      throw Exception('Datos no obtenidos. _getGamesFirestore ${e.toString()}');
+    }
 
     return list;
   }
 
-  Future deleteCollection() async {
-    Firestore.instance.collection("games").getDocuments().then((snapshot) {
-      DateTime _now = DateTime.now();
-      DateTime _today = DateTime(_now.year, _now.month, _now.day);
+  Future<List<Game>> _getGamesFirestore(String idSport, DateTime date) async {
+    List<DocumentSnapshot> templist;
+    List<Game> list = new List();
 
-      for (DocumentSnapshot ds in snapshot.documents) {
-        DateTime _docDate = ds.data['date'].toDate();
-        // Borrar solo si es antes de Hoy
-        if (_docDate.isBefore(_today)) {
-          ds.reference.delete();
-        }
-      }
-    });
-    _gameList = [];
-  }
+    try {
+      CollectionReference collectionRef =
+          Firestore.instance.collection("games");
+      QuerySnapshot collectionSnapshot = await collectionRef
+          .where('idSport', isEqualTo: idSport)
+          .where('date', isEqualTo: date)
+          .orderBy('time')
+          .getDocuments();
 
-  String _addLeadingZero(int value) {
-    if (value < 10) return '0$value';
-    return value.toString();
-  }
+      templist = collectionSnapshot.documents;
 
-  String convertirHora24(String hora) {
-    //hora viene como 7:00AM o 5:30PM
-    final int pos = hora.indexOf(':');
-    int parteHora = int.parse(hora.substring(0, pos));
-    int parteMin = int.parse(hora.substring(pos + 1, pos + 3));
-
-    //Convertir hora a 24 H (AM se queda igual)
-    if (hora.contains('PM') == true) {
-      if (parteHora < 12) parteHora += 12;
+      list = templist.map((DocumentSnapshot docSnapshot) {
+        return new Game.fromMap(docSnapshot.data);
+      }).toList();
+    } catch (e) {
+      throw Exception('Datos no obtenidos. _getGamesFirestore ${e.toString()}');
     }
-    //Restar 1 hora para Central Time
-    parteHora -= 1;
 
-    String horaTexto = _addLeadingZero(parteHora);
-    String minTexto = _addLeadingZero(parteMin);
-
-    return horaTexto + ':' + minTexto;
+    return list;
   }
 
   Future fetchGames(String idSport, DateTime date) async {
     // Revisar si ya esta cargada la lista (deporte - fecha)
     var query;
+
+    print(rutinas.getSoccerDates(date));
 
     isLoading = true;
     notifyListeners();
@@ -341,7 +352,7 @@ class GameScopedModel extends Model {
         });
       } else {
         // No se encontro datos en DB, buscarlo en sportsfeed
-        var dataFromResponse = await _getGamesFeed(idSport, date);
+        var dataFromResponse = await _getFixturesSportsFeed(idSport, date);
 
         List<Gameentry> lista =
             FeedGames.fromJson(dataFromResponse).dailygameschedule.gameentry;
@@ -352,7 +363,7 @@ class GameScopedModel extends Model {
             // Convertir hora string a hora 24
             String horaGame =
                 game.scheduleStatus == 'Normal' ? game.time : game.originalTime;
-            String hora24 = convertirHora24(horaGame);
+            String hora24 = rutinas.convertirHora24(horaGame);
 
             Game newGame = new Game.fromValues(idSport, int.parse(game.iD),
                 date, hora24, game.awayTeam, game.homeTeam, game.location);
