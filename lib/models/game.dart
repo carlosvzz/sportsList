@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:sports_list/models/basemodel.dart';
-import 'package:sports_list/models/feed_games.dart';
+import 'package:sports_list/models/team.dart';
 
 class Game extends BaseModel {
   String _idSport;
   int _idGame;
   DateTime _date;
-  String _time;  // formato 24H 00:00
-  AwayTeam _awayTeam;
-  HomeTeam _homeTeam;
+  String _time; // formato 24H 00:00
+  Team _awayTeam;
+  Team _homeTeam;
   String _location;
   int countHome = 0;
   int countAway = 0;
   int countDraw = 0;
-  int countOverUnder = 0;    // over / under
-  int countExtra = 0;   // Extra segun sports (BTTS , Spread , etc)
+  int countOverUnder = 0; // over / under
+  int countExtra = 0; // Extra segun sports (BTTS , Spread , etc)
   Color colorHome = Colors.white;
   Color colorAway = Colors.white;
   Color colorDraw = Colors.white;
@@ -37,8 +37,8 @@ class Game extends BaseModel {
   int get idGame => _idGame;
   DateTime get date => _date;
   String get time => _time;
-  AwayTeam get awayTeam => _awayTeam;
-  HomeTeam get homeTeam => _homeTeam;
+  Team get awayTeam => _awayTeam;
+  Team get homeTeam => _homeTeam;
   String get location => _location;
 
   Map<String, dynamic> toMap() {
@@ -68,8 +68,8 @@ class Game extends BaseModel {
     this._idGame = map['idGame'];
     this._date = map['date'].toDate(); // Viene como TimeStamp
     this._time = map['time'];
-    this._awayTeam = new AwayTeam.fromJson(map['awayTeam']);
-    this._homeTeam = new HomeTeam.fromJson(map['HomeTeam']);
+    this._awayTeam = new Team.fromJson(map['awayTeam']);
+    this._homeTeam = new Team.fromJson(map['HomeTeam']);
     this._location = map['location'];
     this.countHome = map['countHome'];
     this.countAway = map['countAway'];
@@ -86,8 +86,8 @@ class Game extends BaseModel {
     game._idGame = map['idGame'];
     game._date = map['date'];
     game._time = map['time'];
-    game._awayTeam = new AwayTeam.fromJson(map['awayTeam']);
-    game._homeTeam = new HomeTeam.fromJson(map['HomeTeam']);
+    game._awayTeam = new Team.fromJson(map['awayTeam']);
+    game._homeTeam = new Team.fromJson(map['HomeTeam']);
     game._location = map['location'];
     game.countHome = map['countHome'];
     game.countAway = map['countAway'];

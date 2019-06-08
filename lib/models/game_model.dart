@@ -7,8 +7,9 @@ import 'package:date_format/date_format.dart';
 import 'package:http/http.dart' as http;
 import 'package:sports_list/helpers/rutinas.dart' as rutinas;
 import 'package:sports_list/services/firestore_service.dart';
+import 'fixture_firestore.dart';
 import 'game.dart';
-import 'package:sports_list/models/feed_games.dart';
+import 'package:sports_list/models/fixture_sportsfeed.dart';
 import '../internals/keys.dart' as keys;
 
 class GameScopedModel extends Model {
@@ -274,23 +275,23 @@ class GameScopedModel extends Model {
   }
 
   // para deportes Soccer
-  Future<dynamic> _getFixturesFirestore(String idSport, DateTime date) async {
+  Future<dynamic> _getFixturesFirestore(String idSport, int date) async {
     List<DocumentSnapshot> templist;
-    List<Game> list = new List();
+    List<FixtureFireStore> list = new List();
 
     try {
       CollectionReference collectionRef =
-          Firestore.instance.collection("games");
+          Firestore.instance.collection("fixtures");
       QuerySnapshot collectionSnapshot = await collectionRef
           .where('idSport', isEqualTo: idSport)
-          .where('date', isEqualTo: date)
-          .orderBy('time')
+          .where('gameDate', isEqualTo: date)
+          .orderBy('gameTimestamp')
           .getDocuments();
 
       templist = collectionSnapshot.documents;
 
       list = templist.map((DocumentSnapshot docSnapshot) {
-        return new Game.fromMap(docSnapshot.data);
+        return new FixtureFireStore.fromJson(docSnapshot.data);
       }).toList();
     } catch (e) {
       throw Exception('Datos no obtenidos. _getGamesFirestore ${e.toString()}');
@@ -327,11 +328,17 @@ class GameScopedModel extends Model {
   Future fetchGames(String idSport, DateTime date) async {
     // Revisar si ya esta cargada la lista (deporte - fecha)
     var query;
-
-    print(rutinas.getSoccerDates(date));
-
     isLoading = true;
     notifyListeners();
+
+    /// test
+    //var dataFromResponse =
+    //     await _getFixturesFirestore('Soccer America', 20190614);
+    // print('$dataFromResponse');
+
+    /// fin test
+    ///
+    //return null;
 
     if (_gameList.length > 0) {
       query = _gameList.firstWhere(
@@ -354,8 +361,9 @@ class GameScopedModel extends Model {
         // No se encontro datos en DB, buscarlo en sportsfeed
         var dataFromResponse = await _getFixturesSportsFeed(idSport, date);
 
-        List<Gameentry> lista =
-            FeedGames.fromJson(dataFromResponse).dailygameschedule.gameentry;
+        List<Gameentry> lista = FixtureSportsFeed.fromJson(dataFromResponse)
+            .dailygameschedule
+            .gameentry;
 
         //Agregar respuesta a lista final de games
         if (lista != null) {

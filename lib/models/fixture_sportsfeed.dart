@@ -1,12 +1,13 @@
-class FeedGames {
+import 'package:sports_list/models/team.dart';
+
+class FixtureSportsFeed {
   Dailygameschedule dailygameschedule;
 
-  FeedGames({Dailygameschedule dailygameschedule}) {
+  FixtureSportsFeed({Dailygameschedule dailygameschedule}) {
     this.dailygameschedule = dailygameschedule;
   }
 
-
-  FeedGames.fromJson(Map<String, dynamic> json) {
+  FixtureSportsFeed.fromJson(Map<String, dynamic> json) {
     dailygameschedule = json['dailygameschedule'] != null
         ? new Dailygameschedule.fromJson(json['dailygameschedule'])
         : null;
@@ -29,7 +30,6 @@ class Dailygameschedule {
     this.lastUpdatedOn = lastUpdatedOn;
     this.gameentry = gameentry;
   }
-
 
   Dailygameschedule.fromJson(Map<String, dynamic> json) {
     lastUpdatedOn = json['lastUpdatedOn'];
@@ -59,8 +59,8 @@ class Gameentry {
   String delayedOrPostponedReason;
   String date;
   String time;
-  AwayTeam awayTeam;
-  HomeTeam homeTeam;
+  Team awayTeam;
+  Team homeTeam;
   String location;
 
   Gameentry(
@@ -71,8 +71,8 @@ class Gameentry {
       String delayedOrPostponedReason,
       String date,
       String time,
-      AwayTeam awayTeam,
-      HomeTeam homeTeam,
+      Team awayTeam,
+      Team homeTeam,
       String location}) {
     this.iD = id;
     this.scheduleStatus = scheduleStatus;
@@ -94,12 +94,10 @@ class Gameentry {
     delayedOrPostponedReason = json['delayedOrPostponedReason'];
     date = json['date'];
     time = json['time'];
-    awayTeam = json['awayTeam'] != null
-        ? new AwayTeam.fromJson(json['awayTeam'])
-        : null;
-    homeTeam = json['homeTeam'] != null
-        ? new HomeTeam.fromJson(json['homeTeam'])
-        : null;
+    awayTeam =
+        json['awayTeam'] != null ? new Team.fromJson(json['awayTeam']) : null;
+    homeTeam =
+        json['homeTeam'] != null ? new Team.fromJson(json['homeTeam']) : null;
     location = json['location'];
   }
 
@@ -119,67 +117,6 @@ class Gameentry {
       data['homeTeam'] = this.homeTeam.toJson();
     }
     data['location'] = this.location;
-    return data;
-  }
-}
-
-class AwayTeam {
-  String iD;
-  String city;
-  String name;
-  String abbreviation;
-
-  AwayTeam({String iD, String city, String name, String abbreviation}) {
-    this.iD = iD;
-    this.city = city;
-    this.name = name;
-    this.abbreviation = abbreviation;
-  }
-
-  AwayTeam.fromJson(Map json) {
-    iD = json['ID'];
-    city = json['City'];
-    name = json['Name'];
-    abbreviation = json['Abbreviation'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ID'] = this.iD;
-    data['City'] = this.city;
-    data['Name'] = this.name;
-    data['Abbreviation'] = this.abbreviation;
-    return data;
-  }
-}
-
-class HomeTeam {
-  String iD;
-  String city;
-  String name;
-  String abbreviation;
-
-  HomeTeam({String iD, String city, String name, String abbreviation}) {
-    this.iD = iD;
-    this.city = city;
-    this.name = name;
-    this.abbreviation = abbreviation;
-  }
-
-  //HomeTeam.fromJson(Map<String, dynamic> json) {
-  HomeTeam.fromJson(Map json) {
-    iD = json['ID'];
-    city = json['City'];
-    name = json['Name'];
-    abbreviation = json['Abbreviation'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ID'] = this.iD;
-    data['City'] = this.city;
-    data['Name'] = this.name;
-    data['Abbreviation'] = this.abbreviation;
     return data;
   }
 }
