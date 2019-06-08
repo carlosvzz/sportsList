@@ -1,5 +1,7 @@
 // clase de fixtures/juegos propios en firestore
 import 'package:sports_list/models/team.dart';
+import 'fixture_sportsfeed.dart';
+import 'package:date_format/date_format.dart';
 
 class FixtureFireStore {
   int idGame;
@@ -28,15 +30,13 @@ class FixtureFireStore {
   }
 
   FixtureFireStore.fromJson(Map<String, dynamic> json) {
-    print('$json');
-
     this.idGame = json['idGame'];
     this.idSport = json['idSport'];
     this.gameDate = json['gameDate'];
     this.gameStamp = json['gameTimestamp'];
     this.location = json['location'];
-    this.awayTeam = json['awayTeam'];
-    this.homeTeam = json['homeTeam'];
+    this.awayTeam = new Team.fromJson(json['awayTeam']);
+    this.homeTeam = new Team.fromJson(json['homeTeam']);
   }
 
   Map<String, dynamic> toJson() {
@@ -51,5 +51,23 @@ class FixtureFireStore {
     data['homeTeam'] = this.homeTeam.toJson();
 
     return data;
+  }
+
+  Gameentry toGameentry() {
+    //gameDate viene como yyyymmdd
+    DateTime dateGame =
+        new DateTime.fromMillisecondsSinceEpoch(this.gameStamp * 1000);
+
+    return new Gameentry(
+        id: this.idGame.toString(),
+        scheduleStatus: 'Normal',
+        originalDate: null,
+        originalTime: null,
+        delayedOrPostponedReason: null,
+        date: formatDate(dateGame, ['yyyy', '-', 'mm', '-', 'dd']),
+        time: formatDate(dateGame, ['HH', ':', 'nn']),
+        location: this.location,
+        awayTeam: this.awayTeam,
+        homeTeam: this.homeTeam);
   }
 }

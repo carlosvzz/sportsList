@@ -275,21 +275,24 @@ class GameScopedModel extends Model {
   }
 
   // para deportes Soccer
-  Future<dynamic> _getFixturesFirestore(String idSport, int date) async {
+  Future<List<FixtureFireStore>> _getFixturesFirestore(
+      String idSport, DateTime date) async {
     List<DocumentSnapshot> templist;
     List<FixtureFireStore> list = new List();
+
+    // gameDate en FS es entero con formato yyyymmdd
+    String dateFormat = formatDate(date, ['yyyy', 'mm', 'dd']);
 
     try {
       CollectionReference collectionRef =
           Firestore.instance.collection("fixtures");
       QuerySnapshot collectionSnapshot = await collectionRef
           .where('idSport', isEqualTo: idSport)
-          .where('gameDate', isEqualTo: date)
+          .where('gameDate', isEqualTo: int.parse(dateFormat))
           .orderBy('gameTimestamp')
           .getDocuments();
 
       templist = collectionSnapshot.documents;
-
       list = templist.map((DocumentSnapshot docSnapshot) {
         return new FixtureFireStore.fromJson(docSnapshot.data);
       }).toList();
@@ -326,19 +329,12 @@ class GameScopedModel extends Model {
   }
 
   Future fetchGames(String idSport, DateTime date) async {
+    bool isSoccer = idSport.toLowerCase().contains('soccer');
+
     // Revisar si ya esta cargada la lista (deporte - fecha)
     var query;
     isLoading = true;
     notifyListeners();
-
-    /// test
-    //var dataFromResponse =
-    //     await _getFixturesFirestore('Soccer America', 20190614);
-    // print('$dataFromResponse');
-
-    /// fin test
-    ///
-    //return null;
 
     if (_gameList.length > 0) {
       query = _gameList.firstWhere(
@@ -347,6 +343,8 @@ class GameScopedModel extends Model {
     }
 
     if (query == null) {
+      // No esta cargado aun en la lista interna
+      //Buscar en firestore para ver si ya estan guardados como Games
       List<Game> listaDB;
       listaDB = await _getGamesFirestore(idSport, date);
 
@@ -359,19 +357,42 @@ class GameScopedModel extends Model {
         });
       } else {
         // No se encontro datos en DB, buscarlo en sportsfeed
-        var dataFromResponse = await _getFixturesSportsFeed(idSport, date);
+        List<Gameentry> lista;
 
-        List<Gameentry> lista = FixtureSportsFeed.fromJson(dataFromResponse)
-            .dailygameschedule
-            .gameentry;
+        if (isSoccer) {
+          List<FixtureFireStore> listaFS =
+              await _getFixturesFirestore(idSport, date);
+          if (listaFS == null) {
+            lista = null;
+          } else {
+            lista = new List<Gameentry>();
+
+            listaFS.forEach((ofix) {
+              lista.add(ofix.toGameentry());
+            });
+          }
+        } else {
+          //US games
+          var dataFromResponse = await _getFixturesSportsFeed(idSport, date);
+          lista = FixtureSportsFeed.fromJson(dataFromResponse)
+              .dailygameschedule
+              .gameentry;
+        }
 
         //Agregar respuesta a lista final de games
         if (lista != null) {
           lista.forEach((game) async {
-            // Convertir hora string a hora 24
-            String horaGame =
-                game.scheduleStatus == 'Normal' ? game.time : game.originalTime;
-            String hora24 = rutinas.convertirHora24(horaGame);
+            String hora24;
+
+            // Convertir hora string a hora 24 (en deportes USA)
+            if (isSoccer) {
+              hora24 = game.time;
+            } else {
+              String horaGame = game.scheduleStatus == 'Normal'
+                  ? game.time
+                  : game.originalTime;
+              hora24 = rutinas.convertirHora24(horaGame);
+            }
 
             Game newGame = new Game.fromValues(idSport, int.parse(game.iD),
                 date, hora24, game.awayTeam, game.homeTeam, game.location);
@@ -382,8 +403,6 @@ class GameScopedModel extends Model {
             _gameList.add(newGame);
             setColores(newId, 'initial');
           });
-          //isLoading = false;
-          //notifyListeners();
         }
       }
     }
