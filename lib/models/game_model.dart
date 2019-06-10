@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:date_format/date_format.dart';
 import 'package:http/http.dart' as http;
+import 'package:sports_list/helpers/format_date.dart';
 import 'package:sports_list/helpers/rutinas.dart' as rutinas;
 import 'package:sports_list/services/firestore_service.dart';
 import 'fixture_firestore.dart';
@@ -281,7 +281,7 @@ class GameScopedModel extends Model {
 
     String miUrl =
         '${keys.SportsFeedUrl}/$idSport/current/daily_game_schedule.json?fordate=' +
-            formatDate(date, ['yyyy', 'mm', 'dd']);
+            formatDate(date, [yyyy, mm, dd]);
 
     http.Response response = await http
         .get(miUrl, headers: {'Authorization': _basicAuth}).catchError((error) {

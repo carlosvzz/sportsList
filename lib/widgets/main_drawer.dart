@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:sports_list/helpers/rutinas.dart' as rutinas;
 import 'package:sports_list/models/game_model.dart';
 import 'package:sports_list/models/user_model.dart';
 import '../internals/keys.dart';
@@ -19,10 +18,16 @@ class MainDrawer extends StatelessWidget {
           Column(
             children: <Widget>[
               ListTile(
-                leading: Icon(Icons.calendar_today),
-                title: Text('Calendario juegos'),
-                onTap: () => calendarioJuegos(),
-              ),
+                  leading: Icon(Icons.calendar_today),
+                  title: Text('Calendario juegos'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (builder) {
+                          return CalendarioJuegos();
+                        });
+                  }),
               ScopedModelDescendant<GameScopedModel>(
                 builder: (context, child, gameModel) {
                   return ListTile(

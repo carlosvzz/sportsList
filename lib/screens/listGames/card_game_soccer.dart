@@ -1,5 +1,5 @@
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:sports_list/helpers/format_date.dart';
 import 'package:sports_list/models/game.dart';
 import 'package:sports_list/widgets/custom_step.dart';
 import 'circle_text.dart';
@@ -15,7 +15,7 @@ class CardGameSoccer extends StatelessWidget {
     String labelMain = 'ML';
     String labelOverUnder = 'O/U';
     String labelExtra = 'BTTS';
-    String dateFormat = formatDate(gameData.date, ['D', ' ', dd]);
+    String dateFormat = formatDate(gameData.date, [D, ' ', dd]);
 
     return Card(
       child: Column(

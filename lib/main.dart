@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sports_list/screens/homepage.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   final Firestore firestore = Firestore();
@@ -18,6 +19,14 @@ class MyApp extends StatelessWidget {
       title: 'Sports Consensus',
       theme: _myTheme(),
       home: MyHomePage(),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en'), // English
+        const Locale('es', 'MX'), // Spanish
+      ],
     );
   }
 }
