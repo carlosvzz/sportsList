@@ -18,9 +18,32 @@ class GameScopedModel extends Model {
   FirestoreService<Game> db = new FirestoreService<Game>('games');
 
   List<Game> getGameList(String idSport, DateTime date) {
-    return _gameList
-        .where((Game g) => g.idSport == idSport && g.date == date)
+    List<DateTime> dateFilter = rutinas.getSportDates(idSport, date);
+    isLoading = true;
+    notifyListeners();
+
+    List<Game> lista = _gameList
+        .where((Game g) =>
+            g.idSport == idSport &&
+            ((g.date.isAtSameMomentAs(dateFilter[0]) ||
+                    g.date.isAfter(dateFilter[0])) &&
+                (g.date.isAtSameMomentAs(dateFilter[1]) ||
+                    g.date.isBefore(dateFilter[1]))))
         .toList();
+
+    lista.sort((a, b) {
+      var r = a.date.compareTo(b.date);
+      if (r == 0) {
+        return a.time.compareTo(b.time);
+      } else {
+        return r;
+      }
+    });
+
+    isLoading = false;
+    notifyListeners();
+
+    return lista;
   }
 
   int getListCount(String idSport, DateTime date) {
@@ -279,16 +302,20 @@ class GameScopedModel extends Model {
       String idSport, DateTime date) async {
     List<DocumentSnapshot> templist;
     List<FixtureFireStore> list = new List();
+    List<DateTime> dateFilter = rutinas.getSportDates(idSport, date);
 
     // gameDate en FS es entero con formato yyyymmdd
-    String dateFormat = formatDate(date, ['yyyy', 'mm', 'dd']);
+    String dateIni = formatDate(dateFilter[0], ['yyyy', 'mm', 'dd']);
+    String dateFin = formatDate(dateFilter[1], ['yyyy', 'mm', 'dd']);
 
     try {
       CollectionReference collectionRef =
           Firestore.instance.collection("fixtures");
       QuerySnapshot collectionSnapshot = await collectionRef
           .where('idSport', isEqualTo: idSport)
-          .where('gameDate', isEqualTo: int.parse(dateFormat))
+          .where('gameDate', isGreaterThanOrEqualTo: int.parse(dateIni))
+          .where('gameDate', isLessThanOrEqualTo: int.parse(dateFin))
+          .orderBy('gameDate')
           .orderBy('gameTimestamp')
           .getDocuments();
 
@@ -306,13 +333,16 @@ class GameScopedModel extends Model {
   Future<List<Game>> _getGamesFirestore(String idSport, DateTime date) async {
     List<DocumentSnapshot> templist;
     List<Game> list = new List();
+    List<DateTime> dateFilter = rutinas.getSportDates(idSport, date);
 
     try {
       CollectionReference collectionRef =
           Firestore.instance.collection("games");
       QuerySnapshot collectionSnapshot = await collectionRef
           .where('idSport', isEqualTo: idSport)
-          .where('date', isEqualTo: date)
+          .where('date', isGreaterThanOrEqualTo: dateFilter[0])
+          .where('date', isLessThanOrEqualTo: dateFilter[1])
+          .orderBy('date')
           .orderBy('time')
           .getDocuments();
 
@@ -330,6 +360,7 @@ class GameScopedModel extends Model {
 
   Future fetchGames(String idSport, DateTime date) async {
     bool isSoccer = idSport.toLowerCase().contains('soccer');
+    List<DateTime> dateFilter = rutinas.getSportDates(idSport, date);
 
     // Revisar si ya esta cargada la lista (deporte - fecha)
     var query;
@@ -338,7 +369,12 @@ class GameScopedModel extends Model {
 
     if (_gameList.length > 0) {
       query = _gameList.firstWhere(
-          (Game g) => g.idSport == idSport && g.date == date,
+          (Game g) =>
+              g.idSport == idSport &&
+              ((g.date.isAtSameMomentAs(dateFilter[0]) ||
+                      g.date.isAfter(dateFilter[0])) &&
+                  (g.date.isAtSameMomentAs(dateFilter[1]) ||
+                      g.date.isBefore(dateFilter[1]))),
           orElse: () => null);
     }
 
@@ -383,19 +419,27 @@ class GameScopedModel extends Model {
         if (lista != null) {
           lista.forEach((game) async {
             String hora24;
-
+            DateTime fechaFinal;
             // Convertir hora string a hora 24 (en deportes USA)
             if (isSoccer) {
+              fechaFinal = DateTime.parse(game.date);
               hora24 = game.time;
             } else {
+              fechaFinal = date;
               String horaGame = game.scheduleStatus == 'Normal'
                   ? game.time
                   : game.originalTime;
               hora24 = rutinas.convertirHora24(horaGame);
             }
 
-            Game newGame = new Game.fromValues(idSport, int.parse(game.iD),
-                date, hora24, game.awayTeam, game.homeTeam, game.location);
+            Game newGame = new Game.fromValues(
+                idSport,
+                int.parse(game.iD),
+                fechaFinal,
+                hora24,
+                game.awayTeam,
+                game.homeTeam,
+                game.location);
 
             //Agregar a DB y lista local
             String newId = await db.createObject(newGame);

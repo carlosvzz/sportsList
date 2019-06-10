@@ -16,7 +16,7 @@ class MyModalBottom extends StatelessWidget {
     new CustomMenu('Soccer AMERICA', CustomIcons.soccer_ball),
     new CustomMenu('', null),
     new CustomMenu('', null),
-    new CustomMenu('Soccer USA', CustomIcons.soccer_ball),
+    new CustomMenu('Soccer MLS', CustomIcons.soccer_ball),
     new CustomMenu('Soccer MEX', CustomIcons.soccer_ball),
     new CustomMenu('Soccer ENG', CustomIcons.soccer_ball),
     new CustomMenu('Soccer GER', CustomIcons.soccer_ball),

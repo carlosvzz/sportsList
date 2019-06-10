@@ -62,6 +62,8 @@ class CardGame extends StatelessWidget {
                     '${gameData.awayTeam.name}',
                     style: Theme.of(context).textTheme.display4,
                     textAlign: TextAlign.right,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 SizedBox(
@@ -78,6 +80,8 @@ class CardGame extends StatelessWidget {
                     '${gameData.homeTeam.name}',
                     style: Theme.of(context).textTheme.display4,
                     textAlign: TextAlign.left,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],

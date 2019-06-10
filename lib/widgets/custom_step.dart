@@ -30,7 +30,6 @@ class CustomStep extends StatelessWidget {
 
       default:
     }
-    //print('valor es $_isMini y $_finalLabel y ${custValue.toString()}');
 
     if (_isMini) {
       return RoundKeyDuo(finalLabel, custColor, custValue,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sports_list/helpers/rutinas.dart' as rutinas;
 import 'package:sports_list/models/game_model.dart';
 import 'package:sports_list/models/user_model.dart';
 import '../internals/keys.dart';
+import 'calendario_juegos.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
@@ -16,13 +18,18 @@ class MainDrawer extends StatelessWidget {
           ),
           Column(
             children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.calendar_today),
+                title: Text('Calendario juegos'),
+                onTap: () => calendarioJuegos(),
+              ),
               ScopedModelDescendant<GameScopedModel>(
                 builder: (context, child, gameModel) {
                   return ListTile(
                       leading: Icon(Icons.disc_full),
                       title: Text('Limpiar DB'),
                       onTap: () async {
-                        _showDialog(context, gameModel);
+                        _showDialogLimpiarDB(context, gameModel);
                       });
                 },
               ),
@@ -44,7 +51,7 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  void _showDialog(BuildContext context, GameScopedModel model) async {
+  void _showDialogLimpiarDB(BuildContext context, GameScopedModel model) async {
     // flutter defined function
     showDialog(
       context: context,

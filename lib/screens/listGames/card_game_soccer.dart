@@ -1,3 +1,4 @@
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:sports_list/models/game.dart';
 import 'package:sports_list/widgets/custom_step.dart';
@@ -14,6 +15,7 @@ class CardGameSoccer extends StatelessWidget {
     String labelMain = 'ML';
     String labelOverUnder = 'O/U';
     String labelExtra = 'BTTS';
+    String dateFormat = formatDate(gameData.date, ['D', ' ', dd]);
 
     return Card(
       child: Column(
@@ -30,12 +32,14 @@ class CardGameSoccer extends StatelessWidget {
                     '${gameData.homeTeam.name}',
                     style: Theme.of(context).textTheme.display4,
                     textAlign: TextAlign.right,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 SizedBox(
-                  width: 45,
+                  width: 60,
                   child: Text(
-                    '${gameData.time}',
+                    '$dateFormat \n ${gameData.time}',
                     style: Theme.of(context).textTheme.display2,
                     textAlign: TextAlign.center,
                   ),
@@ -46,6 +50,8 @@ class CardGameSoccer extends StatelessWidget {
                     '${gameData.awayTeam.name}',
                     style: Theme.of(context).textTheme.display4,
                     textAlign: TextAlign.left,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
