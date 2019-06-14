@@ -17,27 +17,18 @@ class MainDrawer extends StatelessWidget {
           ),
           Column(
             children: <Widget>[
-              ListTile(
-                  leading: Icon(Icons.calendar_today),
-                  title: Text('Calendario juegos'),
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (builder) {
-                          return CalendarioJuegos();
-                        });
-                  }),
+              /// LIMPIAR BD
               ScopedModelDescendant<GameScopedModel>(
                 builder: (context, child, gameModel) {
                   return ListTile(
                       leading: Icon(Icons.disc_full),
                       title: Text('Limpiar DB'),
                       onTap: () async {
-                        _showDialogLimpiarDB(context, gameModel);
+                        _limpiarDB(context, gameModel);
                       });
                 },
               ),
+              // VERIFICAR USUARIO
               ScopedModelDescendant<UserScopedModel>(
                 builder: (context, child, userModel) {
                   return ListTile(
@@ -49,6 +40,18 @@ class MainDrawer extends StatelessWidget {
                   );
                 },
               ),
+              // CALENDARIO DE JUEGO
+              ListTile(
+                  leading: Icon(Icons.calendar_today),
+                  title: Text('Calendario juegos'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (builder) {
+                          return CalendarioJuegos();
+                        });
+                  }),
             ],
           ),
         ],
@@ -56,35 +59,11 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  void _showDialogLimpiarDB(BuildContext context, GameScopedModel model) async {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (
-        BuildContext context,
-      ) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text("Limpiar DB"),
-          content: new Text("Limpiamos firestore, seguro ? "),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("NO"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            new FlatButton(
-              child: new Text("SI"),
-              onPressed: () {
-                model.deleteCollection();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void _limpiarDB(BuildContext context, GameScopedModel model) async {
+    Navigator.of(context).pop();
+    await model.deleteCollection();
+    Scaffold.of(context).showSnackBar(new SnackBar(
+      content: new Text("Limpieza terminada!"),
+    ));
   }
 }
