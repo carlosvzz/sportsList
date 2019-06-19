@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         model: gameModel,
         child: Scaffold(
           appBar: MyAppBar(selectedSport),
-          drawer: MainDrawer(),
+          drawer: MainDrawer(selectedSport.nombre),
           bottomNavigationBar:
               MyBottomBar(setActualSport, setActualDate, selectedDate),
           body: selectedSport.nombre == 'X-Sports'

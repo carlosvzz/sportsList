@@ -64,16 +64,28 @@ class GameScopedModel extends Model {
     return _gameList.singleWhere((Game g) => g.idGame == idGame);
   }
 
-  Future deleteCollection() async {
-    Firestore.instance.collection("games").getDocuments().then((snapshot) {
+  Future deleteCollection(bool onlyToday, String idSport) async {
+    Firestore.instance
+        .collection("games")
+        .getDocuments()
+        .then((snapshot) async {
       DateTime _now = DateTime.now();
       DateTime _today = DateTime(_now.year, _now.month, _now.day);
 
       for (DocumentSnapshot ds in snapshot.documents) {
         DateTime _docDate = ds.data['date'].toDate();
-        // Borrar solo si es antes de Hoy
-        if (_docDate.isBefore(_today)) {
-          ds.reference.delete();
+
+        if (onlyToday == true) {
+// Borrar solo si es Hoy y para el Deporte mencionado
+          if (_docDate == _today && ds.data['idSport'] == idSport) {
+            //debugPrint('${ds.data['idSport']} y $idSport ');
+            await ds.reference.delete();
+          }
+        } else {
+// Borrar solo si es antes de Hoy
+          if (_docDate.isBefore(_today)) {
+            await ds.reference.delete();
+          }
         }
       }
     });
