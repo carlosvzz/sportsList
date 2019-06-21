@@ -453,6 +453,7 @@ class GameScopedModel extends Model {
                 game.homeTeam,
                 game.location);
 
+            //debugPrint('${newGame.toMap()}');
             //Agregar a DB y lista local
             String newId = await db.createObject(newGame);
             newGame.id = newId;

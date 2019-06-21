@@ -1,13 +1,64 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sports_list/screens/homepage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sentry/sentry.dart';
 
-void main() async {
+import './internals/keys.dart';
+
+final SentryClient _sentry = new SentryClient(dsn: kSentryDSN);
+
+/// Whether the VM is running in debug mode.
+bool get isInDebugMode {
+  return false;
+  // bool inDebugMode = false;
+  // assert(inDebugMode = true);
+  // return inDebugMode;
+}
+
+/// Reports [error] along with its [stackTrace] to Sentry.io.
+Future<Null> _reportError(dynamic error, dynamic stackTrace) async {
+  print('Caught error: $error');
+  if (isInDebugMode) {
+    print(stackTrace);
+    return;
+  }
+  print('Reporting to Sentry.io...');
+  final SentryResponse response = await _sentry.captureException(
+    exception: error,
+    stackTrace: stackTrace,
+  );
+
+  if (response.isSuccessful) {
+    print('Success! Event ID: ${response.eventId}');
+  } else {
+    print('Failed to report to Sentry.io: ${response.error}');
+  }
+}
+
+Future<Null> main() async {
+  // This captures errors reported by the Flutter framework.
+  FlutterError.onError = (FlutterErrorDetails details) async {
+    if (isInDebugMode) {
+      FlutterError.dumpErrorToConsole(details);
+    } else {
+      Zone.current.handleUncaughtError(details.exception, details.stack);
+    }
+  };
+
   final Firestore firestore = Firestore();
   await firestore.settings(timestampsInSnapshotsEnabled: true);
 
-  runApp(MyApp());
+  //runApp(MyApp());
+  // This creates a [Zone] that contains the Flutter application and stablishes
+  // an error handler that captures errors and reports them.
+  runZoned<Future<Null>>(() async {
+    runApp(new MyApp());
+  }, onError: (error, stackTrace) async {
+    await _reportError(error, stackTrace);
+  });
 }
 
 class MyApp extends StatelessWidget {

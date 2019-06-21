@@ -13,7 +13,6 @@ class FirestoreService<T extends BaseModel> {
   Future<dynamic> createObject(T obj) async {
     final TransactionHandler createTransaction = (Transaction tx) async {
       final DocumentSnapshot ds = await tx.get(_objectCollection.document());
-
       obj.id = ds.documentID;
       final Map<String, dynamic> data = obj.toMap();
 
