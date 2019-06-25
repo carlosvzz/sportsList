@@ -19,8 +19,8 @@ class GameScopedModel extends Model {
 
   List<Game> getGameList(String idSport, DateTime date) {
     List<DateTime> dateFilter = rutinas.getSportDates(idSport, date);
-    isLoading = true;
-    notifyListeners();
+    //isLoading = true;
+    //notifyListeners();
 
     List<Game> lista = _gameList
         .where((Game g) =>
@@ -40,8 +40,8 @@ class GameScopedModel extends Model {
       }
     });
 
-    isLoading = false;
-    notifyListeners();
+    //isLoading = false;
+    //notifyListeners();
 
     return lista;
   }
