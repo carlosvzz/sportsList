@@ -10,24 +10,19 @@ class MyModalBottom extends StatelessWidget {
   static final List<CustomMenu> _listMenuData = [
     new CustomMenu('NBA', CustomIcons.dribbble),
     new CustomMenu('NHL', CustomIcons.hockey),
-    new CustomMenu('', null),
     new CustomMenu('MLB', CustomIcons.baseball),
     new CustomMenu('NFL', CustomIcons.football),
-    new CustomMenu('Soccer AMERICA', CustomIcons.soccer_ball),
-    new CustomMenu('', null),
-    new CustomMenu('', null),
     new CustomMenu('Soccer MLS', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer MEX', CustomIcons.soccer_ball),
     new CustomMenu('Soccer ENG', CustomIcons.soccer_ball),
     new CustomMenu('Soccer GER', CustomIcons.soccer_ball),
     new CustomMenu('Soccer ESP', CustomIcons.soccer_ball),
     new CustomMenu('Soccer ITA', CustomIcons.soccer_ball),
     new CustomMenu('Soccer FRA', CustomIcons.soccer_ball),
-    new CustomMenu('', null),
-    new CustomMenu('', null),
-    new CustomMenu('', null),
     new CustomMenu('Soccer HOL', CustomIcons.soccer_ball),
     new CustomMenu('Soccer POR', CustomIcons.soccer_ball),
+    new CustomMenu('Soccer ENG2', CustomIcons.soccer_ball),
+    new CustomMenu('Soccer HOL2', CustomIcons.soccer_ball),
+    new CustomMenu('Soccer MEX', CustomIcons.soccer_ball),
   ];
 
   @override

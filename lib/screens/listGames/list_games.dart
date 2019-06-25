@@ -54,6 +54,7 @@ class _ListGamesState extends State<ListGames> {
                           .toLowerCase()
                           .contains(widget._filtroEquipo.toLowerCase())) {
                     siMostrar = true;
+                    print('si entro =S');
                   }
                 }
 
@@ -68,6 +69,8 @@ class _ListGamesState extends State<ListGames> {
                     return CardGame(
                         listaFiltrada[index], gameModel.setContadores);
                   }
+                } else {
+                  return Container();
                 }
               },
             );

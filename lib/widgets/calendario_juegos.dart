@@ -70,6 +70,8 @@ Future<List<String>> getLimitDates() async {
   listaResp.add(text);
   text = await getLimitDatesLeague('Soccer ENG');
   listaResp.add(text);
+  text = await getLimitDatesLeague('Soccer ENG2');
+  listaResp.add(text);
   text = await getLimitDatesLeague('Soccer GER');
   listaResp.add(text);
   text = await getLimitDatesLeague('Soccer ESP');
@@ -80,7 +82,9 @@ Future<List<String>> getLimitDates() async {
   listaResp.add(text);
   text = await getLimitDatesLeague('Soccer POR');
   listaResp.add(text);
-  text = await getLimitDatesLeague('Soccer AMERICA');
+  text = await getLimitDatesLeague('Soccer HOL');
+  listaResp.add(text);
+  text = await getLimitDatesLeague('Soccer HOL2');
   listaResp.add(text);
 
   return listaResp..sort();
@@ -101,7 +105,7 @@ Future<String> getLimitDatesLeague(String l) async {
     // Inicial
     collectionSnapshot = await collectionRef
         .where('idSport', isEqualTo: l)
-        .where('gameDate', isGreaterThanOrEqualTo: todayInt)
+        .where('gameDate', isGreaterThan: todayInt)
         .orderBy('gameDate')
         .limit(1)
         .getDocuments();
