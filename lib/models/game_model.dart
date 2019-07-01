@@ -146,21 +146,18 @@ class GameScopedModel extends Model {
         if (game.countDraw > valorMax) valorMax = game.countDraw;
         if (game.countHome > valorMax) valorMax = game.countHome;
 
-        // 3+ para ser verde
-        if (game.countAway - game.countHome > 2 &&
-            game.countAway - game.countDraw > 2) {
+        // 3+ que la suma del resto para ser verde
+        if (game.countAway - (game.countHome + game.countDraw) > 2) {
           hayMax = true;
           _gameList[index].colorAway = Colors.green.shade600;
         }
 
-        if (game.countHome - game.countAway > 2 &&
-            game.countHome - game.countDraw > 2) {
+        if (game.countHome - (game.countAway + game.countDraw) > 2) {
           hayMax = true;
           _gameList[index].colorHome = Colors.green.shade600;
         }
 
-        if (game.countDraw - game.countAway > 2 &&
-            game.countDraw - game.countHome > 2) {
+        if (game.countDraw - (game.countHome + game.countAway) > 2) {
           hayMax = true;
           _gameList[index].colorDraw = Colors.green.shade600;
         }
@@ -194,18 +191,22 @@ class GameScopedModel extends Model {
 
               if (game.countDraw < game.countAway &&
                   game.countDraw == game.countHome) {
-                _gameList[index].colorDraw = Colors.red.shade600;
-                _gameList[index].colorHome = Colors.red.shade600;
+                if (_gameList[index].countDraw > 0)
+                  _gameList[index].colorDraw = Colors.red.shade600;
+                if (_gameList[index].countHome > 0)
+                  _gameList[index].colorHome = Colors.red.shade600;
               }
 
               if (game.countDraw < game.countAway &&
                   game.countDraw > game.countHome) {
-                _gameList[index].colorDraw = Colors.red.shade600;
+                if (_gameList[index].countDraw > 0)
+                  _gameList[index].colorDraw = Colors.red.shade600;
               }
 
               if (game.countHome < game.countAway &&
                   game.countHome > game.countDraw) {
-                _gameList[index].colorHome = Colors.red.shade600;
+                if (_gameList[index].countHome > 0)
+                  _gameList[index].colorHome = Colors.red.shade600;
               }
             }
 
@@ -219,18 +220,22 @@ class GameScopedModel extends Model {
 
               if (game.countAway < game.countDraw &&
                   game.countAway == game.countHome) {
-                _gameList[index].colorAway = Colors.red.shade600;
-                _gameList[index].colorHome = Colors.red.shade600;
+                if (_gameList[index].countAway > 0)
+                  _gameList[index].colorAway = Colors.red.shade600;
+                if (_gameList[index].countHome > 0)
+                  _gameList[index].colorHome = Colors.red.shade600;
               }
 
               if (game.countAway < game.countDraw &&
                   game.countAway > game.countHome) {
-                _gameList[index].colorAway = Colors.red.shade600;
+                if (_gameList[index].countAway > 0)
+                  _gameList[index].colorAway = Colors.red.shade600;
               }
 
               if (game.countHome < game.countDraw &&
                   game.countHome > game.countAway) {
-                _gameList[index].colorHome = Colors.red.shade600;
+                if (_gameList[index].countHome > 0)
+                  _gameList[index].colorHome = Colors.red.shade600;
               }
             }
 
@@ -241,18 +246,22 @@ class GameScopedModel extends Model {
               //2do lugar
               if (game.countAway < game.countHome &&
                   game.countAway == game.countDraw) {
-                _gameList[index].colorAway = Colors.red.shade600;
-                _gameList[index].colorDraw = Colors.red.shade600;
+                if (_gameList[index].countAway > 0)
+                  _gameList[index].colorAway = Colors.red.shade600;
+                if (_gameList[index].countDraw > 0)
+                  _gameList[index].colorDraw = Colors.red.shade600;
               }
 
               if (game.countAway < game.countHome &&
                   game.countAway > game.countDraw) {
-                _gameList[index].colorAway = Colors.red.shade600;
+                if (_gameList[index].countAway > 0)
+                  _gameList[index].colorAway = Colors.red.shade600;
               }
 
               if (game.countDraw < game.countHome &&
                   game.countDraw > game.countAway) {
-                _gameList[index].colorDraw = Colors.red.shade600;
+                if (_gameList[index].countDraw > 0)
+                  _gameList[index].colorDraw = Colors.red.shade600;
               }
             }
           }
