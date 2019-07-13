@@ -92,9 +92,8 @@ class CardGame extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              SizedBox(
-                width: 40,
-              ),
+              CustomStep(gameData.id, 'away', '', gameData.countAway,
+                  gameData.colorAway, setContadores),
               CircleText('${gameData.awayTeam.abbreviation}'),
               SizedBox(
                 width: 40,
@@ -105,28 +104,27 @@ class CardGame extends StatelessWidget {
                 ),
               ),
               CircleText('${gameData.homeTeam.abbreviation}'),
-              SizedBox(
-                width: 40,
-              ),
+              CustomStep(gameData.id, 'home', '', gameData.countHome,
+                  gameData.colorHome, setContadores),
             ],
           ),
           SizedBox(
-            height: 8.0,
+            height: 5.0,
           ),
           ////////////////////////////////////////////////////////
           // STEPPERS MAIN --
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              SizedBox(width: 5),
-              CustomStep(gameData.id, 'away', '', gameData.countAway,
-                  gameData.colorAway, setContadores),
-              SizedBox(width: 10),
-              CustomStep(gameData.id, 'home', '', gameData.countHome,
-                  gameData.colorHome, setContadores),
-              SizedBox(width: 5),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: <Widget>[
+          //     SizedBox(width: 5),
+          //     CustomStep(gameData.id, 'away', '', gameData.countAway,
+          //         gameData.colorAway, setContadores),
+          //     SizedBox(width: 10),
+          //     CustomStep(gameData.id, 'home', '', gameData.countHome,
+          //         gameData.colorHome, setContadores),
+          //     SizedBox(width: 5),
+          //   ],
+          // ),
           SizedBox(
             height: 8,
           ),

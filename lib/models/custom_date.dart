@@ -1,4 +1,4 @@
-import 'package:date_format/date_format.dart';
+import 'package:sports_list/helpers/format_date.dart';
 
 class CustomDate {
   DateTime date;
@@ -31,9 +31,7 @@ class CustomDate {
     } else if (date == _yesterday) {
       return 'AYER';
     } else {
-      return formatDate(date, [D , ' ', dd, '/', mm]);
+      return formatDate(date, [D, ' ', dd, '/', mm]);
     }
   }
-
-  
 }

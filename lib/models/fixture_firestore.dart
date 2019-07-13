@@ -1,7 +1,7 @@
 // clase de fixtures/juegos propios en firestore
+import 'package:sports_list/helpers/format_date.dart';
 import 'package:sports_list/models/team.dart';
 import 'fixture_sportsfeed.dart';
-import 'package:date_format/date_format.dart';
 
 class FixtureFireStore {
   int idGame;
@@ -64,8 +64,8 @@ class FixtureFireStore {
         originalDate: null,
         originalTime: null,
         delayedOrPostponedReason: null,
-        date: formatDate(dateGame, ['yyyy', '-', 'mm', '-', 'dd']),
-        time: formatDate(dateGame, ['HH', ':', 'nn']),
+        date: formatDate(dateGame, [yyyy, '-', mm, '-', dd]),
+        time: formatDate(dateGame, [HH, ':', nn]),
         location: this.location,
         awayTeam: this.awayTeam,
         homeTeam: this.homeTeam);

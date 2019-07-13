@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:date_format/date_format.dart';
 import 'package:http/http.dart' as http;
+import 'package:sports_list/helpers/format_date.dart';
 import 'package:sports_list/helpers/rutinas.dart' as rutinas;
 import 'package:sports_list/services/firestore_service.dart';
 import 'fixture_firestore.dart';
@@ -19,8 +19,8 @@ class GameScopedModel extends Model {
 
   List<Game> getGameList(String idSport, DateTime date) {
     List<DateTime> dateFilter = rutinas.getSportDates(idSport, date);
-    isLoading = true;
-    notifyListeners();
+    //isLoading = true;
+    //notifyListeners();
 
     List<Game> lista = _gameList
         .where((Game g) =>
@@ -40,8 +40,8 @@ class GameScopedModel extends Model {
       }
     });
 
-    isLoading = false;
-    notifyListeners();
+    //isLoading = false;
+    //notifyListeners();
 
     return lista;
   }
@@ -64,16 +64,28 @@ class GameScopedModel extends Model {
     return _gameList.singleWhere((Game g) => g.idGame == idGame);
   }
 
-  Future deleteCollection() async {
-    Firestore.instance.collection("games").getDocuments().then((snapshot) {
+  Future deleteCollection(bool onlyToday, String idSport) async {
+    Firestore.instance
+        .collection("games")
+        .getDocuments()
+        .then((snapshot) async {
       DateTime _now = DateTime.now();
       DateTime _today = DateTime(_now.year, _now.month, _now.day);
 
       for (DocumentSnapshot ds in snapshot.documents) {
         DateTime _docDate = ds.data['date'].toDate();
-        // Borrar solo si es antes de Hoy
-        if (_docDate.isBefore(_today)) {
-          ds.reference.delete();
+
+        if (onlyToday == true) {
+// Borrar solo si es Hoy y para el Deporte mencionado
+          if (_docDate == _today && ds.data['idSport'] == idSport) {
+            //debugPrint('${ds.data['idSport']} y $idSport ');
+            await ds.reference.delete();
+          }
+        } else {
+// Borrar solo si es antes de Hoy
+          if (_docDate.isBefore(_today)) {
+            await ds.reference.delete();
+          }
         }
       }
     });
@@ -134,21 +146,18 @@ class GameScopedModel extends Model {
         if (game.countDraw > valorMax) valorMax = game.countDraw;
         if (game.countHome > valorMax) valorMax = game.countHome;
 
-        // 3+ para ser verde
-        if (game.countAway - game.countHome > 2 &&
-            game.countAway - game.countDraw > 2) {
+        // 3+ que la suma del resto para ser verde
+        if (game.countAway - (game.countHome + game.countDraw) > 2) {
           hayMax = true;
           _gameList[index].colorAway = Colors.green.shade600;
         }
 
-        if (game.countHome - game.countAway > 2 &&
-            game.countHome - game.countDraw > 2) {
+        if (game.countHome - (game.countAway + game.countDraw) > 2) {
           hayMax = true;
           _gameList[index].colorHome = Colors.green.shade600;
         }
 
-        if (game.countDraw - game.countAway > 2 &&
-            game.countDraw - game.countHome > 2) {
+        if (game.countDraw - (game.countHome + game.countAway) > 2) {
           hayMax = true;
           _gameList[index].colorDraw = Colors.green.shade600;
         }
@@ -182,18 +191,22 @@ class GameScopedModel extends Model {
 
               if (game.countDraw < game.countAway &&
                   game.countDraw == game.countHome) {
-                _gameList[index].colorDraw = Colors.red.shade600;
-                _gameList[index].colorHome = Colors.red.shade600;
+                if (_gameList[index].countDraw > 0)
+                  _gameList[index].colorDraw = Colors.red.shade600;
+                if (_gameList[index].countHome > 0)
+                  _gameList[index].colorHome = Colors.red.shade600;
               }
 
               if (game.countDraw < game.countAway &&
                   game.countDraw > game.countHome) {
-                _gameList[index].colorDraw = Colors.red.shade600;
+                if (_gameList[index].countDraw > 0)
+                  _gameList[index].colorDraw = Colors.red.shade600;
               }
 
               if (game.countHome < game.countAway &&
                   game.countHome > game.countDraw) {
-                _gameList[index].colorHome = Colors.red.shade600;
+                if (_gameList[index].countHome > 0)
+                  _gameList[index].colorHome = Colors.red.shade600;
               }
             }
 
@@ -207,18 +220,22 @@ class GameScopedModel extends Model {
 
               if (game.countAway < game.countDraw &&
                   game.countAway == game.countHome) {
-                _gameList[index].colorAway = Colors.red.shade600;
-                _gameList[index].colorHome = Colors.red.shade600;
+                if (_gameList[index].countAway > 0)
+                  _gameList[index].colorAway = Colors.red.shade600;
+                if (_gameList[index].countHome > 0)
+                  _gameList[index].colorHome = Colors.red.shade600;
               }
 
               if (game.countAway < game.countDraw &&
                   game.countAway > game.countHome) {
-                _gameList[index].colorAway = Colors.red.shade600;
+                if (_gameList[index].countAway > 0)
+                  _gameList[index].colorAway = Colors.red.shade600;
               }
 
               if (game.countHome < game.countDraw &&
                   game.countHome > game.countAway) {
-                _gameList[index].colorHome = Colors.red.shade600;
+                if (_gameList[index].countHome > 0)
+                  _gameList[index].colorHome = Colors.red.shade600;
               }
             }
 
@@ -229,18 +246,22 @@ class GameScopedModel extends Model {
               //2do lugar
               if (game.countAway < game.countHome &&
                   game.countAway == game.countDraw) {
-                _gameList[index].colorAway = Colors.red.shade600;
-                _gameList[index].colorDraw = Colors.red.shade600;
+                if (_gameList[index].countAway > 0)
+                  _gameList[index].colorAway = Colors.red.shade600;
+                if (_gameList[index].countDraw > 0)
+                  _gameList[index].colorDraw = Colors.red.shade600;
               }
 
               if (game.countAway < game.countHome &&
                   game.countAway > game.countDraw) {
-                _gameList[index].colorAway = Colors.red.shade600;
+                if (_gameList[index].countAway > 0)
+                  _gameList[index].colorAway = Colors.red.shade600;
               }
 
               if (game.countDraw < game.countHome &&
                   game.countDraw > game.countAway) {
-                _gameList[index].colorDraw = Colors.red.shade600;
+                if (_gameList[index].countDraw > 0)
+                  _gameList[index].colorDraw = Colors.red.shade600;
               }
             }
           }
@@ -281,7 +302,7 @@ class GameScopedModel extends Model {
 
     String miUrl =
         '${keys.SportsFeedUrl}/$idSport/current/daily_game_schedule.json?fordate=' +
-            formatDate(date, ['yyyy', 'mm', 'dd']);
+            formatDate(date, [yyyy, mm, dd]);
 
     http.Response response = await http
         .get(miUrl, headers: {'Authorization': _basicAuth}).catchError((error) {
@@ -441,6 +462,7 @@ class GameScopedModel extends Model {
                 game.homeTeam,
                 game.location);
 
+            //debugPrint('${newGame.toMap()}');
             //Agregar a DB y lista local
             String newId = await db.createObject(newGame);
             newGame.id = newId;

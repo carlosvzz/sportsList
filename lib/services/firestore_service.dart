@@ -11,26 +11,25 @@ class FirestoreService<T extends BaseModel> {
   }
 
   Future<dynamic> createObject(T obj) async {
-    final TransactionHandler createTransaction = (Transaction tx) async {
-      final DocumentSnapshot ds = await tx.get(_objectCollection.document());
-
-      obj.id = ds.documentID;
-      final Map<String, dynamic> data = obj.toMap();
-
-      await tx.set(ds.reference, data);
-      return data;
-    };
-
     try {
-      return Firestore.instance
-          .runTransaction(createTransaction)
-          .then((mapData) {
-        //var objNew = obj.createNew();
-        //return objNew.fromMap(mapData);
-        return mapData['id'];
-      }).catchError((error) {
-        return null;
-      });
+      final TransactionHandler createTransaction = (Transaction tx) async {
+        final DocumentSnapshot ds = await tx.get(_objectCollection.document());
+        obj.id = ds.documentID;
+        final Map<String, dynamic> data = obj.toMap();
+
+        await tx.set(ds.reference, data);
+        return data;
+      };
+
+      if (createTransaction != null) {
+        return Firestore.instance
+            .runTransaction(createTransaction)
+            .then((mapData) {
+          return mapData['id'];
+        }).catchError((error) {
+          return null;
+        });
+      }
     } catch (e) {
       print('db error : $e');
     }

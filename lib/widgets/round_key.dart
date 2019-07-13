@@ -35,19 +35,41 @@ class _RoundKeyState extends State<RoundKey> {
     }
 
     // no Mini es boton de renglon MAIN. El label es el valor real del campo
-    content = FloatingActionButton(
-      mini: false,
-      child: Text(
-        '${_value.toString()}',
-        style: TextStyle(
-            fontSize: 25.0,
-            fontWeight: FontWeight.bold,
-            color: widget.color == Colors.yellowAccent.shade700
-                ? Colors.grey.shade600
-                : Colors.white),
+    // content = FloatingActionButton(
+    //   mini: false,
+    //   child: Text(
+    //     '${_value.toString()}',
+    //     style: TextStyle(
+    //         fontSize: 25.0,
+    //         fontWeight: FontWeight.bold,
+    //         color: widget.color == Colors.yellowAccent.shade700
+    //             ? Colors.grey.shade600
+    //             : Colors.white),
+    //   ),
+    //   backgroundColor: widget.color,
+    //   onPressed: () => _updateValue(),
+    // );
+
+    content = GestureDetector(
+      onTap: () => _updateValue(),
+      child: Container(
+        width: 40.0,
+        height: 40.0,
+        decoration: new BoxDecoration(
+            color: widget.color,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(10.0)),
+        child: Center(
+            child: Text(
+          '${_value.toString()}',
+          style: TextStyle(
+              color: widget.color == Colors.yellowAccent.shade700
+                  ? Colors.grey.shade600
+                  : Colors.white,
+              fontSize: 17.0,
+              fontWeight: FontWeight.bold),
+        )),
       ),
-      backgroundColor: widget.color,
-      onPressed: () => _updateValue(),
     );
 
     return content;

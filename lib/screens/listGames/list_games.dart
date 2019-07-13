@@ -8,8 +8,9 @@ import 'package:sports_list/screens/listGames/card_game_soccer.dart';
 class ListGames extends StatefulWidget {
   final String _sport;
   final DateTime _date;
+  final String _filtroEquipo;
 
-  ListGames(this._sport, this._date);
+  ListGames(this._sport, this._date, this._filtroEquipo);
 
   @override
   _ListGamesState createState() => _ListGamesState();
@@ -36,16 +37,40 @@ class _ListGamesState extends State<ListGames> {
               itemCount: listaFiltrada.length,
               padding: const EdgeInsets.all(3.0),
               itemBuilder: (context, index) {
-                if (listaFiltrada[index]
-                    .idSport
-                    .toUpperCase()
-                    .contains('SOCCER')) {
-                  // TODO SOCCER
-                  return CardGameSoccer(
-                      listaFiltrada[index], gameModel.setContadores);
+                bool siMostrar = false;
+
+                if (widget._filtroEquipo == null ||
+                    widget._filtroEquipo.isEmpty) {
+                  siMostrar = true;
                 } else {
-                  return CardGame(
-                      listaFiltrada[index], gameModel.setContadores);
+                  if (listaFiltrada[index]
+                          .homeTeam
+                          .abbreviation
+                          .toLowerCase()
+                          .contains(widget._filtroEquipo.toLowerCase()) ||
+                      listaFiltrada[index]
+                          .awayTeam
+                          .abbreviation
+                          .toLowerCase()
+                          .contains(widget._filtroEquipo.toLowerCase())) {
+                    siMostrar = true;
+                    print('si entro =S');
+                  }
+                }
+
+                if (siMostrar) {
+                  if (listaFiltrada[index]
+                      .idSport
+                      .toUpperCase()
+                      .contains('SOCCER')) {
+                    return CardGameSoccer(
+                        listaFiltrada[index], gameModel.setContadores);
+                  } else {
+                    return CardGame(
+                        listaFiltrada[index], gameModel.setContadores);
+                  }
+                } else {
+                  return Container();
                 }
               },
             );

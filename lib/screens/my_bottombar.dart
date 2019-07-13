@@ -28,8 +28,9 @@ class MyBottomBar extends StatelessWidget {
       final DateTime picked = await showDatePicker(
         context: context,
         initialDate: _selectedDate.date,
-        firstDate: _today.subtract(Duration(days: 3)),
-        lastDate: _today.add(Duration(days: 7)),
+        firstDate: _today.subtract(Duration(days: 1)),
+        lastDate: _today.add(Duration(days: 10)),
+        locale: const Locale("es", "ES"),
       );
 
       if (picked != null && picked != _selectedDate.date) {

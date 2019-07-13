@@ -1,5 +1,5 @@
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:sports_list/helpers/format_date.dart';
 import 'package:sports_list/models/game.dart';
 import 'package:sports_list/widgets/custom_step.dart';
 import 'circle_text.dart';
@@ -12,10 +12,10 @@ class CardGameSoccer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String labelMain = 'ML';
+    //String labelMain = 'ML';
     String labelOverUnder = 'O/U';
     String labelExtra = 'BTTS';
-    String dateFormat = formatDate(gameData.date, ['D', ' ', dd]);
+    String dateFormat = formatDate(gameData.date, [D, ' ', dd]);
 
     return Card(
       child: Column(
@@ -62,43 +62,35 @@ class CardGameSoccer extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              SizedBox(
-                width: 40,
-              ),
+              CustomStep(gameData.id, 'home', '', gameData.countHome,
+                  gameData.colorHome, setContadores),
               CircleText('${gameData.homeTeam.abbreviation}'),
-              SizedBox(
-                width: 40,
-                child: Text(
-                  '$labelMain',
-                  style: Theme.of(context).textTheme.display4,
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              CustomStep(gameData.id, 'draw', '', gameData.countDraw,
+                  gameData.colorDraw, setContadores),
               CircleText('${gameData.awayTeam.abbreviation}'),
-              SizedBox(
-                width: 40,
-              ),
+              CustomStep(gameData.id, 'away', '', gameData.countAway,
+                  gameData.colorAway, setContadores),
             ],
           ),
           SizedBox(
-            height: 8.0,
+            height: 5.0,
           ),
 
 ////////////////////////////////////////////////////////
           // Steppers MAIN
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              SizedBox(width: 5),
-              CustomStep(gameData.id, 'home', '', gameData.countHome,
-                  gameData.colorHome, setContadores),
-              CustomStep(gameData.id, 'draw', '', gameData.countDraw,
-                  gameData.colorDraw, setContadores),
-              CustomStep(gameData.id, 'away', '', gameData.countAway,
-                  gameData.colorAway, setContadores),
-              SizedBox(width: 5),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: <Widget>[
+          //     SizedBox(width: 5),
+          //     CustomStep(gameData.id, 'home', '', gameData.countHome,
+          //         gameData.colorHome, setContadores),
+          //     CustomStep(gameData.id, 'draw', '', gameData.countDraw,
+          //         gameData.colorDraw, setContadores),
+          //     CustomStep(gameData.id, 'away', '', gameData.countAway,
+          //         gameData.colorAway, setContadores),
+          //     SizedBox(width: 5),
+          //   ],
+          // ),
           SizedBox(
             height: 8,
           ),
