@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Sports Consensus',
+      title: 'Sports Consensus Provider',
       theme: _myTheme(),
       home: MyHomePage(),
     );
