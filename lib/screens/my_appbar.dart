@@ -1,41 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
-import 'package:sports_list/models/custom_menu.dart';
-import 'package:sports_list/models/user_model.dart';
+import 'package:provider/provider.dart';
+import 'package:sports_list/internals/keys.dart';
+import 'package:sports_list/providers/game_model.dart';
+import 'package:sports_list/providers/user_model.dart';
 
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
-  final CustomMenu _selectedSport;
-
-  MyAppBar(this._selectedSport);
-
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
+    GameModel oGame = Provider.of<GameModel>(context);
+    UserModel oUser = Provider.of<UserModel>(context);
+
     return AppBar(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Icon(
-            _selectedSport.icono,
+            oGame.selectedSport.icono,
             color: Colors.white70,
             size: 22.0,
           ),
           SizedBox(
             width: 5.0,
           ),
-          Text(_selectedSport.nombre ?? ''),
+          Text(oGame.selectedSport.nombre ?? ''),
           Spacer(),
-          ScopedModelDescendant<UserScopedModel>(
-            builder: (context, child, userModel) {
-              if (userModel.isLoading) {
-                return CircularProgressIndicator();
-              } else {
-                return Text(
-                  userModel.getOnlyUser(),
-                  style: Theme.of(context).textTheme.display1,
-                );
+          FutureBuilder<bool>(
+            future: oUser.verifyUser(
+                Key_FirebaseEmail, Key_FirebasePwd), // async work
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return new CircularProgressIndicator();
+                default:
+                  if (snapshot.hasError)
+                    return new Text('n/d');
+                  else
+                    return new Text(oUser.getOnlyUser());
               }
             },
           )

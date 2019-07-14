@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:sports_list/models/custom_date.dart';
-import 'package:sports_list/models/custom_menu.dart';
+import 'package:provider/provider.dart';
+import 'package:sports_list/providers/game_model.dart';
 import 'package:sports_list/screens/my_modalbottom.dart';
 
 class MyBottomBar extends StatelessWidget {
-  final Function fnSetSport;
-  final Function fnSetDate;
-  final CustomDate _selectedDate;
-
-  MyBottomBar(this.fnSetSport, this.fnSetDate, this._selectedDate);
-
   @override
   Widget build(BuildContext context) {
-    void _showModalSheet() {
+    GameModel oGame = Provider.of<GameModel>(context);
+
+    void _showModalSheet(BuildContext context) {
       showModalBottomSheet(
         context: context,
         builder: (builder) {
-          return MyModalBottom(fnSetSport);
+          return MyModalBottom(oGame.setSelectedSport);
         },
       );
     }
@@ -27,14 +23,14 @@ class MyBottomBar extends StatelessWidget {
 
       final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: _selectedDate.date,
+        initialDate: oGame.selectedDate.date,
         firstDate: _today.subtract(Duration(days: 1)),
         lastDate: _today.add(Duration(days: 10)),
         locale: const Locale("es", "ES"),
       );
 
-      if (picked != null && picked != _selectedDate.date) {
-        fnSetDate(picked);
+      if (picked != null && picked != oGame.selectedDate.date) {
+        oGame.selectedDate.date = picked;
       }
     }
 
@@ -44,11 +40,11 @@ class MyBottomBar extends StatelessWidget {
         children: <Widget>[
           RaisedButton(
             child: Text('clear'),
-            onPressed: () => fnSetSport(new CustomMenu('X-Sports', Icons.star)),
+            onPressed: () => oGame.setSelectedSport('X-Sports', Icons.star),
           ),
           RaisedButton(
             child: Text(
-              '${_selectedDate.label}',
+              '${oGame.selectedDate.label}',
               style: TextStyle(color: Theme.of(context).accentColor),
             ),
             onPressed: () => _selectDate(context),
@@ -56,7 +52,7 @@ class MyBottomBar extends StatelessWidget {
           RaisedButton(
             child: Text('sports'),
             onPressed: () {
-              _showModalSheet();
+              _showModalSheet(context);
             },
           ),
         ],

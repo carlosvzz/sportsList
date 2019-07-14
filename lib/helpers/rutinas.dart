@@ -1,3 +1,4 @@
+const String kSportVacio = 'X-Sports';
 //Lista con fecha ini y fin para partidos, segun dateOrig
 
 List<DateTime> getSportDates(String idSport, DateTime dateOrig) {

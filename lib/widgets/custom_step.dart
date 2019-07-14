@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sports_list/providers/game_model.dart';
 import 'package:sports_list/widgets/round_key.dart';
 import 'package:sports_list/widgets/round_key_duo.dart';
 
@@ -8,9 +10,8 @@ class CustomStep extends StatelessWidget {
   final String finalLabel;
   final int custValue;
   final Color custColor;
-  final Function fnContadores;
-  CustomStep(this.id, this.custType, this.finalLabel, this.custValue,
-      this.custColor, this.fnContadores);
+  CustomStep(
+      this.id, this.custType, this.finalLabel, this.custValue, this.custColor);
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +33,18 @@ class CustomStep extends StatelessWidget {
     }
 
     if (_isMini) {
-      return RoundKeyDuo(finalLabel, custColor, custValue,
-          (int value) => fnContadores(id, custType, value));
+      return RoundKeyDuo(
+          finalLabel,
+          custColor,
+          custValue,
+          (int value) => Provider.of<GameModel>(context)
+              .setContadores(id, custType, value));
     } else {
-      return RoundKey(custColor, custValue,
-          (int value) => fnContadores(id, custType, value));
+      return RoundKey(
+          custColor,
+          custValue,
+          (int value) => Provider.of<GameModel>(context)
+              .setContadores(id, custType, value));
     }
   }
 }

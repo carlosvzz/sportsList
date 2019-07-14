@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
-import 'package:sports_list/models/game_model.dart';
-import 'package:sports_list/models/user_model.dart';
+import 'package:provider/provider.dart';
+import 'package:sports_list/providers/game_model.dart';
+import 'package:sports_list/providers/user_model.dart';
 import '../internals/keys.dart';
 import 'calendario_juegos.dart';
 
 class MainDrawer extends StatelessWidget {
-  final String idSport;
-
-  MainDrawer(this.idSport);
-
   @override
   Widget build(BuildContext context) {
     return new Drawer(
@@ -22,36 +18,43 @@ class MainDrawer extends StatelessWidget {
           Column(
             children: <Widget>[
               /// LIMPIAR BD
-              ScopedModelDescendant<GameScopedModel>(
-                builder: (context, child, gameModel) {
-                  return ListTile(
-                      leading: Icon(Icons.disc_full),
-                      title: Text('Limpiar DB antiguos'),
-                      onTap: () async {
-                        _limpiarDB(context, gameModel, false);
+              ListTile(
+                leading: Icon(Icons.disc_full),
+                title: Text('Limpiar DB antiguos'),
+                onTap: () async {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
                       });
+                  await _limpiarDB(context, false);
+                  Navigator.pop(context);
                 },
               ),
-              ScopedModelDescendant<GameScopedModel>(
-                builder: (context, child, gameModel) {
-                  return ListTile(
-                      leading: Icon(Icons.disc_full),
-                      title: Text('Limpiar DB hoy'),
-                      onTap: () async {
-                        _limpiarDB(context, gameModel, true);
+              ListTile(
+                leading: Icon(Icons.disc_full),
+                title: Text('Limpiar DB hoy'),
+                onTap: () async {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
                       });
+                  await _limpiarDB(context, true);
+                  Navigator.pop(context);
                 },
               ),
               // VERIFICAR USUARIO
-              ScopedModelDescendant<UserScopedModel>(
-                builder: (context, child, userModel) {
-                  return ListTile(
-                    leading: Icon(Icons.verified_user),
-                    title: Text('Iniciar sesión'),
-                    onTap: () async {
-                      userModel.verifyUser(Key_FirebaseEmail, Key_FirebasePwd);
-                    },
-                  );
+              ListTile(
+                leading: Icon(Icons.verified_user),
+                title: Text('Iniciar sesión'),
+                onTap: () async {
+                  Provider.of<UserModel>(context, listen: false)
+                      .verifyUser(Key_FirebaseEmail, Key_FirebasePwd);
                 },
               ),
               // CALENDARIO DE JUEGO
@@ -73,12 +76,12 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  void _limpiarDB(
-      BuildContext context, GameScopedModel model, bool onlyToday) async {
+  Future<bool> _limpiarDB(BuildContext context, bool onlyToday) async {
     Navigator.of(context).pop();
-    await model.deleteCollection(onlyToday, this.idSport);
+    await Provider.of<GameModel>(context).deleteCollection(onlyToday);
     Scaffold.of(context).showSnackBar(new SnackBar(
       content: new Text("Limpieza terminada!"),
     ));
+    return true;
   }
 }

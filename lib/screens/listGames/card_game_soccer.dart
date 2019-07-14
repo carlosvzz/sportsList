@@ -5,10 +5,8 @@ import 'package:sports_list/widgets/custom_step.dart';
 import 'circle_text.dart';
 
 class CardGameSoccer extends StatelessWidget {
-  CardGameSoccer(this.gameData, this.setContadores);
-
+  CardGameSoccer(this.gameData);
   final Game gameData;
-  final Function setContadores;
 
   @override
   Widget build(BuildContext context) {
@@ -63,34 +61,19 @@ class CardGameSoccer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               CustomStep(gameData.id, 'home', '', gameData.countHome,
-                  gameData.colorHome, setContadores),
+                  gameData.colorHome),
               CircleText('${gameData.homeTeam.abbreviation}'),
               CustomStep(gameData.id, 'draw', '', gameData.countDraw,
-                  gameData.colorDraw, setContadores),
+                  gameData.colorDraw),
               CircleText('${gameData.awayTeam.abbreviation}'),
               CustomStep(gameData.id, 'away', '', gameData.countAway,
-                  gameData.colorAway, setContadores),
+                  gameData.colorAway),
             ],
           ),
           SizedBox(
             height: 5.0,
           ),
 
-////////////////////////////////////////////////////////
-          // Steppers MAIN
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: <Widget>[
-          //     SizedBox(width: 5),
-          //     CustomStep(gameData.id, 'home', '', gameData.countHome,
-          //         gameData.colorHome, setContadores),
-          //     CustomStep(gameData.id, 'draw', '', gameData.countDraw,
-          //         gameData.colorDraw, setContadores),
-          //     CustomStep(gameData.id, 'away', '', gameData.countAway,
-          //         gameData.colorAway, setContadores),
-          //     SizedBox(width: 5),
-          //   ],
-          // ),
           SizedBox(
             height: 8,
           ),
@@ -107,13 +90,8 @@ class CardGameSoccer extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              CustomStep(
-                  gameData.id,
-                  'overunder',
-                  'OU',
-                  gameData.countOverUnder,
-                  gameData.colorOverUnder,
-                  setContadores),
+              CustomStep(gameData.id, 'overunder', 'OU',
+                  gameData.countOverUnder, gameData.colorOverUnder),
               Spacer(),
               SizedBox(
                 width: 40,
@@ -124,7 +102,7 @@ class CardGameSoccer extends StatelessWidget {
                 ),
               ),
               CustomStep(gameData.id, 'extra', 'YN', gameData.countExtra,
-                  gameData.colorExtra, setContadores),
+                  gameData.colorExtra),
             ],
           ),
           SizedBox(height: 8.0),

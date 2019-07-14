@@ -3,9 +3,8 @@ import 'package:sports_list/models/custom_menu.dart';
 import 'package:sports_list/widgets/custom_icons.dart';
 
 class MyModalBottom extends StatelessWidget {
-  final Function setSport;
-
-  MyModalBottom(this.setSport);
+  final Function fnSetSport;
+  MyModalBottom(this.fnSetSport);
 
   static final List<CustomMenu> _listMenuData = [
     new CustomMenu('NBA', CustomIcons.dribbble),
@@ -36,7 +35,7 @@ class MyModalBottom extends StatelessWidget {
           crossAxisSpacing: 5.0,
           children: _listMenuData.map((CustomMenu data) {
             return new GridTile(
-              child: new SportContainer(setSport: setSport, data: data),
+              child: new SportContainer(fnSetSport: fnSetSport, data: data),
             );
           }).toList()),
     );
@@ -44,14 +43,13 @@ class MyModalBottom extends StatelessWidget {
 }
 
 class SportContainer extends StatelessWidget {
-  const SportContainer({
-    Key key,
-    @required this.setSport,
-    @required this.data,
-  }) : super(key: key);
-
-  final Function setSport;
+  final Function fnSetSport;
   final CustomMenu data;
+
+  const SportContainer({
+    @required this.fnSetSport,
+    @required this.data,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +71,7 @@ class SportContainer extends StatelessWidget {
                   fontSize: 17.0, color: Theme.of(context).accentColor),
             ),
             onPressed: () {
-              setSport(data);
+              fnSetSport(data.nombre, data.icono);
               Navigator.pop(context);
             },
           ));

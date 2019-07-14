@@ -24,14 +24,18 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   http: ^0.12.0+2
-  scoped_model: ^1.0.1
-  # cloud_firestore: ^0.9.13+1
+  # scoped_model: ^1.0.1
+  provider: ^3.0.0+1
+  #cloud_firestore: ^0.9.13+1
   #pre-AndroidX
   cloud_firestore: ^0.8.2+3  
   #pre-AndroidX
-  firebase_auth: any
+  firebase_auth: 0.7.0
   json_table: ^0.3.0
+  # Envio de errores 
   sentry: ^2.2.0
+  # Mostrar Toast Msg
+  overlay_support: ^1.0.0
 
   flutter_localizations:
     sdk: flutter

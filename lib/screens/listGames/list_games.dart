@@ -1,86 +1,83 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:provider/provider.dart';
 import 'package:sports_list/models/game.dart';
-import 'package:sports_list/models/game_model.dart';
+import 'package:sports_list/providers/game_model.dart';
 import 'package:sports_list/screens/listGames/card_game.dart';
 import 'package:sports_list/screens/listGames/card_game_soccer.dart';
 
 class ListGames extends StatefulWidget {
-  final String _sport;
-  final DateTime _date;
   final String _filtroEquipo;
 
-  ListGames(this._sport, this._date, this._filtroEquipo);
+  ListGames(this._filtroEquipo);
 
   @override
   _ListGamesState createState() => _ListGamesState();
 }
 
 class _ListGamesState extends State<ListGames> {
+  List<Game> _listaFiltrada;
+
+  @override
+  void initState() {
+    super.initState();
+    _listaFiltrada =
+        Provider.of<GameModel>(context, listen: false).getListaFiltrada();
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget modelBuilder = ScopedModelDescendant<GameScopedModel>(
-      builder: (context, child, gameModel) {
-        Widget content;
-        if (gameModel.isLoading) {
-          content = Center(child: CircularProgressIndicator());
-        } else {
-          List<Game> listaFiltrada =
-              gameModel.getGameList(widget._sport, widget._date);
+    GameModel oGame = Provider.of<GameModel>(context);
+    Widget content = Center(child: CircularProgressIndicator());
 
-          if (listaFiltrada.length == 0) {
-            content = Center(
-              child: Text('NO GAMES / FETCHING ... '),
-            );
-          } else {
-            content = ListView.builder(
-              itemCount: listaFiltrada.length,
-              padding: const EdgeInsets.all(3.0),
-              itemBuilder: (context, index) {
-                bool siMostrar = false;
+    if (oGame.isLoading || oGame.isFiltering) {
+      content = Center(
+        child: Text('FETCHING ... '),
+      );
+    } else {
+      if (_listaFiltrada.length == 0) {
+        content = Center(
+          child: Text('NO GAMES ... '),
+        );
+      } else {
+        content = ListView.builder(
+          itemCount: _listaFiltrada.length,
+          padding: const EdgeInsets.all(3.0),
+          itemBuilder: (context, index) {
+            bool siMostrar = false;
 
-                if (widget._filtroEquipo == null ||
-                    widget._filtroEquipo.isEmpty) {
-                  siMostrar = true;
-                } else {
-                  if (listaFiltrada[index]
-                          .homeTeam
-                          .abbreviation
-                          .toLowerCase()
-                          .contains(widget._filtroEquipo.toLowerCase()) ||
-                      listaFiltrada[index]
-                          .awayTeam
-                          .abbreviation
-                          .toLowerCase()
-                          .contains(widget._filtroEquipo.toLowerCase())) {
-                    siMostrar = true;
-                    print('si entro =S');
-                  }
-                }
+            if (widget._filtroEquipo == null || widget._filtroEquipo.isEmpty) {
+              siMostrar = true;
+            } else {
+              if (_listaFiltrada[index]
+                      .homeTeam
+                      .abbreviation
+                      .toLowerCase()
+                      .startsWith(widget._filtroEquipo.toLowerCase()) ||
+                  _listaFiltrada[index]
+                      .awayTeam
+                      .abbreviation
+                      .toLowerCase()
+                      .startsWith(widget._filtroEquipo.toLowerCase())) {
+                siMostrar = true;
+              }
+            }
 
-                if (siMostrar) {
-                  if (listaFiltrada[index]
-                      .idSport
-                      .toUpperCase()
-                      .contains('SOCCER')) {
-                    return CardGameSoccer(
-                        listaFiltrada[index], gameModel.setContadores);
-                  } else {
-                    return CardGame(
-                        listaFiltrada[index], gameModel.setContadores);
-                  }
-                } else {
-                  return Container();
-                }
-              },
-            );
-          }
-        }
-
-        return content;
-      },
-    );
-
-    return modelBuilder;
+            if (siMostrar) {
+              if (_listaFiltrada[index]
+                  .idSport
+                  .toUpperCase()
+                  .contains('SOCCER')) {
+                return CardGameSoccer(_listaFiltrada[index]);
+              } else {
+                return CardGame(_listaFiltrada[index]);
+              }
+            } else {
+              return Container();
+            }
+          },
+        );
+      }
+    }
+    return content;
   }
 }

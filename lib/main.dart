@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
+import 'package:sports_list/providers/game_model.dart';
+import 'package:sports_list/providers/user_model.dart';
 import 'package:sports_list/screens/homepage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sentry/sentry.dart';
@@ -12,10 +16,9 @@ final SentryClient _sentry = new SentryClient(dsn: kSentryDSN);
 
 /// Whether the VM is running in debug mode.
 bool get isInDebugMode {
-  return false;
-  // bool inDebugMode = false;
-  // assert(inDebugMode = true);
-  // return inDebugMode;
+  bool inDebugMode = false;
+  assert(inDebugMode = true);
+  return inDebugMode;
 }
 
 /// Reports [error] along with its [stackTrace] to Sentry.io.
@@ -65,19 +68,28 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Sports Consensus',
-      theme: _myTheme(),
-      home: MyHomePage(),
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en'), // English
-        const Locale('es', 'MX'), // Spanish
-      ],
+    return OverlaySupport(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Sports Consensus',
+        theme: _myTheme(),
+        home: MultiProvider(providers: [
+          ChangeNotifierProvider<UserModel>(
+            builder: (context) => UserModel(),
+          ),
+          ChangeNotifierProvider<GameModel>(
+            builder: (context) => GameModel(),
+          )
+        ], child: MyHomePage()),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('en'), // English
+          const Locale('es', 'MX'), // Spanish
+        ],
+      ),
     );
   }
 }

@@ -4,10 +4,9 @@ import 'package:sports_list/widgets/custom_step.dart';
 import 'circle_text.dart';
 
 class CardGame extends StatelessWidget {
-  CardGame(this.gameData, this.setContadores);
+  CardGame(this.gameData);
 
   final Game gameData;
-  final Function setContadores;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,7 @@ class CardGame extends StatelessWidget {
               ),
             ),
             CustomStep(gameData.id, 'extra', 'AH', gameData.countExtra,
-                gameData.colorExtra, setContadores),
+                gameData.colorExtra),
           ],
         );
       }
@@ -93,7 +92,7 @@ class CardGame extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               CustomStep(gameData.id, 'away', '', gameData.countAway,
-                  gameData.colorAway, setContadores),
+                  gameData.colorAway),
               CircleText('${gameData.awayTeam.abbreviation}'),
               SizedBox(
                 width: 40,
@@ -105,26 +104,13 @@ class CardGame extends StatelessWidget {
               ),
               CircleText('${gameData.homeTeam.abbreviation}'),
               CustomStep(gameData.id, 'home', '', gameData.countHome,
-                  gameData.colorHome, setContadores),
+                  gameData.colorHome),
             ],
           ),
           SizedBox(
             height: 5.0,
           ),
-          ////////////////////////////////////////////////////////
-          // STEPPERS MAIN --
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: <Widget>[
-          //     SizedBox(width: 5),
-          //     CustomStep(gameData.id, 'away', '', gameData.countAway,
-          //         gameData.colorAway, setContadores),
-          //     SizedBox(width: 10),
-          //     CustomStep(gameData.id, 'home', '', gameData.countHome,
-          //         gameData.colorHome, setContadores),
-          //     SizedBox(width: 5),
-          //   ],
-          // ),
+
           SizedBox(
             height: 8,
           ),
@@ -140,13 +126,8 @@ class CardGame extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              CustomStep(
-                  gameData.id,
-                  'overunder',
-                  'OU',
-                  gameData.countOverUnder,
-                  gameData.colorOverUnder,
-                  setContadores),
+              CustomStep(gameData.id, 'overunder', 'OU',
+                  gameData.countOverUnder, gameData.colorOverUnder),
               Spacer(),
               // extra solo en NFL y NBA > NHL y MLB se muestra vacío
               extraStep(),
