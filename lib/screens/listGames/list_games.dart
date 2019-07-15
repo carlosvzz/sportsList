@@ -15,18 +15,17 @@ class ListGames extends StatefulWidget {
 }
 
 class _ListGamesState extends State<ListGames> {
-  List<Game> _listaFiltrada;
+  GameModel oGame;
 
   @override
   void initState() {
     super.initState();
-    _listaFiltrada =
-        Provider.of<GameModel>(context, listen: false).getListaFiltrada();
+    oGame = Provider.of<GameModel>(context, listen: false);
   }
 
   @override
   Widget build(BuildContext context) {
-    GameModel oGame = Provider.of<GameModel>(context);
+    List<Game> _listaFiltrada;
     Widget content = Center(child: CircularProgressIndicator());
 
     if (oGame.isLoading || oGame.isFiltering) {
@@ -34,6 +33,8 @@ class _ListGamesState extends State<ListGames> {
         child: Text('FETCHING ... '),
       );
     } else {
+      _listaFiltrada =
+          Provider.of<GameModel>(context, listen: false).getListaFiltrada();
       if (_listaFiltrada.length == 0) {
         content = Center(
           child: Text('NO GAMES ... '),

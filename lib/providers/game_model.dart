@@ -15,7 +15,7 @@ import 'package:sports_list/models/fixture_sportsfeed.dart';
 import 'package:sports_list/internals/keys.dart' as keys;
 
 class GameModel with ChangeNotifier {
-  CustomMenu selectedSport = new CustomMenu('X-Sports', Icons.stars);
+  CustomMenu selectedSport = new CustomMenu(kSportVacio, Icons.stars);
   CustomDate selectedDate = new CustomDate(DateTime.now());
   List<Game> listaOrig = [];
 
@@ -27,15 +27,34 @@ class GameModel with ChangeNotifier {
   String get idSport => selectedSport.nombre;
   DateTime get idDate => selectedDate.date;
 
-  void setSelectedSport(String nombre, IconData icono) {
+  Future<Null> setSelectedSport(String nombre, IconData icono) async {
+    isLoading = true;
+    print('paso por aqui>>1A $isLoading');
+    notifyListeners();
+
     selectedSport = new CustomMenu(nombre, icono);
+    await fetchGames();
+
+    print('paso por aqui>>1B $isLoading');
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<Null> setSelectedDate(DateTime date) async {
+    isLoading = true;
+    print('paso por aqui>>2A $isLoading');
+    notifyListeners();
+
+    selectedDate.date = date;
+    await fetchGames();
+
+    isLoading = false;
+    print('paso por aqui>>2C $isLoading');
     notifyListeners();
   }
 
   List<Game> getListaFiltrada() {
     List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
-    isFiltering = true;
-    notifyListeners();
 
     List<Game> lista = listaOrig
         .where((Game g) =>
@@ -56,15 +75,11 @@ class GameModel with ChangeNotifier {
     });
 
     isFiltering = false;
-    notifyListeners();
-
     return lista;
   }
 
   Future<void> deleteCollection(bool onlyToday) async {
-    isDeleting = true;
-    notifyListeners();
-
+    String _actualSport = idSport;
     try {
       Firestore.instance
           .collection("games")
@@ -77,9 +92,8 @@ class GameModel with ChangeNotifier {
           DateTime _docDate = ds.data['date'].toDate();
 
           if (onlyToday == true) {
-// Borrar solo si es Hoy y para el Deporte mencionado
-            if (_docDate == _today && ds.data['idSport'] == idSport) {
-              //debugPrint('${ds.data['idSport']} y $idSport ');
+            // Borrar solo si es Hoy y para el Deporte mencionado
+            if (_docDate == _today && ds.data['idSport'] == _actualSport) {
               await ds.reference.delete();
             }
           } else {
@@ -94,9 +108,7 @@ class GameModel with ChangeNotifier {
       print('ERROR deleteCollection > ${e.toString()}');
     } finally {
       listaOrig = [];
-      setSelectedSport(kSportVacio, Icons.star);
-      isDeleting = false;
-      notifyListeners();
+      await setSelectedSport(kSportVacio, Icons.star);
     }
   }
 
@@ -126,7 +138,7 @@ class GameModel with ChangeNotifier {
         }
 
         //Actualizar db
-        db.updateObject(listaOrig[index]);
+        await db.updateObject(listaOrig[index]);
         setColores(idFireStore, typeCount);
       }
     } catch (e) {
@@ -404,7 +416,7 @@ class GameModel with ChangeNotifier {
   }
 
   // Buscar JUEGOS, ya sea de la lista Original en memoria, si no del FireStore, y  si no nuevos de SportsFeed/FS Fixtures
-  Future<void> fetchGames() async {
+  Future<Null> fetchGames() async {
     bool isSoccer = idSport.toLowerCase().contains('soccer');
     List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
 
@@ -412,9 +424,6 @@ class GameModel with ChangeNotifier {
       if (idSport.isNotEmpty && idSport != kSportVacio) {
         // Revisar si ya esta cargada la lista (deporte - fecha)
         var query;
-        isLoading = true;
-        notifyListeners();
-
         if (listaOrig.length > 0) {
           query = listaOrig.firstWhere(
               (Game g) =>
@@ -456,10 +465,12 @@ class GameModel with ChangeNotifier {
               }
             } else {
               //US games
-              var dataFromResponse = await _getFixturesSportsFeed();
-              lista = FixtureSportsFeed.fromJson(dataFromResponse)
-                  .dailygameschedule
-                  .gameentry;
+              try {
+                var dataFromResponse = await _getFixturesSportsFeed();
+                lista = FixtureSportsFeed.fromJson(dataFromResponse)
+                    .dailygameschedule
+                    .gameentry;
+              } catch (e) {}
             }
 
             //Agregar respuesta a lista final de games
@@ -505,9 +516,6 @@ class GameModel with ChangeNotifier {
       }
     } catch (e) {
       print('ERR fetchGames > ${e.toString()}');
-    } finally {
-      isLoading = false;
-      notifyListeners();
     }
   }
 }

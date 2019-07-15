@@ -27,21 +27,24 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
           ),
           Text(oGame.selectedSport.nombre ?? ''),
           Spacer(),
-          FutureBuilder<bool>(
-            future: oUser.verifyUser(
-                Key_FirebaseEmail, Key_FirebasePwd), // async work
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return new CircularProgressIndicator();
-                default:
-                  if (snapshot.hasError)
-                    return new Text('n/d');
-                  else
-                    return new Text(oUser.getOnlyUser());
-              }
-            },
-          )
+          (oUser.uid?.isNotEmpty ?? false)
+              ? Text(oUser.getOnlyUser())
+              : FutureBuilder<bool>(
+                  future: oUser.verifyUser(
+                      Key_FirebaseEmail, Key_FirebasePwd), // async work
+                  builder:
+                      (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return new CircularProgressIndicator();
+                      default:
+                        if (snapshot.hasError)
+                          return new Text('n/d');
+                        else
+                          return new Text(oUser.getOnlyUser());
+                    }
+                  },
+                )
         ],
       ),
       iconTheme: IconThemeData(color: Theme.of(context).accentColor),

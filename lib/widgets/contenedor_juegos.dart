@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sports_list/providers/game_model.dart';
 import 'package:sports_list/screens/listGames/list_games.dart';
 
 class ContenedorJuegos extends StatefulWidget {
@@ -15,7 +13,6 @@ class _ContenedorJuegosState extends State<ContenedorJuegos> {
   @override
   void initState() {
     super.initState();
-    Provider.of<GameModel>(context, listen: false).fetchGames();
   }
 
   @override

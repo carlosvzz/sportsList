@@ -17,7 +17,8 @@ class FirestoreService<T extends BaseModel> {
         obj.id = ds.documentID;
         final Map<String, dynamic> data = obj.toMap();
 
-        await tx.set(ds.reference, data);
+        //await tx.set(ds.reference, data);
+        tx.set(ds.reference, data);
         return data;
       };
 
@@ -27,6 +28,7 @@ class FirestoreService<T extends BaseModel> {
             .then((mapData) {
           return mapData['id'];
         }).catchError((error) {
+          print('db error1 : $error');
           return null;
         });
       }
@@ -50,21 +52,25 @@ class FirestoreService<T extends BaseModel> {
   }
 
   Future<dynamic> updateObject(T obj) async {
-    final TransactionHandler updateTransaction = (Transaction tx) async {
-      final DocumentSnapshot ds =
-          await tx.get(_objectCollection.document(obj.id));
+    try {
+      final TransactionHandler updateTransaction = (Transaction tx) async {
+        final DocumentSnapshot ds =
+            await tx.get(_objectCollection.document(obj.id));
+        await tx.update(ds.reference, obj.toMap());
+        return {'updated': true};
+      };
 
-      await tx.update(ds.reference, obj.toMap());
-      return {'updated': true};
-    };
-
-    return Firestore.instance
-        .runTransaction(updateTransaction)
-        .then((result) => result['updated'])
-        .catchError((error) {
-      print('error : $error');
-      return false;
-    });
+      return Firestore.instance
+          .runTransaction(updateTransaction)
+          .then((result) => result['updated'])
+          .catchError((error) {
+        print('error : $error');
+        return false;
+      });
+    } catch (e) {
+      print('ERR updateObject > ${e.toString()}');
+    }
+    print('updateObject 6');
   }
 
   Future<dynamic> deleteObject(String id) async {

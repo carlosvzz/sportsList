@@ -2,7 +2,6 @@ import 'package:sports_list/helpers/format_date.dart';
 
 class CustomDate {
   DateTime date;
-  String label;
   //
   DateTime _now;
   DateTime _today;
@@ -13,8 +12,9 @@ class CustomDate {
     initDates();
 
     date = DateTime(date.year, date.month, date.day); // Solo fecha
-    label = _formatName();
   }
+
+  String get label => _formatName();
 
   void initDates() {
     _now = DateTime.now();
