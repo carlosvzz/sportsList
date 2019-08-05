@@ -71,8 +71,8 @@ class SportContainer extends StatelessWidget {
                   fontSize: 17.0, color: Theme.of(context).accentColor),
             ),
             onPressed: () async {
-              await fnSetSport(data.nombre, data.icono);
               Navigator.pop(context);
+              await fnSetSport(data.nombre, data.icono);
             },
           ));
     }

@@ -61,38 +61,49 @@ class _CalendarioJuegosState extends State<CalendarioJuegos> {
 
 // Lista con Fecha inicial y Final de cada Fixture por tipo Deporte
 Future<List<String>> getLimitDates() async {
-  List<String> listaResp = new List<String>();
+  List<TablaJuegos> listaLigas = [];
 
-  String text;
-  text = await getLimitDatesLeague('Soccer MEX');
-  listaResp.add(text);
-  text = await getLimitDatesLeague('Soccer MLS');
-  listaResp.add(text);
-  text = await getLimitDatesLeague('Soccer ENG');
-  listaResp.add(text);
-  text = await getLimitDatesLeague('Soccer ENG2');
-  listaResp.add(text);
-  text = await getLimitDatesLeague('Soccer GER');
-  listaResp.add(text);
-  text = await getLimitDatesLeague('Soccer ESP');
-  listaResp.add(text);
-  text = await getLimitDatesLeague('Soccer ITA');
-  listaResp.add(text);
-  text = await getLimitDatesLeague('Soccer FRA');
-  listaResp.add(text);
-  text = await getLimitDatesLeague('Soccer POR');
-  listaResp.add(text);
-  text = await getLimitDatesLeague('Soccer HOL');
-  listaResp.add(text);
-  text = await getLimitDatesLeague('Soccer HOL2');
-  listaResp.add(text);
+  // Listado de ligas
+  listaLigas.add(new TablaJuegos('Soccer MEX'));
+  listaLigas.add(new TablaJuegos('Soccer MLS'));
+  listaLigas.add(new TablaJuegos('Soccer ENG'));
+  listaLigas.add(new TablaJuegos('Soccer ENG2'));
+  listaLigas.add(new TablaJuegos('Soccer GER'));
+  listaLigas.add(new TablaJuegos('Soccer ESP'));
+  listaLigas.add(new TablaJuegos('Soccer ITA'));
+  listaLigas.add(new TablaJuegos('Soccer FRA'));
+  listaLigas.add(new TablaJuegos('Soccer POR'));
+  listaLigas.add(new TablaJuegos('Soccer HOL'));
+  listaLigas.add(new TablaJuegos('Soccer HOL2'));
 
-  return listaResp..sort();
+  // Obtener fecha de las distintas ligas
+  await Future.wait(listaLigas.map((l) async {
+    await getLimitDatesLeague(l);
+  }));
+
+  // Armar lista con strings json para mostrar en tabla (ya con formato de fecha y ordenado por fecha ini)
+  List<String> listaJson = [];
+  List<TablaJuegos> listaOrdenada =
+      List.from(listaLigas..sort((a, b) => a.fechaIni.compareTo(b.fechaIni)));
+
+//  print('lista ordenada >>');
+  String fechaI;
+  String fechaF;
+  listaOrdenada.forEach((f) {
+    f.fechaIni == DateTime.parse("2100-01-01")
+        ? fechaI = ''
+        : fechaI = formatDate(f.fechaIni, [D, ' ', dd, '/', M]);
+    f.fechaFin == DateTime.parse("2100-01-01")
+        ? fechaF = ''
+        : fechaF = formatDate(f.fechaFin, [D, ' ', dd, '/', M]);
+    String texto = '{"Liga":"${f.liga}","Sig":"$fechaI","Ultima":"$fechaF"}';
+    listaJson.add(texto);
+  });
+
+  return listaJson;
 }
 
-Future<String> getLimitDatesLeague(String l) async {
-  List<String> listaFechas = ['', ''];
-
+Future<void> getLimitDatesLeague(TablaJuegos l) async {
   try {
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
@@ -104,22 +115,19 @@ Future<String> getLimitDatesLeague(String l) async {
 
     // Inicial
     collectionSnapshot = await collectionRef
-        .where('idSport', isEqualTo: l)
+        .where('idSport', isEqualTo: l.liga)
         .where('gameDate', isGreaterThan: todayInt)
         .orderBy('gameDate')
         .limit(1)
         .getDocuments();
 
     if (collectionSnapshot.documents.length > 0) {
-      DateTime dateAux;
-
       int seconds = collectionSnapshot.documents[0].data['gameTimestamp'];
-      dateAux = DateTime.fromMillisecondsSinceEpoch(seconds * 1000);
-      listaFechas[0] = formatDate(dateAux, [D, ' ', dd, '/', M]);
+      l.fechaIni = DateTime.fromMillisecondsSinceEpoch(seconds * 1000);
 
       // Final
       collectionSnapshot = await collectionRef
-          .where('idSport', isEqualTo: l)
+          .where('idSport', isEqualTo: l.liga)
           .where('gameDate', isGreaterThanOrEqualTo: todayInt)
           .orderBy('gameDate', descending: true)
           .limit(1)
@@ -127,13 +135,22 @@ Future<String> getLimitDatesLeague(String l) async {
 
       if (collectionSnapshot.documents.length > 0) {
         int seconds = collectionSnapshot.documents[0].data['gameTimestamp'];
-        dateAux = DateTime.fromMillisecondsSinceEpoch(seconds * 1000);
-        listaFechas[1] = formatDate(dateAux, [D, ' ', dd, '/', M]);
+        l.fechaFin = DateTime.fromMillisecondsSinceEpoch(seconds * 1000);
       }
     }
-
-    return '{"Liga":"$l","Sig":"${listaFechas[0]}","Ultima":"${listaFechas[1]}"}';
+    return Future.value(null);
   } catch (e) {
     throw Exception('Datos no obtenidos. _getGamesFirestore ${e.toString()}');
+  }
+}
+
+class TablaJuegos {
+  String liga;
+  DateTime fechaIni;
+  DateTime fechaFin;
+
+  TablaJuegos(this.liga) {
+    fechaIni = DateTime.parse("2100-01-01");
+    fechaFin = DateTime.parse("2100-01-01");
   }
 }

@@ -320,7 +320,7 @@ class GameModel with ChangeNotifier {
   }
 
   //para deportes USA > NFL, NHL, NBA, MLB
-  Future<dynamic> _getFixturesSportsFeed() async {
+  Future<dynamic> _getFixturesSportsFeed(DateTime dateAux) async {
     String _username = keys.SportsFeedApi;
     String _password = keys.SportsFeedPwd;
     String _basicAuth =
@@ -329,7 +329,7 @@ class GameModel with ChangeNotifier {
     try {
       String miUrl =
           '${keys.SportsFeedUrl}/$idSport/current/daily_game_schedule.json?fordate=' +
-              formatDate(idDate, [yyyy, mm, dd]);
+              formatDate(dateAux, [yyyy, mm, dd]);
 
       http.Response response = await http.get(miUrl,
           headers: {'Authorization': _basicAuth}).catchError((error) {
@@ -464,18 +464,38 @@ class GameModel with ChangeNotifier {
                 });
               }
             } else {
-              //US games
-              try {
-                var dataFromResponse = await _getFixturesSportsFeed();
-                lista = FixtureSportsFeed.fromJson(dataFromResponse)
-                    .dailygameschedule
-                    .gameentry;
-              } catch (e) {}
+              //US games. NFL sera de Jueves a Lunes, por lo que hay que recorrer el listado
+              int maxVuelta = 1;
+              if (idSport.toLowerCase().contains('nfl')) {
+                maxVuelta = 5;
+              }
+
+              DateTime dateAux = idDate;
+              lista = new List<Gameentry>();
+
+              for (var i = 1; i <= maxVuelta; i++) {
+                // 2 sería viernes (nfl), ese día no lo brincamos
+                if (i != 2) {
+                  try {
+                    var dataFromResponse =
+                        await _getFixturesSportsFeed(dateAux);
+
+                    //print('dataFromResponse > $dataFromResponse');
+                    lista.addAll(FixtureSportsFeed.fromJson(dataFromResponse)
+                        .dailygameschedule
+                        .gameentry);
+                  } catch (e) {
+                    print('ERR fetchGames $e ');
+                  }
+                }
+                //Aumentamos un día para traer partidos
+                dateAux = dateAux.add(Duration(days: 1));
+              }
             }
 
             //Agregar respuesta a lista final de games
             if (lista != null) {
-              lista.forEach((game) async {
+              await Future.wait(lista.map((game) async {
                 String hora24;
                 DateTime fechaFinal;
                 // Convertir hora string a hora 24 (en deportes USA)
@@ -509,7 +529,7 @@ class GameModel with ChangeNotifier {
 
                 listaOrig.add(newGame);
                 setColores(newId, 'initial');
-              });
+              }));
             }
           }
         }
