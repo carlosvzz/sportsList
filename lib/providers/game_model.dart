@@ -22,6 +22,7 @@ class GameModel with ChangeNotifier {
   bool isLoading = false;
   bool isFiltering = false;
   bool isDeleting = false;
+  bool isUpdating = false;
   FirestoreService<Game> db = new FirestoreService<Game>('games');
 
   String get idSport => selectedSport.nombre;
@@ -114,6 +115,9 @@ class GameModel with ChangeNotifier {
 
   Future<void> setContadores(
       String idFireStore, String typeCount, int value) async {
+    isUpdating = true;
+    notifyListeners();
+
     try {
       // Buscar index del Game
       int index = listaOrig.indexWhere((Game g) => g.id == idFireStore);
@@ -137,12 +141,19 @@ class GameModel with ChangeNotifier {
           default:
         }
 
+        // Actualizar primero los colores para que se muestre sin "delay"
+        setColores(idFireStore, typeCount);
+
         //Actualizar db
         await db.updateObject(listaOrig[index]);
-        setColores(idFireStore, typeCount);
+
+        return Future.value(null);
       }
     } catch (e) {
       print('ERR setContadores > ${e.toString()}');
+    } finally {
+      isUpdating = false;
+      notifyListeners();
     }
   }
 

@@ -33,18 +33,15 @@ class CustomStep extends StatelessWidget {
     }
 
     if (_isMini) {
-      return RoundKeyDuo(
-          finalLabel,
-          custColor,
-          custValue,
-          (int value) => Provider.of<GameModel>(context)
-              .setContadores(id, custType, value));
+      return RoundKeyDuo(finalLabel, custColor, custValue, (int value) async {
+        await Provider.of<GameModel>(context)
+            .setContadores(id, custType, value);
+      });
     } else {
-      return RoundKey(
-          custColor,
-          custValue,
-          (int value) => Provider.of<GameModel>(context)
-              .setContadores(id, custType, value));
+      return RoundKey(custColor, custValue, (int value) async {
+        await Provider.of<GameModel>(context)
+            .setContadores(id, custType, value);
+      });
     }
   }
 }
