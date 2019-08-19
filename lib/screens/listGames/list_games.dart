@@ -4,7 +4,7 @@ import 'package:sports_list/models/game.dart';
 import 'package:sports_list/providers/game_model.dart';
 import 'package:sports_list/screens/listGames/card_game.dart';
 import 'package:sports_list/screens/listGames/card_game_soccer.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+//import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class ListGames extends StatefulWidget {
   final String _filtroEquipo;
@@ -41,9 +41,9 @@ class _ListGamesState extends State<ListGames> {
           child: Text('NO GAMES ... '),
         );
       } else {
-        content = ModalProgressHUD(
-          inAsyncCall: oGame.isUpdating,
-          child: ListView.builder(
+        // content = ModalProgressHUD(
+        //   inAsyncCall: oGame.isUpdating,
+          content= ListView.builder(
             itemCount: _listaFiltrada.length,
             padding: const EdgeInsets.all(3.0),
             itemBuilder: (context, index) {
@@ -80,8 +80,8 @@ class _ListGamesState extends State<ListGames> {
                 return Container();
               }
             },
-          ),
-        );
+          );
+        //);
       }
     }
     return content;

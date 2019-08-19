@@ -15,18 +15,15 @@ class CardGame extends StatelessWidget {
     String labelExtra = '';
 
     // MAIN  >> NFL y NBA = Spread || NHL y MLB es ML
-    // EXTRA >> NFL y NBA = ML || MLB = F5 ML |  NHL no aplica
+    // EXTRA >> NFL y NBA = ML || MLB y NHL no aplica
     if (gameData.idSport.contains('NFL') || gameData.idSport.contains('NBA')) {
       labelMain = 'SP +/-';
       labelExtra = 'ML';
     }
 
-    if (gameData.idSport.contains('MLB')) {
-      labelExtra = 'F5 ML';
-    }
-
     Widget extraStep() {
-      if (gameData.idSport.contains('NHL')) {
+      if (gameData.idSport.contains('NHL') ||
+          gameData.idSport.contains('MLB')) {
         return Container();
       } else {
         return Row(

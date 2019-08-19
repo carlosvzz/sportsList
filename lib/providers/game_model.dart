@@ -115,8 +115,8 @@ class GameModel with ChangeNotifier {
 
   Future<void> setContadores(
       String idFireStore, String typeCount, int value) async {
-    isUpdating = true;
-    notifyListeners();
+    // isUpdating = true;
+    // notifyListeners();
 
     try {
       // Buscar index del Game
@@ -152,8 +152,8 @@ class GameModel with ChangeNotifier {
     } catch (e) {
       print('ERR setContadores > ${e.toString()}');
     } finally {
-      isUpdating = false;
-      notifyListeners();
+      // isUpdating = false;
+      // notifyListeners();
     }
   }
 
@@ -536,10 +536,10 @@ class GameModel with ChangeNotifier {
                 newGame.id = newId;
                 if (newId.isEmpty) {
                   print('ERR fetchGames > NO ID');
+                } else {
+                  listaOrig.add(newGame);
+                  setColores(newId, 'initial');
                 }
-
-                listaOrig.add(newGame);
-                setColores(newId, 'initial');
               }));
             }
           }
