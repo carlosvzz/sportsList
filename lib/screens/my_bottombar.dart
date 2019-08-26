@@ -54,7 +54,7 @@ class _WidgetFechaState extends State<WidgetFecha> {
       context: context,
       initialDate: oGame.selectedDate.date,
       firstDate: _today.subtract(Duration(days: 1)),
-      lastDate: _today.add(Duration(days: 10)),
+      lastDate: _today.add(Duration(days: 15)),
       locale: const Locale("es", "ES"),
     );
 

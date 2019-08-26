@@ -32,9 +32,10 @@ class Dailygameschedule {
   }
 
   Dailygameschedule.fromJson(Map<String, dynamic> json) {
-    lastUpdatedOn = json['lastUpdatedOn'];
+    lastUpdatedOn = json['lastUpdatedOn'] ?? DateTime.now().toIso8601String();
+    gameentry = new List<Gameentry>();
+
     if (json['gameentry'] != null) {
-      gameentry = new List<Gameentry>();
       json['gameentry'].forEach((v) {
         gameentry.add(new Gameentry.fromJson(v));
       });

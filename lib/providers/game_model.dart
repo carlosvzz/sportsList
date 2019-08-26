@@ -8,6 +8,7 @@ import 'package:sports_list/helpers/rutinas.dart' as rutinas;
 import 'package:sports_list/helpers/rutinas.dart';
 import 'package:sports_list/models/custom_date.dart';
 import 'package:sports_list/models/custom_menu.dart';
+import 'package:sports_list/models/fixtures_rundown.dart';
 import 'package:sports_list/services/firestore_service.dart';
 import 'package:sports_list/models/game.dart';
 import 'package:sports_list/models/fixture_firestore.dart';
@@ -30,27 +31,27 @@ class GameModel with ChangeNotifier {
 
   Future<Null> setSelectedSport(String nombre, IconData icono) async {
     isLoading = true;
-    print('paso por aqui>>1A $isLoading');
+    //print('paso por aqui>>1A $isLoading');
     notifyListeners();
 
     selectedSport = new CustomMenu(nombre, icono);
     await fetchGames();
 
-    print('paso por aqui>>1B $isLoading');
+    //print('paso por aqui>>1B $isLoading');
     isLoading = false;
     notifyListeners();
   }
 
   Future<Null> setSelectedDate(DateTime date) async {
     isLoading = true;
-    print('paso por aqui>>2A $isLoading');
+    //print('paso por aqui>>2A $isLoading');
     notifyListeners();
 
     selectedDate.date = date;
     await fetchGames();
 
     isLoading = false;
-    print('paso por aqui>>2C $isLoading');
+    //print('paso por aqui>>2C $isLoading');
     notifyListeners();
   }
 
@@ -337,16 +338,19 @@ class GameModel with ChangeNotifier {
     String _basicAuth =
         'Basic ' + base64Encode(utf8.encode('$_username:$_password'));
 
+    String season = 'current';
+    if (this.selectedSport.nombre == 'NFL') {
+      season = '2019-regular';
+    }
+
     try {
       String miUrl =
-          '${keys.SportsFeedUrl}/$idSport/current/daily_game_schedule.json?fordate=' +
+          '${keys.SportsFeedUrl}/$idSport/$season/daily_game_schedule.json?fordate=' +
               formatDate(dateAux, [yyyy, mm, dd]);
 
-      http.Response response = await http.get(miUrl,
-          headers: {'Authorization': _basicAuth}).catchError((error) {
-        print('ERR _getFixturesSportsFeed > ${error.toString()}');
-        throw Exception('No se pudo obtener los datos del feed. $error');
-      });
+      //print(miUrl);
+      http.Response response =
+          await http.get(miUrl, headers: {'Authorization': _basicAuth});
 
       if (response.statusCode == 200) {
         //print(response.body);
@@ -359,6 +363,36 @@ class GameModel with ChangeNotifier {
       }
     } catch (e) {
       print('ERR _getFixturesSportsFeed > ${e.toString()}');
+      throw Exception('No se pudo obtener los datos del feed. $e');
+    }
+  }
+
+  //para deportes USA > NCAF
+  Future<dynamic> _getFixturesRunDown(DateTime dateAux) async {
+    String idSport = '1'; //1 = NCAF
+    try {
+      // offset 300 es para Central Time (5 horas )
+      String miUrl = '${keys.RunDownUrl}/sports/$idSport/events/' +
+          formatDate(dateAux, [yyyy, '-', mm, '-', dd]) +
+          '?offset=300';
+
+      http.Response response = await http.get(miUrl, headers: {
+        'x-rapidapi-host': keys.RunDownHost,
+        'x-rapidapi-key': keys.RunDownApi
+      });
+
+      if (response.statusCode == 200) {
+        //print(response.body);
+        return json.decode(response.body);
+      } else {
+        print(
+            'ERR _getFixturesSportsFeed > ${response.statusCode.toString()} - ${response.reasonPhrase}');
+        throw Exception(
+            'Datos no obtenidos. ${response.statusCode.toString()} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('ERR _getFixturesRunDown > ${e.toString()}');
+      throw Exception('No se pudo obtener los datos del feed. $e');
     }
   }
 
@@ -426,11 +460,10 @@ class GameModel with ChangeNotifier {
     return list;
   }
 
-  // Buscar JUEGOS, ya sea de la lista Original en memoria, si no del FireStore, y  si no nuevos de SportsFeed/FS Fixtures
+  // Buscar JUEGOS, ya sea de la lista Original en memoria, si no del FireStore, y  si no nuevos de SportsFeed/FS Fixtures/RunDown
   Future<Null> fetchGames() async {
     bool isSoccer = idSport.toLowerCase().contains('soccer');
     List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
-
     try {
       if (idSport.isNotEmpty && idSport != kSportVacio) {
         // Revisar si ya esta cargada la lista (deporte - fecha)
@@ -460,7 +493,7 @@ class GameModel with ChangeNotifier {
               setColores(game.id, 'initial');
             });
           } else {
-            // No se encontro datos en DB, buscarlo en sportsfeed
+            // No se encontro datos en DB, buscarlo en sportsfeed/rundown/FS
             List<Gameentry> lista;
 
             if (isSoccer) {
@@ -475,9 +508,9 @@ class GameModel with ChangeNotifier {
                 });
               }
             } else {
-              //US games. NFL sera de Jueves a Lunes, por lo que hay que recorrer el listado
+              //US games. NFL y NCAAF sera de Jueves a Lunes, por lo que hay que recorrer el listado
               int maxVuelta = 1;
-              if (idSport.toLowerCase().contains('nfl')) {
+              if (idSport == 'NFL' || idSport == 'NCAAF') {
                 maxVuelta = 5;
               }
 
@@ -485,16 +518,27 @@ class GameModel with ChangeNotifier {
               lista = new List<Gameentry>();
 
               for (var i = 1; i <= maxVuelta; i++) {
-                // 2 sería viernes (nfl), ese día no lo brincamos
-                if (i != 2) {
+                // 2 sería viernes (nfl), ese día nos lo brincamos
+                if (i != 2 || (i == 2 && idSport == 'NCAAF')) {
                   try {
-                    var dataFromResponse =
-                        await _getFixturesSportsFeed(dateAux);
+                    if (idSport == 'NCAAF') {
+                      var dataFromResponse = await _getFixturesRunDown(dateAux);
 
-                    //print('dataFromResponse > $dataFromResponse');
-                    lista.addAll(FixtureSportsFeed.fromJson(dataFromResponse)
-                        .dailygameschedule
-                        .gameentry);
+                      //print('dataFromResponse > $dataFromResponse');
+                      FixturesRunDown oFix =
+                          FixturesRunDown.fromJson(dataFromResponse);
+                      oFix.events.forEach((f) {
+                        lista.add(f.toGameentry());
+                      });
+                    } else {
+                      var dataFromResponse =
+                          await _getFixturesSportsFeed(dateAux);
+
+                      //print('dataFromResponse > $dataFromResponse');
+                      lista.addAll(FixtureSportsFeed.fromJson(dataFromResponse)
+                          .dailygameschedule
+                          .gameentry);
+                    }
                   } catch (e) {
                     print('ERR fetchGames $e ');
                   }
@@ -508,22 +552,24 @@ class GameModel with ChangeNotifier {
             if (lista != null) {
               await Future.wait(lista.map((game) async {
                 String hora24;
-                DateTime fechaFinal;
+                DateTime fechaFinal = DateTime.parse(game.date);
                 // Convertir hora string a hora 24 (en deportes USA)
                 if (isSoccer) {
-                  fechaFinal = DateTime.parse(game.date);
                   hora24 = game.time;
                 } else {
-                  fechaFinal = idDate;
-                  String horaGame = game.scheduleStatus == 'Normal'
-                      ? game.time
-                      : game.originalTime;
-                  hora24 = rutinas.convertirHora24(horaGame);
+                  if (idSport == 'NCAAF') {
+                    hora24 = game.time; //NCAAF ya viene en formato 24
+                  } else {
+                    String horaGame = game.scheduleStatus == 'Normal'
+                        ? game.time
+                        : game.originalTime;
+                    hora24 = rutinas.convertirHora24(horaGame);
+                  }
                 }
 
                 Game newGame = new Game.fromValues(
                     idSport,
-                    int.parse(game.iD),
+                    int.tryParse(game.iD) ?? 1,
                     fechaFinal,
                     hora24,
                     game.awayTeam,

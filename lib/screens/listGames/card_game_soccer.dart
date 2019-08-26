@@ -29,8 +29,8 @@ class CardGameSoccer extends StatelessWidget {
                   child: Text(
                     '${gameData.homeTeam.name}',
                     style: Theme.of(context).textTheme.display4,
-                    textAlign: TextAlign.right,
-                    maxLines: 1,
+                    textAlign: TextAlign.left,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -47,8 +47,8 @@ class CardGameSoccer extends StatelessWidget {
                   child: Text(
                     '${gameData.awayTeam.name}',
                     style: Theme.of(context).textTheme.display4,
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
+                    textAlign: TextAlign.right,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

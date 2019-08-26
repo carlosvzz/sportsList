@@ -7,8 +7,9 @@ List<DateTime> getSportDates(String idSport, DateTime dateOrig) {
   listDates[0] = dateOrig;
   listDates[1] = dateOrig;
 
-  if (idSport.toUpperCase().contains('NFL')) {
-    // NFL siempre será Jueves - Lunes
+  if (idSport.toUpperCase().contains('NFL') ||
+      idSport.toUpperCase().contains('NCAAF')) {
+    // NFL y NCAAF siempre será Jueves - Lunes
     // Si fecha inicial es martes o miercoles se brinca al próximo jueves y hasta el lunes
     bool isTueWed = false;
     List<int> diff = new List<int>(2);

@@ -11,7 +11,7 @@ class MyModalBottom extends StatelessWidget {
     new CustomMenu('NHL', CustomIcons.hockey),
     new CustomMenu('MLB', CustomIcons.baseball),
     new CustomMenu('NFL', CustomIcons.football),
-    new CustomMenu('Soccer MLS', CustomIcons.soccer_ball),
+    new CustomMenu('NCAAF', CustomIcons.football),
     new CustomMenu('Soccer ENG', CustomIcons.soccer_ball),
     new CustomMenu('Soccer GER', CustomIcons.soccer_ball),
     new CustomMenu('Soccer ESP', CustomIcons.soccer_ball),
@@ -20,7 +20,7 @@ class MyModalBottom extends StatelessWidget {
     new CustomMenu('Soccer HOL', CustomIcons.soccer_ball),
     new CustomMenu('Soccer POR', CustomIcons.soccer_ball),
     new CustomMenu('Soccer ENG2', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer HOL2', CustomIcons.soccer_ball),
+    new CustomMenu('Soccer MLS', CustomIcons.soccer_ball),
     new CustomMenu('Soccer MEX', CustomIcons.soccer_ball),
   ];
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sports_list/helpers/format_date.dart';
 import 'package:sports_list/models/game.dart';
 import 'package:sports_list/widgets/custom_step.dart';
 import 'circle_text.dart';
 
 class CardGame extends StatelessWidget {
   CardGame(this.gameData);
-
   final Game gameData;
 
   @override
@@ -13,6 +13,14 @@ class CardGame extends StatelessWidget {
     String labelMain = 'ML';
     String labelOverUnder = 'o/u';
     String labelExtra = '';
+    String dateFormat = gameData.time;
+    bool isAmFoot = false;
+
+    if (gameData.idSport == 'NFL' || gameData.idSport == 'NCAAF') {
+      isAmFoot = true;
+      dateFormat =
+          formatDate(gameData.date, [D, ' ', dd]) + '\n' + gameData.time;
+    }
 
     // MAIN  >> NFL y NBA = Spread || NHL y MLB es ML
     // EXTRA >> NFL y NBA = ML || MLB y NHL no aplica
@@ -57,15 +65,15 @@ class CardGame extends StatelessWidget {
                   child: Text(
                     '${gameData.awayTeam.name}',
                     style: Theme.of(context).textTheme.display4,
-                    textAlign: TextAlign.right,
-                    maxLines: 1,
+                    textAlign: TextAlign.left,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 SizedBox(
-                  width: 45,
+                  width: isAmFoot ? 60 : 45,
                   child: Text(
-                    '${gameData.time}',
+                    dateFormat,
                     style: Theme.of(context).textTheme.display2,
                     textAlign: TextAlign.center,
                   ),
@@ -75,8 +83,8 @@ class CardGame extends StatelessWidget {
                   child: Text(
                     '${gameData.homeTeam.name}',
                     style: Theme.of(context).textTheme.display4,
-                    textAlign: TextAlign.left,
-                    maxLines: 1,
+                    textAlign: TextAlign.right,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -108,9 +116,6 @@ class CardGame extends StatelessWidget {
             height: 5.0,
           ),
 
-          SizedBox(
-            height: 8,
-          ),
           ////////// STEPPERS RENGLON 2 O/U + EXTRA
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
