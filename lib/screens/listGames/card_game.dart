@@ -22,9 +22,11 @@ class CardGame extends StatelessWidget {
           formatDate(gameData.date, [D, ' ', dd]) + '\n' + gameData.time;
     }
 
-    // MAIN  >> NFL y NBA = Spread || NHL y MLB es ML
+    // MAIN  >> NFL/NCAAF y NBA = Spread || NHL y MLB es ML
     // EXTRA >> NFL y NBA = ML || MLB y NHL no aplica
-    if (gameData.idSport.contains('NFL') || gameData.idSport.contains('NBA')) {
+    if (gameData.idSport.contains('NFL') ||
+        gameData.idSport.contains('NBA') ||
+        gameData.idSport.contains('NCAAF')) {
       labelMain = 'SP +/-';
       labelExtra = 'ML';
     }
