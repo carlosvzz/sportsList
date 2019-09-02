@@ -64,11 +64,9 @@ class _ListGamesState extends State<ListGames> {
                       .startsWith(widget._filtroEquipo.toLowerCase())) {
                 siMostrar = true;
               }
-              //Soccer y NCAAF buscara por nombre de equipo tambien
-              if (!siMostrar &&
-                  (oGame.idSport.contains('Soccer') ||
-                      oGame.idSport == 'NCAAF')) {
-                print('entro1');
+              //Buscar por nombre de equipo tambien (si no encontró abreviacion)
+              if (!siMostrar) {
+                // print('entro1');
                 if (_listaFiltrada[index]
                         .homeTeam
                         .name

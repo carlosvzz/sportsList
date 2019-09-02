@@ -73,8 +73,7 @@ Future<List<String>> getLimitDates() async {
   listaLigas.add(new TablaJuegos('Soccer ITA'));
   listaLigas.add(new TablaJuegos('Soccer FRA'));
   listaLigas.add(new TablaJuegos('Soccer POR'));
-  listaLigas.add(new TablaJuegos('Soccer HOL'));
-  listaLigas.add(new TablaJuegos('Soccer HOL2'));
+  listaLigas.add(new TablaJuegos('Soccer HOL'));  
 
   // Obtener fecha de las distintas ligas
   await Future.wait(listaLigas.map((l) async {

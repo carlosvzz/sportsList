@@ -79,6 +79,7 @@ class MainDrawer extends StatelessWidget {
   Future<bool> _limpiarDB(BuildContext context, bool onlyToday) async {
     Navigator.of(context).pop();
     await Provider.of<GameModel>(context).deleteCollection(onlyToday);
+
     Scaffold.of(context).showSnackBar(new SnackBar(
       content: new Text("Limpieza terminada!"),
     ));

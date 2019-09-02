@@ -83,7 +83,7 @@ class GameModel with ChangeNotifier {
   Future<void> deleteCollection(bool onlyToday) async {
     String _actualSport = idSport;
     try {
-      Firestore.instance
+      await Firestore.instance
           .collection("games")
           .getDocuments()
           .then((snapshot) async {
