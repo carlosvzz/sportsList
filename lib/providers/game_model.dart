@@ -450,7 +450,7 @@ class GameModel with ChangeNotifier {
       });
 
       if (response.statusCode == 200) {
-        //print(response.body);
+        print(response.body);
         return json.decode(response.body);
       } else {
         print(
@@ -569,8 +569,8 @@ class GameModel with ChangeNotifier {
               DateTime dateAux = dateFilter[0]; //Rango de inicio
               lista = new List<Gameentry>();
 
-              while (dateAux.isBefore(dateFilter[1]) ||
-                  dateAux.isAtSameMomentAs(dateFilter[1])) {
+              while (dateAux.isBefore(dateFilter[0]) ||
+                  dateAux.isAtSameMomentAs(dateFilter[0])) {
                 try {
                   var dataFromResponse = await _getFixturesApiFootball(dateAux);
                   //print('dataFromResponse > $dataFromResponse');
@@ -585,12 +585,12 @@ class GameModel with ChangeNotifier {
                       }
                     }
                   }
-
-                  //Aumentamos un día para traer partidos
-                  dateAux = dateAux.add(Duration(days: 1));
                 } catch (e) {
                   print('ERR fetchGames $e ');
                 }
+
+                //Aumentamos un día para traer partidos
+                dateAux = dateAux.add(Duration(days: 1));
               }
             } else {
               //US games. NFL y NCAAF sera de Jueves a Lunes, por lo que hay que recorrer el listado

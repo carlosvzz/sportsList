@@ -51,50 +51,26 @@ class Fixtures {
   int leagueId;
   String eventDate;
   int eventTimestamp;
-  int firstHalfStart;
-  int secondHalfStart;
-  String round;
-  String status;
-  String statusShort;
-  int elapsed;
   String venue;
   String referee;
   Team homeTeam;
   Team awayTeam;
-  int goalsHomeTeam;
-  int goalsAwayTeam;
-  Score score;
 
   Fixtures(
       {this.fixtureId,
       this.leagueId,
       this.eventDate,
       this.eventTimestamp,
-      this.firstHalfStart,
-      this.secondHalfStart,
-      this.round,
-      this.status,
-      this.statusShort,
-      this.elapsed,
       this.venue,
       this.referee,
       this.homeTeam,
-      this.awayTeam,
-      this.goalsHomeTeam,
-      this.goalsAwayTeam,
-      this.score});
+      this.awayTeam});
 
   Fixtures.fromJson(Map<String, dynamic> json) {
     fixtureId = json['fixture_id'];
     leagueId = json['league_id'];
     eventDate = json['event_date'];
     eventTimestamp = json['event_timestamp'];
-    firstHalfStart = json['firstHalfStart'];
-    secondHalfStart = json['secondHalfStart'];
-    round = json['round'];
-    status = json['status'];
-    statusShort = json['statusShort'];
-    elapsed = json['elapsed'];
     venue = json['venue'];
     referee = json['referee'];
     homeTeam = json['homeTeam'] != null
@@ -103,9 +79,6 @@ class Fixtures {
     awayTeam = json['awayTeam'] != null
         ? new Team.fromJsonAPIFootball(json['awayTeam'])
         : null;
-    goalsHomeTeam = json['goalsHomeTeam'];
-    goalsAwayTeam = json['goalsAwayTeam'];
-    score = json['score'] != null ? new Score.fromJson(json['score']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -114,12 +87,6 @@ class Fixtures {
     data['league_id'] = this.leagueId;
     data['event_date'] = this.eventDate;
     data['event_timestamp'] = this.eventTimestamp;
-    data['firstHalfStart'] = this.firstHalfStart;
-    data['secondHalfStart'] = this.secondHalfStart;
-    data['round'] = this.round;
-    data['status'] = this.status;
-    data['statusShort'] = this.statusShort;
-    data['elapsed'] = this.elapsed;
     data['venue'] = this.venue;
     data['referee'] = this.referee;
     if (this.homeTeam != null) {
@@ -127,11 +94,6 @@ class Fixtures {
     }
     if (this.awayTeam != null) {
       data['awayTeam'] = this.awayTeam.toJson();
-    }
-    data['goalsHomeTeam'] = this.goalsHomeTeam;
-    data['goalsAwayTeam'] = this.goalsAwayTeam;
-    if (this.score != null) {
-      data['score'] = this.score.toJson();
     }
     return data;
   }
@@ -152,30 +114,5 @@ class Fixtures {
         location: this.venue,
         awayTeam: this.awayTeam,
         homeTeam: this.homeTeam);
-  }
-}
-
-class Score {
-  String halftime;
-  String fulltime;
-  Null extratime;
-  Null penalty;
-
-  Score({this.halftime, this.fulltime, this.extratime, this.penalty});
-
-  Score.fromJson(Map<String, dynamic> json) {
-    halftime = json['halftime'];
-    fulltime = json['fulltime'];
-    extratime = json['extratime'];
-    penalty = json['penalty'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['halftime'] = this.halftime;
-    data['fulltime'] = this.fulltime;
-    data['extratime'] = this.extratime;
-    data['penalty'] = this.penalty;
-    return data;
   }
 }
