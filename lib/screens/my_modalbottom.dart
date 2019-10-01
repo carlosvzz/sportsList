@@ -22,6 +22,8 @@ class MyModalBottom extends StatelessWidget {
     new CustomMenu('Soccer ENG2', CustomIcons.soccer_ball),
     new CustomMenu('Soccer MLS', CustomIcons.soccer_ball),
     new CustomMenu('Soccer MEX', CustomIcons.soccer_ball),
+    new CustomMenu('Soccer CHAMP', CustomIcons.soccer_ball),
+    new CustomMenu('Soccer EUR', CustomIcons.soccer_ball),
   ];
 
   @override

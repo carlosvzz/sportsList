@@ -8,10 +8,11 @@ import 'package:sports_list/helpers/rutinas.dart' as rutinas;
 import 'package:sports_list/helpers/rutinas.dart';
 import 'package:sports_list/models/custom_date.dart';
 import 'package:sports_list/models/custom_menu.dart';
+import 'package:sports_list/models/fixture_apifootball.dart';
 import 'package:sports_list/models/fixtures_rundown.dart';
 import 'package:sports_list/services/firestore_service.dart';
 import 'package:sports_list/models/game.dart';
-import 'package:sports_list/models/fixture_firestore.dart';
+//import 'package:sports_list/models/fixture_firestore.dart';
 import 'package:sports_list/models/fixture_sportsfeed.dart';
 import 'package:sports_list/internals/keys.dart' as keys;
 
@@ -396,39 +397,106 @@ class GameModel with ChangeNotifier {
     }
   }
 
-  // para deportes Soccer
-  Future<List<FixtureFireStore>> _getFixturesFirestore() async {
-    List<FixtureFireStore> list = new List();
+  //para deportes Soccer
+  Future<dynamic> _getFixturesApiFootball(DateTime dateAux) async {
+    String idLeague = "";
 
-    try {
-      List<DocumentSnapshot> templist;
-      List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
-
-      // gameDate en FS es entero con formato yyyymmdd
-      String dateIni = formatDate(dateFilter[0], ['yyyy', 'mm', 'dd']);
-      String dateFin = formatDate(dateFilter[1], ['yyyy', 'mm', 'dd']);
-
-      CollectionReference collectionRef =
-          Firestore.instance.collection("fixtures");
-      QuerySnapshot collectionSnapshot = await collectionRef
-          .where('idSport', isEqualTo: idSport)
-          .where('gameDate', isGreaterThanOrEqualTo: int.parse(dateIni))
-          .where('gameDate', isLessThanOrEqualTo: int.parse(dateFin))
-          .orderBy('gameDate')
-          .orderBy('gameTimestamp')
-          .getDocuments();
-
-      templist = collectionSnapshot.documents;
-      list = templist.map((DocumentSnapshot docSnapshot) {
-        return new FixtureFireStore.fromJson(docSnapshot.data);
-      }).toList();
-    } catch (e) {
-      print('ERR _getFixturesFirestore > ${e.toString()}');
-      throw Exception('Datos no obtenidos. _getGamesFirestore ${e.toString()}');
+    switch (idSport) {
+      case 'Soccer ENG':
+        idLeague = "524";
+        break;
+      case 'Soccer GER':
+        idLeague = "754";
+        break;
+      case 'Soccer ESP':
+        idLeague = "775";
+        break;
+      case 'Soccer ITA':
+        idLeague = "891";
+        break;
+      case 'Soccer FRA':
+        idLeague = "525";
+        break;
+      case 'Soccer HOL':
+        idLeague = "566";
+        break;
+      case 'Soccer POR':
+        idLeague = "766";
+        break;
+      case 'Soccer ENG2':
+        idLeague = "565";
+        break;
+      case 'Soccer MLS':
+        idLeague = "294";
+        break;
+      case 'Soccer MEX':
+        idLeague = "584";
+        break;
+      case 'Soccer CHAMP':
+        idLeague = "530";
+        break;
+      case 'Soccer EUR':
+        idLeague = "514";
+        break;
     }
 
-    return list;
+    try {
+      String miUrl = '${keys.ApiFootballUrl}/v2/fixtures/league/$idLeague/' +
+          formatDate(dateAux, [yyyy, '-', mm, '-', dd]);
+
+      http.Response response = await http.get(miUrl, headers: {
+        'x-rapidapi-host': keys.ApiFootballHost,
+        'x-rapidapi-key': keys.ApiFootballKey
+      });
+
+      if (response.statusCode == 200) {
+        //print(response.body);
+        return json.decode(response.body);
+      } else {
+        print(
+            'ERR _getFixturesApiFootball > ${response.statusCode.toString()} - ${response.reasonPhrase}');
+        throw Exception(
+            'Datos no obtenidos. ${response.statusCode.toString()} - ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('ERR _getFixturesApiFootball > ${e.toString()}');
+      throw Exception('No se pudo obtener los datos del feed. $e');
+    }
   }
+
+  // // para deportes Soccer
+  // Future<List<FixtureFireStore>> _getFixturesFirestore() async {
+  //   List<FixtureFireStore> list = new List();
+
+  //   try {
+  //     List<DocumentSnapshot> templist;
+  //     List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
+
+  //     // gameDate en FS es entero con formato yyyymmdd
+  //     String dateIni = formatDate(dateFilter[0], ['yyyy', 'mm', 'dd']);
+  //     String dateFin = formatDate(dateFilter[1], ['yyyy', 'mm', 'dd']);
+
+  //     CollectionReference collectionRef =
+  //         Firestore.instance.collection("fixtures");
+  //     QuerySnapshot collectionSnapshot = await collectionRef
+  //         .where('idSport', isEqualTo: idSport)
+  //         .where('gameDate', isGreaterThanOrEqualTo: int.parse(dateIni))
+  //         .where('gameDate', isLessThanOrEqualTo: int.parse(dateFin))
+  //         .orderBy('gameDate')
+  //         .orderBy('gameTimestamp')
+  //         .getDocuments();
+
+  //     templist = collectionSnapshot.documents;
+  //     list = templist.map((DocumentSnapshot docSnapshot) {
+  //       return new FixtureFireStore.fromJson(docSnapshot.data);
+  //     }).toList();
+  //   } catch (e) {
+  //     print('ERR _getFixturesFirestore > ${e.toString()}');
+  //     throw Exception('Datos no obtenidos. _getGamesFirestore ${e.toString()}');
+  //   }
+
+  //   return list;
+  // }
 
   // para obtener los juegos finales del FS
   Future<List<Game>> _getGamesFirestore() async {
@@ -460,7 +528,7 @@ class GameModel with ChangeNotifier {
     return list;
   }
 
-  // Buscar JUEGOS, ya sea de la lista Original en memoria, si no del FireStore, y  si no nuevos de SportsFeed/FS Fixtures/RunDown
+  // Buscar JUEGOS, ya sea de la lista Original en memoria, si no del FireStore, y  si no nuevos de SportsFeed/FS Fixtures/RunDown/ApiFB
   Future<Null> fetchGames() async {
     bool isSoccer = idSport.toLowerCase().contains('soccer');
     List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
@@ -493,19 +561,36 @@ class GameModel with ChangeNotifier {
               setColores(game.id, 'initial');
             });
           } else {
-            // No se encontro datos en DB, buscarlo en sportsfeed/rundown/FS
+            // No se encontro datos en DB, buscarlo en sportsfeed/rundown/ApiFB
             List<Gameentry> lista;
 
             if (isSoccer) {
-              List<FixtureFireStore> listaFS = await _getFixturesFirestore();
-              if (listaFS == null) {
-                lista = null;
-              } else {
-                lista = new List<Gameentry>();
+              //Soccer sera de Martes-Jueves o Viernes-Lunes, por lo que hay que recorrer el listado por cada día
+              DateTime dateAux = dateFilter[0]; //Rango de inicio
+              lista = new List<Gameentry>();
 
-                listaFS.forEach((ofix) {
-                  lista.add(ofix.toGameentry());
-                });
+              while (dateAux.isBefore(dateFilter[1]) ||
+                  dateAux.isAtSameMomentAs(dateFilter[1])) {
+                try {
+                  var dataFromResponse = await _getFixturesApiFootball(dateAux);
+                  //print('dataFromResponse > $dataFromResponse');
+                  FixturesApiFootball oFix =
+                      FixturesApiFootball.fromJson(dataFromResponse);
+                  if (oFix != null) {
+                    if (oFix.api != null) {
+                      if (oFix.api.results > 0) {
+                        oFix.api.fixtures.forEach((f) {
+                          lista.add(f.toGameentry());
+                        });
+                      }
+                    }
+                  }
+
+                  //Aumentamos un día para traer partidos
+                  dateAux = dateAux.add(Duration(days: 1));
+                } catch (e) {
+                  print('ERR fetchGames $e ');
+                }
               }
             } else {
               //US games. NFL y NCAAF sera de Jueves a Lunes, por lo que hay que recorrer el listado
