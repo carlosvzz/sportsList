@@ -450,7 +450,7 @@ class GameModel with ChangeNotifier {
       });
 
       if (response.statusCode == 200) {
-        print(response.body);
+        //print(response.body);
         return json.decode(response.body);
       } else {
         print(
@@ -569,8 +569,8 @@ class GameModel with ChangeNotifier {
               DateTime dateAux = dateFilter[0]; //Rango de inicio
               lista = new List<Gameentry>();
 
-              while (dateAux.isBefore(dateFilter[0]) ||
-                  dateAux.isAtSameMomentAs(dateFilter[0])) {
+              while (dateAux.isBefore(dateFilter[1]) ||
+                  dateAux.isAtSameMomentAs(dateFilter[1])) {
                 try {
                   var dataFromResponse = await _getFixturesApiFootball(dateAux);
                   //print('dataFromResponse > $dataFromResponse');
