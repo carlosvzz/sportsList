@@ -30,10 +30,10 @@ class Team {
   }
 
   String fnGetTeamAbbreviation(String tName) {
-    tName += "   "; //x si es menor a 3 caracteres
+    tName += "    "; //x si es menor a 3 caracteres
     String tAbbr = tName.substring(0, 4).toUpperCase();
 
-    switch (tName) {
+    switch (tName.trim()) {
       // MLS
       case "New York City FC":
         tAbbr = "NYC";
