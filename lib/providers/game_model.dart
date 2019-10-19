@@ -532,6 +532,36 @@ class GameModel with ChangeNotifier {
     return list;
   }
 
+  // para obtener los juegos finales de BD local
+  Future<List<Game>> _getGamesDbLocal() async {
+    List<DocumentSnapshot> templist;
+    List<Game> list = new List();
+    List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
+
+    try {
+      CollectionReference collectionRef =
+          Firestore.instance.collection("games");
+      QuerySnapshot collectionSnapshot = await collectionRef
+          .where('idSport', isEqualTo: idSport)
+          .where('date', isGreaterThanOrEqualTo: dateFilter[0])
+          .where('date', isLessThanOrEqualTo: dateFilter[1])
+          .orderBy('date')
+          .orderBy('time')
+          .getDocuments();
+
+      templist = collectionSnapshot.documents;
+
+      list = templist.map((DocumentSnapshot docSnapshot) {
+        return new Game.fromMap(docSnapshot.data);
+      }).toList();
+    } catch (e) {
+      print('ERR _getGamesFirestore > ${e.toString()}');
+      throw Exception('Datos no obtenidos. _getGamesFirestore ${e.toString()}');
+    }
+
+    return list;
+  }
+
   // Buscar JUEGOS, ya sea de la lista Original en memoria, si no del FireStore, y  si no nuevos de SportsFeed/FS Fixtures/RunDown/ApiFB
   Future<Null> fetchGames() async {
     bool isSoccer = idSport.toLowerCase().contains('soccer');
@@ -682,9 +712,7 @@ class GameModel with ChangeNotifier {
                 int result = await dbHelper.saveGame(newGameLocal);
                 //newGame.id = newId;
                 //if (newId.isEmpty) {
-                if (result == 1) {
-                  print('ERR fetchGames > NO ID');
-                } else {
+                if (result == 0) {
                   listaOrig.add(newGame);
                   setColores(newGameLocal.id, 'initial');
                 }

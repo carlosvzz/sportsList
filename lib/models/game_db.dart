@@ -30,9 +30,8 @@ class GameDb {
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
-    if (id != null) {
-      map['id'] = id;
-    }
+
+    map['id'] = id;
     map['idSport'] = idSport;
     map['idGame'] = idGame;
     map['date'] = date;

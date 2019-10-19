@@ -74,7 +74,7 @@ class DatabaseHelper {
     return result;
   }
 
-  Future<List> getGames(String sport) async {
+  Future<List<Map<String, dynamic>>> getGames(String sport) async {
     Database db = await instance.database;
 
     var result = await db.query(tableGames,
@@ -84,11 +84,18 @@ class DatabaseHelper {
     return result.toList();
   }
 
-  Future<int> deleteGame(String sport) async {
+  Future<int> deleteGameOld(String sport, String date) async {
     Database db = await instance.database;
 
-    return await db
-        .delete(tableGames, where: '$columnIdSport = ?', whereArgs: [sport]);
+    return await db.delete(tableGames,
+        where: '$columnIdSport = ?, $columnDate = ?', whereArgs: [sport, date]);
+  }
+
+  Future<int> deleteGameBySport(String sport, String date) async {
+    Database db = await instance.database;
+
+    return await db.delete(tableGames,
+        where: '$columnIdSport = ?, $columnDate = ?', whereArgs: [sport, date]);
   }
 
   Future<int> updateGame(GameDb game) async {
