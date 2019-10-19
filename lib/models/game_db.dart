@@ -28,19 +28,6 @@ class GameDb {
 
   GameDb();
 
-  GameDb.fromValues(
-    this.id,
-    this.idSport,
-    this.idGame,
-    this.date,
-    this.time,
-    this.location,
-    this.awayTeamAbbrev,
-    this.awayTeamName,
-    this.homeTeamAbbrev,
-    this.homeTeamName,
-  );
-
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
     if (id != null) {

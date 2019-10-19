@@ -4,15 +4,13 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = new DatabaseHelper.internal();
-
-  factory DatabaseHelper() => _instance;
-
-  final String tableGames = 'games';
+  static final _databaseName = "Xsports.db";
+  static final _databaseVersion = 1;
+  static final String tableGames = 'games';
   // Columns
   final String columnId = 'id';
-  final String columnIdSport = 'title';
-  final String columnIdGame = 'description';
+  final String columnIdSport = 'idSport';
+  final String columnIdGame = 'idGame';
   final String columnDate = 'date';
   final String columnTime = 'time';
   final String columnLocation = 'location';
@@ -26,45 +24,60 @@ class DatabaseHelper {
   final String columnCountOverUnder = 'countOverUnder'; // over / under
   final String columnCountExtra = 'countExtra'; // Extra s
 
-  static Database _db;
+  // make this a singleton class
+  DatabaseHelper._privateConstructor();
+  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
-  DatabaseHelper.internal();
-
-  Future<Database> get db async {
-    if (_db != null) {
-      return _db;
-    }
-    _db = await initDb();
-
-    return _db;
+  // only have a single app-wide reference to the database
+  static Database _database;
+  Future<Database> get database async {
+    if (_database != null) return _database;
+    // lazily instantiate the db the first time it is accessed
+    _database = await _initDatabase();
+    return _database;
   }
 
-  initDb() async {
+  // this opens the database (and creates it if it doesn't exist)
+  _initDatabase() async {
     String databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'xsports.db');
+    String path = join(databasesPath, _databaseName);
 
-    await deleteDatabase(path); // just for testing
-
-    var db = await openDatabase(path, version: 1, onCreate: _onCreate);
-    return db;
+    return await openDatabase(path,
+        version: _databaseVersion, onCreate: _onCreate);
   }
 
-  void _onCreate(Database db, int newVersion) async {
-    await db.execute(
-        'CREATE TABLE $tableGames($columnId TEXT PRIMARY KEY, $columnIdSport TEXT, $columnIdGame TEXT, $columnDate TEXT, $columnTime TEXT, $columnLocation TEXT, $columnAwayTeamAbbrev TEXT, $columnAwayTeamName TEXT, $columnHomeTeamAbbrev TEXT, $columnHomeTeamName TEXT, $columnCountHome INTEGER,  $columnCountAway INTEGER,  $columnCountDraw INTEGER,  $columnCountOverUnder INTEGER, $columnCountExtra INTEGER)');
+  Future _onCreate(Database db, int newVersion) async {
+    await db.execute('''
+        CREATE TABLE $tableGames(
+          $columnId TEXT PRIMARY KEY, 
+          $columnIdSport TEXT, 
+          $columnIdGame TEXT, 
+          $columnDate TEXT, 
+          $columnTime TEXT, 
+          $columnLocation TEXT, 
+          $columnAwayTeamAbbrev TEXT, 
+          $columnAwayTeamName TEXT, 
+          $columnHomeTeamAbbrev TEXT, 
+          $columnHomeTeamName TEXT, 
+          $columnCountHome INTEGER,  
+          $columnCountAway INTEGER,  
+          $columnCountDraw INTEGER,  
+          $columnCountOverUnder INTEGER, 
+          $columnCountExtra INTEGER
+        )''');
   }
 
   Future<int> saveGame(GameDb game) async {
-    var dbClient = await db;
-    var result = await dbClient.insert(tableGames, game.toMap());
+    Database db = await instance.database;
 
+    var result = await db.insert(tableGames, game.toMap());
     return result;
   }
 
   Future<List> getGames(String sport) async {
-    var dbClient = await db;
+    Database db = await instance.database;
 
-    var result = await dbClient.query(tableGames,
+    var result = await db.query(tableGames,
         where: 'columnIdSport = ?', whereArgs: [sport], orderBy: 'date, time');
 //    var result = await dbClient.rawQuery('SELECT * FROM $tableNote');
 
@@ -72,19 +85,20 @@ class DatabaseHelper {
   }
 
   Future<int> deleteGame(String sport) async {
-    var dbClient = await db;
-    return await dbClient
+    Database db = await instance.database;
+
+    return await db
         .delete(tableGames, where: '$columnIdSport = ?', whereArgs: [sport]);
   }
 
   Future<int> updateGame(GameDb game) async {
-    var dbClient = await db;
-    return await dbClient.update(tableGames, game.toMap(),
+    Database db = await instance.database;
+
+    return await db.update(tableGames, game.toMap(),
         where: "$columnId = ?", whereArgs: [game.id]);
   }
 
   Future close() async {
-    var dbClient = await db;
-    return dbClient.close();
+    return _database.close();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sports_list/helpers/database_helper.dart';
 import 'package:sports_list/helpers/format_date.dart';
 import 'package:sports_list/helpers/rutinas.dart' as rutinas;
 import 'package:sports_list/helpers/rutinas.dart';
@@ -10,11 +11,13 @@ import 'package:sports_list/models/custom_date.dart';
 import 'package:sports_list/models/custom_menu.dart';
 import 'package:sports_list/models/fixture_apifootball.dart';
 import 'package:sports_list/models/fixtures_rundown.dart';
+import 'package:sports_list/models/game_db.dart';
 import 'package:sports_list/services/firestore_service.dart';
 import 'package:sports_list/models/game.dart';
 //import 'package:sports_list/models/fixture_firestore.dart';
 import 'package:sports_list/models/fixture_sportsfeed.dart';
 import 'package:sports_list/internals/keys.dart' as keys;
+import 'package:uuid/uuid.dart';
 
 class GameModel with ChangeNotifier {
   CustomMenu selectedSport = new CustomMenu(kSportVacio, Icons.stars);
@@ -26,6 +29,7 @@ class GameModel with ChangeNotifier {
   bool isDeleting = false;
   bool isUpdating = false;
   FirestoreService<Game> db = new FirestoreService<Game>('games');
+  final dbHelper = DatabaseHelper.instance;
 
   String get idSport => selectedSport.nombre;
   DateTime get idDate => selectedDate.date;
@@ -593,41 +597,35 @@ class GameModel with ChangeNotifier {
                 dateAux = dateAux.add(Duration(days: 1));
               }
             } else {
-              //US games. NFL y NCAAF sera de Jueves a Lunes, por lo que hay que recorrer el listado
-              int maxVuelta = 1;
-              if (idSport == 'NFL' || idSport == 'NCAAF') {
-                maxVuelta = 5;
-              }
-
-              DateTime dateAux = idDate;
+              //US games. NFL y NCAAF puede ser varíos días, por lo que hay que recorrer el listado por cada día
+              DateTime dateAux = dateFilter[0]; //Rango de inicio
               lista = new List<Gameentry>();
 
-              for (var i = 1; i <= maxVuelta; i++) {
-                // 2 sería viernes (nfl), ese día nos lo brincamos
-                if (i != 2 || (i == 2 && idSport == 'NCAAF')) {
-                  try {
-                    if (idSport == 'NCAAF') {
-                      var dataFromResponse = await _getFixturesRunDown(dateAux);
+              while (dateAux.isBefore(dateFilter[1]) ||
+                  dateAux.isAtSameMomentAs(dateFilter[1])) {
+                try {
+                  if (idSport == 'NCAAF') {
+                    var dataFromResponse = await _getFixturesRunDown(dateAux);
 
-                      //print('dataFromResponse > $dataFromResponse');
-                      FixturesRunDown oFix =
-                          FixturesRunDown.fromJson(dataFromResponse);
-                      oFix.events.forEach((f) {
-                        lista.add(f.toGameentry());
-                      });
-                    } else {
-                      var dataFromResponse =
-                          await _getFixturesSportsFeed(dateAux);
+                    //print('dataFromResponse > $dataFromResponse');
+                    FixturesRunDown oFix =
+                        FixturesRunDown.fromJson(dataFromResponse);
+                    oFix.events.forEach((f) {
+                      lista.add(f.toGameentry());
+                    });
+                  } else {
+                    var dataFromResponse =
+                        await _getFixturesSportsFeed(dateAux);
 
-                      //print('dataFromResponse > $dataFromResponse');
-                      lista.addAll(FixtureSportsFeed.fromJson(dataFromResponse)
-                          .dailygameschedule
-                          .gameentry);
-                    }
-                  } catch (e) {
-                    print('ERR fetchGames $e ');
+                    //print('dataFromResponse > $dataFromResponse');
+                    lista.addAll(FixtureSportsFeed.fromJson(dataFromResponse)
+                        .dailygameschedule
+                        .gameentry);
                   }
+                } catch (e) {
+                  print('ERR fetchGames $e ');
                 }
+
                 //Aumentamos un día para traer partidos
                 dateAux = dateAux.add(Duration(days: 1));
               }
@@ -661,15 +659,34 @@ class GameModel with ChangeNotifier {
                     game.homeTeam,
                     game.location);
 
+                GameDb newGameLocal = new GameDb();
+                //Asignar id
+                var uuid = new Uuid();
+                String id = uuid.v1();
+
+                newGameLocal.id = id;
+                newGameLocal.idSport = idSport;
+                newGameLocal.idGame = int.tryParse(game.iD) ?? 1;
+                newGameLocal.location = game.location;
+                newGameLocal.date =
+                    formatDate(fechaFinal, [yyyy, '-', mm, '-', dd]);
+                newGameLocal.time = hora24;
+                newGameLocal.awayTeamAbbrev = game.awayTeam.abbreviation;
+                newGameLocal.awayTeamName = game.awayTeam.name;
+                newGameLocal.homeTeamAbbrev = game.homeTeam.abbreviation;
+                newGameLocal.homeTeamName = game.homeTeam.name;
+
                 //debugPrint('${newGame.toMap()}');
                 //Agregar a DB y lista local
-                String newId = await db.createObject(newGame);
-                newGame.id = newId;
-                if (newId.isEmpty) {
+                //String newId = await db.createObject(newGame);
+                int result = await dbHelper.saveGame(newGameLocal);
+                //newGame.id = newId;
+                //if (newId.isEmpty) {
+                if (result == 1) {
                   print('ERR fetchGames > NO ID');
                 } else {
                   listaOrig.add(newGame);
-                  setColores(newId, 'initial');
+                  setColores(newGameLocal.id, 'initial');
                 }
               }));
             }

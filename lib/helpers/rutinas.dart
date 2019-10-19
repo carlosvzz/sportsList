@@ -7,9 +7,8 @@ List<DateTime> getSportDates(String idSport, DateTime dateOrig) {
   listDates[0] = dateOrig;
   listDates[1] = dateOrig;
 
-  if (idSport.toUpperCase().contains('NFL') ||
-      idSport.toUpperCase().contains('NCAAF')) {
-    // NFL y NCAAF siempre será Jueves - Lunes
+  if (idSport.toUpperCase().contains('NFL')) {
+    // NFL siempre será Jueves - Lunes
     // Si fecha inicial es martes o miercoles se brinca al próximo jueves y hasta el lunes
     bool isTueWed = false;
     List<int> diff = new List<int>(2);
@@ -59,6 +58,48 @@ List<DateTime> getSportDates(String idSport, DateTime dateOrig) {
       listDates[0] = dateOrig.subtract(Duration(days: diff[0]));
       listDates[1] = dateOrig.add(Duration(days: diff[1]));
     }
+  } else if (idSport.toUpperCase().contains('NCAAF')) {
+    // NCAAF es de Lunes-Sabado
+    List<int> diff = new List<int>(2);
+    switch (dateOrig.weekday) {
+      case DateTime.monday:
+        diff[0] = 0;
+        diff[1] = 5;
+        break;
+
+      case DateTime.tuesday:
+        diff[0] = 1;
+        diff[1] = 4;
+        break;
+
+      case DateTime.wednesday:
+        diff[0] = 2;
+        diff[1] = 3;
+        break;
+
+      case DateTime.thursday:
+        diff[0] = 3;
+        diff[1] = 2;
+        break;
+
+      case DateTime.friday:
+        diff[0] = 4;
+        diff[1] = 1;
+        break;
+
+      case DateTime.saturday:
+        diff[0] = 5;
+        diff[1] = 0;
+        break;
+
+      case DateTime.sunday:
+        diff[0] = 6;
+        diff[1] = 0;
+        break;
+      default:
+    }
+    listDates[0] = dateOrig.subtract(Duration(days: diff[0]));
+    listDates[1] = dateOrig.add(Duration(days: diff[1]));
   } else if (idSport.toUpperCase().contains('SOCCER')) {
     // SOCCER es de Martes=Jueves y Viernes-Lunes
     List<int> diff = new List<int>(2);

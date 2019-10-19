@@ -42,6 +42,8 @@ Future<Null> _reportError(dynamic error, dynamic stackTrace) async {
 }
 
 Future<Null> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // This captures errors reported by the Flutter framework.
   FlutterError.onError = (FlutterErrorDetails details) async {
     if (isInDebugMode) {

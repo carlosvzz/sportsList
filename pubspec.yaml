@@ -43,6 +43,8 @@ dependencies:
   sqflite:
   # Helper para rutas de sistema
   path:
+  # Generar uuid / guid
+  uuid: 2.0.1
 
   flutter_localizations:
     sdk: flutter
