@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sports_list/providers/game_model.dart';
-import 'package:sports_list/providers/user_model.dart';
-import '../internals/keys.dart';
-import 'calendario_juegos.dart';
+// import 'package:sports_list/providers/user_model.dart';
+// import '../internals/keys.dart';
+// import 'calendario_juegos.dart';
 
 class MainDrawer extends StatelessWidget {
   @override
@@ -35,7 +35,7 @@ class MainDrawer extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(Icons.disc_full),
-                title: Text('Limpiar DB hoy'),
+                title: Text('Limpiar DB sport'),
                 onTap: () async {
                   showDialog(
                       context: context,
@@ -49,26 +49,26 @@ class MainDrawer extends StatelessWidget {
                 },
               ),
               // VERIFICAR USUARIO
-              ListTile(
-                leading: Icon(Icons.verified_user),
-                title: Text('Iniciar sesión'),
-                onTap: () async {
-                  Provider.of<UserModel>(context, listen: false)
-                      .verifyUser(Key_FirebaseEmail, Key_FirebasePwd);
-                },
-              ),
+              // ListTile(
+              //   leading: Icon(Icons.verified_user),
+              //   title: Text('Iniciar sesión'),
+              //   onTap: () async {
+              //     Provider.of<UserModel>(context, listen: false)
+              //         .verifyUser(Key_FirebaseEmail, Key_FirebasePwd);
+              //   },
+              // ),
               // CALENDARIO DE JUEGO
-              ListTile(
-                  leading: Icon(Icons.calendar_today),
-                  title: Text('Calendario juegos'),
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (builder) {
-                          return CalendarioJuegos();
-                        });
-                  }),
+              // ListTile(
+              //     leading: Icon(Icons.calendar_today),
+              //     title: Text('Calendario juegos'),
+              //     onTap: () async {
+              //       Navigator.of(context).pop();
+              //       showModalBottomSheet(
+              //           context: context,
+              //           builder: (builder) {
+              //             return CalendarioJuegos();
+              //           });
+              //     }),
             ],
           ),
         ],
@@ -76,9 +76,9 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  Future<bool> _limpiarDB(BuildContext context, bool onlyToday) async {
+  Future<bool> _limpiarDB(BuildContext context, bool onlySport) async {
     Navigator.of(context).pop();
-    await Provider.of<GameModel>(context).deleteCollection(onlyToday);
+    await Provider.of<GameModel>(context).deleteGames(onlySport);
 
     Scaffold.of(context).showSnackBar(new SnackBar(
       content: new Text("Limpieza terminada!"),

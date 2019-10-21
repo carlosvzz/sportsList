@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sports_list/models/basemodel.dart';
+import 'package:sports_list/helpers/format_date.dart';
+//import 'package:sports_list/models/basemodel.dart';
 import 'package:sports_list/models/team.dart';
 
-class Game extends BaseModel {
+class Game {
+  String id;
   String _idSport;
   int _idGame;
   DateTime _date;
@@ -41,6 +43,10 @@ class Game extends BaseModel {
   Team get homeTeam => _homeTeam;
   String get location => _location;
 
+  String get dateFormat {
+    return formatDate(_date, [yyyy, '-', mm, '-', dd]);
+  }
+
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
     if (id != null) {
@@ -53,6 +59,28 @@ class Game extends BaseModel {
     map['awayTeam'] = _awayTeam.toJson();
     map['HomeTeam'] = _homeTeam.toJson();
     map['location'] = _location;
+    map['countHome'] = countHome;
+    map['countAway'] = countAway;
+    map['countDraw'] = countDraw;
+    map['countOverUnder'] = countOverUnder;
+    map['countExtra'] = countExtra;
+
+    return map;
+  }
+
+  Map<String, dynamic> toMapDatabase() {
+    var map = new Map<String, dynamic>();
+
+    map['id'] = id;
+    map['idSport'] = idSport;
+    map['idGame'] = idGame;
+    map['date'] = dateFormat;
+    map['time'] = time;
+    map['location'] = location;
+    map['awayTeamAbbrev'] = _awayTeam.abbreviation;
+    map['awayTeamName'] = _awayTeam.name;
+    map['homeTeamAbbrev'] = _homeTeam.abbreviation;
+    map['homeTeamName'] = _homeTeam.name;
     map['countHome'] = countHome;
     map['countAway'] = countAway;
     map['countDraw'] = countDraw;
@@ -78,24 +106,26 @@ class Game extends BaseModel {
     this.countExtra = map['countExtra'];
   }
 
-  Game fromMap(Map<String, dynamic> map) {
-    var game = new Game();
+  Game.fromMapDatabase(Map<String, dynamic> map) {
+    DateTime dateGame = DateTime.parse(map['date']);
+    Team awayT = new Team(
+        mName: map['awayTeamName'], mAbbreviation: map['awayTeamAbbrev']);
+    Team homeT = new Team(
+        mName: map['homeTeamName'], mAbbreviation: map['homeTeamAbbrev']);
 
-    game.id = map['id'];
-    game._idSport = map['idSport'];
-    game._idGame = map['idGame'];
-    game._date = map['date'];
-    game._time = map['time'];
-    game._awayTeam = new Team.fromJson(map['awayTeam']);
-    game._homeTeam = new Team.fromJson(map['HomeTeam']);
-    game._location = map['location'];
-    game.countHome = map['countHome'];
-    game.countAway = map['countAway'];
-    game.countDraw = map['countDraw'];
-    game.countOverUnder = map['countOverUnder'];
-    game.countExtra = map['countExtra'];
-
-    return game;
+    this.id = map['id'];
+    this._idSport = map['idSport'];
+    this._idGame = map['idGame'];
+    this._date = dateGame;
+    this._time = map['time'];
+    this._awayTeam = awayT;
+    this._homeTeam = homeT;
+    this._location = map['location'];
+    this.countHome = map['countHome'];
+    this.countAway = map['countAway'];
+    this.countDraw = map['countDraw'];
+    this.countOverUnder = map['countOverUnder'];
+    this.countExtra = map['countExtra'];
   }
 
   Game createNew() {

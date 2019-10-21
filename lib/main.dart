@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:sports_list/providers/game_model.dart';
-import 'package:sports_list/providers/user_model.dart';
+// import 'package:sports_list/providers/user_model.dart';
 import 'package:sports_list/screens/homepage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sentry/sentry.dart';
@@ -53,8 +53,8 @@ Future<Null> main() async {
     }
   };
 
-  final Firestore firestore = Firestore();
-  await firestore.settings(timestampsInSnapshotsEnabled: true);
+  // final Firestore firestore = Firestore();
+  // await firestore.settings(timestampsInSnapshotsEnabled: true);
 
   //runApp(MyApp());
   // This creates a [Zone] that contains the Flutter application and stablishes
@@ -76,9 +76,9 @@ class MyApp extends StatelessWidget {
         title: 'Sports Consensus',
         theme: _myTheme(),
         home: MultiProvider(providers: [
-          ChangeNotifierProvider<UserModel>(
-            builder: (context) => UserModel(),
-          ),
+          // ChangeNotifierProvider<UserModel>(
+          //   builder: (context) => UserModel(),
+          // ),
           ChangeNotifierProvider<GameModel>(
             builder: (context) => GameModel(),
           )

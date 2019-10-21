@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sports_list/helpers/database_helper.dart';
@@ -11,8 +11,7 @@ import 'package:sports_list/models/custom_date.dart';
 import 'package:sports_list/models/custom_menu.dart';
 import 'package:sports_list/models/fixture_apifootball.dart';
 import 'package:sports_list/models/fixtures_rundown.dart';
-import 'package:sports_list/models/game_db.dart';
-import 'package:sports_list/services/firestore_service.dart';
+// import 'package:sports_list/services/firestore_service.dart';
 import 'package:sports_list/models/game.dart';
 //import 'package:sports_list/models/fixture_firestore.dart';
 import 'package:sports_list/models/fixture_sportsfeed.dart';
@@ -28,7 +27,7 @@ class GameModel with ChangeNotifier {
   bool isFiltering = false;
   bool isDeleting = false;
   bool isUpdating = false;
-  FirestoreService<Game> db = new FirestoreService<Game>('games');
+  // FirestoreService<Game> db = new FirestoreService<Game>('games');
   final dbHelper = DatabaseHelper.instance;
 
   String get idSport => selectedSport.nombre;
@@ -36,13 +35,12 @@ class GameModel with ChangeNotifier {
 
   Future<Null> setSelectedSport(String nombre, IconData icono) async {
     isLoading = true;
-    //print('paso por aqui>>1A $isLoading');
     notifyListeners();
 
     selectedSport = new CustomMenu(nombre, icono);
     await fetchGames();
 
-    //print('paso por aqui>>1B $isLoading');
+    // print('paso por aqui>>1B $isLoading');
     isLoading = false;
     notifyListeners();
   }
@@ -53,10 +51,10 @@ class GameModel with ChangeNotifier {
     notifyListeners();
 
     selectedDate.date = date;
-    await fetchGames();
+    fetchGames();
 
     isLoading = false;
-    //print('paso por aqui>>2C $isLoading');
+    print('paso por aqui>>2C $isLoading');
     notifyListeners();
   }
 
@@ -85,37 +83,15 @@ class GameModel with ChangeNotifier {
     return lista;
   }
 
-  Future<void> deleteCollection(bool onlyToday) async {
-    String _actualSport = idSport;
-    try {
-      await Firestore.instance
-          .collection("games")
-          .getDocuments()
-          .then((snapshot) async {
-        DateTime _now = DateTime.now();
-        DateTime _today = DateTime(_now.year, _now.month, _now.day);
-
-        for (DocumentSnapshot ds in snapshot.documents) {
-          DateTime _docDate = ds.data['date'].toDate();
-
-          if (onlyToday == true) {
-            // Borrar solo si es Hoy y para el Deporte mencionado
-            if (_docDate == _today && ds.data['idSport'] == _actualSport) {
-              await ds.reference.delete();
-            }
-          } else {
-// Borrar solo si es antes de Hoy
-            if (_docDate.isBefore(_today)) {
-              await ds.reference.delete();
-            }
-          }
-        }
-      });
-    } catch (e) {
-      print('ERROR deleteCollection > ${e.toString()}');
-    } finally {
-      listaOrig = [];
-      await setSelectedSport(kSportVacio, Icons.star);
+  Future<void> deleteGames(bool onlySport) async {
+    if (onlySport == true) {
+      await dbHelper.deleteGameBySport(idSport);
+      listaOrig.removeWhere((item) => item.idSport == idSport);
+      //notifyListeners();
+    } else {
+      await dbHelper.deleteGameOld();
+      listaOrig.clear();
+      //notifyListeners();
     }
   }
 
@@ -151,7 +127,7 @@ class GameModel with ChangeNotifier {
         setColores(idFireStore, typeCount);
 
         //Actualizar db
-        await db.updateObject(listaOrig[index]);
+        await dbHelper.updateGame(listaOrig[index]);
 
         return Future.value(null);
       }
@@ -503,64 +479,34 @@ class GameModel with ChangeNotifier {
   // }
 
   // para obtener los juegos finales del FS
-  Future<List<Game>> _getGamesFirestore() async {
-    List<DocumentSnapshot> templist;
-    List<Game> list = new List();
-    List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
+  // Future<List<Game>> _getGamesFirestore() async {
+  //   List<DocumentSnapshot> templist;
+  //   List<Game> list = new List();
+  //   List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
 
-    try {
-      CollectionReference collectionRef =
-          Firestore.instance.collection("games");
-      QuerySnapshot collectionSnapshot = await collectionRef
-          .where('idSport', isEqualTo: idSport)
-          .where('date', isGreaterThanOrEqualTo: dateFilter[0])
-          .where('date', isLessThanOrEqualTo: dateFilter[1])
-          .orderBy('date')
-          .orderBy('time')
-          .getDocuments();
+  //   try {
+  //     CollectionReference collectionRef =
+  //         Firestore.instance.collection("games");
+  //     QuerySnapshot collectionSnapshot = await collectionRef
+  //         .where('idSport', isEqualTo: idSport)
+  //         .where('date', isGreaterThanOrEqualTo: dateFilter[0])
+  //         .where('date', isLessThanOrEqualTo: dateFilter[1])
+  //         .orderBy('date')
+  //         .orderBy('time')
+  //         .getDocuments();
 
-      templist = collectionSnapshot.documents;
+  //     templist = collectionSnapshot.documents;
 
-      list = templist.map((DocumentSnapshot docSnapshot) {
-        return new Game.fromMap(docSnapshot.data);
-      }).toList();
-    } catch (e) {
-      print('ERR _getGamesFirestore > ${e.toString()}');
-      throw Exception('Datos no obtenidos. _getGamesFirestore ${e.toString()}');
-    }
+  //     list = templist.map((DocumentSnapshot docSnapshot) {
+  //       return new Game.fromMap(docSnapshot.data);
+  //     }).toList();
+  //   } catch (e) {
+  //     print('ERR _getGamesFirestore > ${e.toString()}');
+  //     throw Exception('Datos no obtenidos. _getGamesFirestore ${e.toString()}');
+  //   }
 
-    return list;
-  }
-
-  // para obtener los juegos finales de BD local
-  Future<List<Game>> _getGamesDbLocal() async {
-    List<DocumentSnapshot> templist;
-    List<Game> list = new List();
-    List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
-
-    try {
-      CollectionReference collectionRef =
-          Firestore.instance.collection("games");
-      QuerySnapshot collectionSnapshot = await collectionRef
-          .where('idSport', isEqualTo: idSport)
-          .where('date', isGreaterThanOrEqualTo: dateFilter[0])
-          .where('date', isLessThanOrEqualTo: dateFilter[1])
-          .orderBy('date')
-          .orderBy('time')
-          .getDocuments();
-
-      templist = collectionSnapshot.documents;
-
-      list = templist.map((DocumentSnapshot docSnapshot) {
-        return new Game.fromMap(docSnapshot.data);
-      }).toList();
-    } catch (e) {
-      print('ERR _getGamesFirestore > ${e.toString()}');
-      throw Exception('Datos no obtenidos. _getGamesFirestore ${e.toString()}');
-    }
-
-    return list;
-  }
+  //   return list;
+  // }
 
   // Buscar JUEGOS, ya sea de la lista Original en memoria, si no del FireStore, y  si no nuevos de SportsFeed/FS Fixtures/RunDown/ApiFB
   Future<Null> fetchGames() async {
@@ -583,12 +529,13 @@ class GameModel with ChangeNotifier {
 
         if (query == null) {
           // No esta cargado aun en la lista interna
-          //Buscar en firestore para ver si ya estan guardados como Games
+          //Buscar en Database para ver si ya estan guardados como Games
           List<Game> listaDB;
-          listaDB = await _getGamesFirestore();
+          listaDB =
+              await dbHelper.getGames(idSport, dateFilter[0], dateFilter[1]);
 
           if (listaDB?.isNotEmpty ?? false) {
-            //Encontro datos ya en DB firestore
+            //Encontro datos ya en DB
             // Agregarlo a _gameList
             listaDB.forEach((game) {
               listaOrig.add(game);
@@ -663,7 +610,7 @@ class GameModel with ChangeNotifier {
 
             //Agregar respuesta a lista final de games
             if (lista != null) {
-              await Future.wait(lista.map((game) async {
+              Future.wait(lista.map((game) async {
                 String hora24;
                 DateTime fechaFinal = DateTime.parse(game.date);
                 // Convertir hora string a hora 24 (en deportes USA)
@@ -688,33 +635,17 @@ class GameModel with ChangeNotifier {
                     game.awayTeam,
                     game.homeTeam,
                     game.location);
-
-                GameDb newGameLocal = new GameDb();
                 //Asignar id
                 var uuid = new Uuid();
                 String id = uuid.v1();
+                newGame.id = id;
 
-                newGameLocal.id = id;
-                newGameLocal.idSport = idSport;
-                newGameLocal.idGame = int.tryParse(game.iD) ?? 1;
-                newGameLocal.location = game.location;
-                newGameLocal.date =
-                    formatDate(fechaFinal, [yyyy, '-', mm, '-', dd]);
-                newGameLocal.time = hora24;
-                newGameLocal.awayTeamAbbrev = game.awayTeam.abbreviation;
-                newGameLocal.awayTeamName = game.awayTeam.name;
-                newGameLocal.homeTeamAbbrev = game.homeTeam.abbreviation;
-                newGameLocal.homeTeamName = game.homeTeam.name;
-
-                //debugPrint('${newGame.toMap()}');
+                // debugPrint('${newGame.toMap()}');
                 //Agregar a DB y lista local
-                //String newId = await db.createObject(newGame);
-                int result = await dbHelper.saveGame(newGameLocal);
-                //newGame.id = newId;
-                //if (newId.isEmpty) {
+                int result = await dbHelper.saveGame(newGame);
                 if (result == 0) {
                   listaOrig.add(newGame);
-                  setColores(newGameLocal.id, 'initial');
+                  setColores(newGame.id, 'initial');
                 }
               }));
             }

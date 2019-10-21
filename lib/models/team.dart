@@ -223,6 +223,11 @@ class Team {
         tAbbr = "WOL";
         break;
 
+      //Italy
+      case "AS ROMA":
+        tAbbr = "ROMA";
+        break;
+
       //Portugal
       case "FC Porto":
         tAbbr = "POR";

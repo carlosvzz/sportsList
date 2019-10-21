@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sports_list/internals/keys.dart';
+// import 'package:sports_list/internals/keys.dart';
 import 'package:sports_list/providers/game_model.dart';
-import 'package:sports_list/providers/user_model.dart';
+// import 'package:sports_list/providers/user_model.dart';
 
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
@@ -11,7 +11,7 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     GameModel oGame = Provider.of<GameModel>(context);
-    UserModel oUser = Provider.of<UserModel>(context);
+    // UserModel oUser = Provider.of<UserModel>(context);
 
     return AppBar(
       title: Row(
@@ -27,24 +27,24 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
           ),
           Text(oGame.selectedSport.nombre ?? ''),
           Spacer(),
-          (oUser.uid?.isNotEmpty ?? false)
-              ? Text(oUser.getOnlyUser())
-              : FutureBuilder<bool>(
-                  future: oUser.verifyUser(
-                      Key_FirebaseEmail, Key_FirebasePwd), // async work
-                  builder:
-                      (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return new CircularProgressIndicator();
-                      default:
-                        if (snapshot.hasError)
-                          return new Text('n/d');
-                        else
-                          return new Text(oUser.getOnlyUser());
-                    }
-                  },
-                )
+          // (oUser.uid?.isNotEmpty ?? false)
+          //     ? Text(oUser.getOnlyUser())
+          //     : FutureBuilder<bool>(
+          //         future: oUser.verifyUser(
+          //             Key_FirebaseEmail, Key_FirebasePwd), // async work
+          //         builder:
+          //             (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          //           switch (snapshot.connectionState) {
+          //             case ConnectionState.waiting:
+          //               return new CircularProgressIndicator();
+          //             default:
+          //               if (snapshot.hasError)
+          //                 return new Text('n/d');
+          //               else
+          //                 return new Text(oUser.getOnlyUser());
+          //           }
+          //         },
+          //       )
         ],
       ),
       iconTheme: IconThemeData(color: Theme.of(context).accentColor),
