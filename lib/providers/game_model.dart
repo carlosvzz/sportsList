@@ -305,6 +305,7 @@ class GameModel with ChangeNotifier {
             listaOrig[index].colorExtra = Colors.blueGrey.shade700;
           }
         }
+        isLoading = false;
         notifyListeners();
       }
     } catch (e) {
