@@ -16,7 +16,7 @@ import 'package:sports_list/models/game.dart';
 //import 'package:sports_list/models/fixture_firestore.dart';
 import 'package:sports_list/models/fixture_sportsfeed.dart';
 import 'package:sports_list/internals/keys.dart' as keys;
-import 'package:uuid/uuid.dart';
+// import 'package:uuid/uuid.dart';
 
 class GameModel with ChangeNotifier {
   CustomMenu selectedSport = new CustomMenu(kSportVacio, Icons.stars);
@@ -56,7 +56,7 @@ class GameModel with ChangeNotifier {
     notifyListeners();
   }
 
-  List<Game> getListaFiltrada() {
+  Future<List<Game>> getListaFiltrada() async {
     List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
 
     List<Game> lista = listaOrig
@@ -508,7 +508,7 @@ class GameModel with ChangeNotifier {
   // }
 
   // Buscar JUEGOS, ya sea de la lista Original en memoria, si no del FireStore, y  si no nuevos de SportsFeed/FS Fixtures/RunDown/ApiFB
-  Future<List<Game>> fetchGames() async {
+  Future<Null> fetchGames() async {
     bool isSoccer = idSport.toLowerCase().contains('soccer');
     List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
 
@@ -610,9 +610,7 @@ class GameModel with ChangeNotifier {
             }
 
             //Agregar respuesta a lista final de games
-            debugPrint('aqui va 1');
             if (lista != null) {
-              debugPrint('aqui va 2');
               await Future.wait(lista.map((game) async {
                 String hora24;
                 DateTime fechaFinal = DateTime.parse(game.date);
@@ -639,18 +637,22 @@ class GameModel with ChangeNotifier {
                     game.homeTeam,
                     game.location);
                 //Asignar id
-                var uuid = new Uuid();
-                String id = uuid.v1();
+                //var uuid = new Uuid();
+                //String id = uuid.v1();
+                String id =
+                    '$idSport-${game.date}-$hora24-${newGame.awayTeam.abbreviation}@${newGame.homeTeam.abbreviation}';
                 newGame.id = id;
 
+                // debugPrint(
+                //     'id -> $idSport-${game.date}-$hora24-${newGame.awayTeam.abbreviation}@${newGame.homeTeam.abbreviation}');
                 //debugPrint('${newGame.toMap()}');
                 //Agregar a DB y lista local
-                int result = await dbHelper.saveGame(newGame);
-                debugPrint('Result => ${result.toString()} y $id');
-                if (result != 0) {
-                  listaOrig.add(newGame);
-                  setColores(newGame.id, 'initial');
-                }
+                await dbHelper.saveGame(newGame);
+                //debugPrint('Result => ${result.toString()} y $id');
+                //if (result != 0) {
+                listaOrig.add(newGame);
+                setColores(newGame.id, 'initial');
+                //}
               }));
             }
           }
@@ -659,7 +661,8 @@ class GameModel with ChangeNotifier {
     } catch (e) {
       print('ERR fetchGames > ${e.toString()}');
     }
-    // notifyListeners();
-    return getListaFiltrada();
+    // notifyListeners();`
+    // debugPrint('Contador -> ${listaOrig.length}');
+    //return getListaFiltrada();
   }
 }

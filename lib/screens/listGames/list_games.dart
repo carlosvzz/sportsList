@@ -33,7 +33,7 @@ class _ListGamesState extends State<ListGames> {
             child: CircularProgressIndicator(),
           )
         : FutureBuilder<List<Game>>(
-            future: oGame.fetchGames(), // async work
+            future: oGame.getListaFiltrada(), // async work
             builder:
                 (BuildContext context, AsyncSnapshot<List<Game>> snapshot) {
               switch (snapshot.connectionState) {
