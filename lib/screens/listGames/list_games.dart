@@ -26,82 +26,93 @@ class _ListGamesState extends State<ListGames> {
   @override
   Widget build(BuildContext context) {
     List<Game> _listaFiltrada;
-    Widget content = Center(child: CircularProgressIndicator());
+    //Widget content = Center(child: CircularProgressIndicator());
 
-    return FutureBuilder<List<Game>>(
-      future: oGame.fetchGames(), // async work
-      builder: (BuildContext context, AsyncSnapshot<List<Game>> snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return CircularProgressIndicator();
-          default:
-            if (snapshot.hasError)
-              return new Text('Error: ${snapshot.error}');
-            else
-              _listaFiltrada = snapshot.data;
-            if (_listaFiltrada.length == 0) {
-              return Center(
-                child: Text('NO GAMES ... '),
-              );
-            } else {
-              return ListView.builder(
-                itemCount: _listaFiltrada.length,
-                padding: const EdgeInsets.all(3.0),
-                itemBuilder: (context, index) {
-                  bool siMostrar = false;
-
-                  if (widget._filtroEquipo == null ||
-                      widget._filtroEquipo.isEmpty) {
-                    siMostrar = true;
+    return oGame.isLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : FutureBuilder<List<Game>>(
+            future: oGame.fetchGames(), // async work
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Game>> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                default:
+                  if (snapshot.hasError)
+                    return new Text('Error: ${snapshot.error}');
+                  else
+                    _listaFiltrada = snapshot.data;
+                  if (_listaFiltrada.length == 0) {
+                    return Center(
+                      child: Text('NO GAMES ... '),
+                    );
                   } else {
-                    if (_listaFiltrada[index]
-                            .homeTeam
-                            .abbreviation
-                            .toLowerCase()
-                            .startsWith(widget._filtroEquipo.toLowerCase()) ||
-                        _listaFiltrada[index]
-                            .awayTeam
-                            .abbreviation
-                            .toLowerCase()
-                            .startsWith(widget._filtroEquipo.toLowerCase())) {
-                      siMostrar = true;
-                    }
-                    //Buscar por nombre de equipo tambien (si no encontró abreviacion)
-                    if (!siMostrar) {
-                      // print('entro1');
-                      if (_listaFiltrada[index]
-                              .homeTeam
-                              .name
-                              .toLowerCase()
-                              .contains(widget._filtroEquipo.toLowerCase()) ||
-                          _listaFiltrada[index]
-                              .awayTeam
-                              .name
-                              .toLowerCase()
-                              .contains(widget._filtroEquipo.toLowerCase())) {
-                        siMostrar = true;
-                      }
-                    }
-                  }
+                    return ListView.builder(
+                      itemCount: _listaFiltrada.length,
+                      padding: const EdgeInsets.all(3.0),
+                      itemBuilder: (context, index) {
+                        bool siMostrar = false;
 
-                  if (siMostrar) {
-                    if (_listaFiltrada[index]
-                        .idSport
-                        .toUpperCase()
-                        .contains('SOCCER')) {
-                      return CardGameSoccer(_listaFiltrada[index]);
-                    } else {
-                      return CardGame(_listaFiltrada[index]);
-                    }
-                  } else {
-                    return Container();
+                        if (widget._filtroEquipo == null ||
+                            widget._filtroEquipo.isEmpty) {
+                          siMostrar = true;
+                        } else {
+                          if (_listaFiltrada[index]
+                                  .homeTeam
+                                  .abbreviation
+                                  .toLowerCase()
+                                  .startsWith(
+                                      widget._filtroEquipo.toLowerCase()) ||
+                              _listaFiltrada[index]
+                                  .awayTeam
+                                  .abbreviation
+                                  .toLowerCase()
+                                  .startsWith(
+                                      widget._filtroEquipo.toLowerCase())) {
+                            siMostrar = true;
+                          }
+                          //Buscar por nombre de equipo tambien (si no encontró abreviacion)
+                          if (!siMostrar) {
+                            // print('entro1');
+                            if (_listaFiltrada[index]
+                                    .homeTeam
+                                    .name
+                                    .toLowerCase()
+                                    .contains(
+                                        widget._filtroEquipo.toLowerCase()) ||
+                                _listaFiltrada[index]
+                                    .awayTeam
+                                    .name
+                                    .toLowerCase()
+                                    .contains(
+                                        widget._filtroEquipo.toLowerCase())) {
+                              siMostrar = true;
+                            }
+                          }
+                        }
+
+                        if (siMostrar) {
+                          if (_listaFiltrada[index]
+                              .idSport
+                              .toUpperCase()
+                              .contains('SOCCER')) {
+                            return CardGameSoccer(_listaFiltrada[index]);
+                          } else {
+                            return CardGame(_listaFiltrada[index]);
+                          }
+                        } else {
+                          return Container();
+                        }
+                      },
+                    );
                   }
-                },
-              );
-            }
-        }
-      },
-    );
+              }
+            },
+          );
 
     // if (oGame.isLoading || oGame.isFiltering) {
     //   content = Center(

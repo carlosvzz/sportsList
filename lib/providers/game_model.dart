@@ -47,14 +47,12 @@ class GameModel with ChangeNotifier {
 
   Future<Null> setSelectedDate(DateTime date) async {
     isLoading = true;
-    //print('paso por aqui>>2A $isLoading');
     notifyListeners();
 
     selectedDate.date = date;
-    fetchGames();
+    //await fetchGames();
 
     isLoading = false;
-    print('paso por aqui>>2C $isLoading');
     notifyListeners();
   }
 
@@ -511,10 +509,9 @@ class GameModel with ChangeNotifier {
 
   // Buscar JUEGOS, ya sea de la lista Original en memoria, si no del FireStore, y  si no nuevos de SportsFeed/FS Fixtures/RunDown/ApiFB
   Future<List<Game>> fetchGames() async {
-    
     bool isSoccer = idSport.toLowerCase().contains('soccer');
     List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
-    
+
     try {
       if (idSport.isNotEmpty && idSport != kSportVacio) {
         // Revisar si ya esta cargada la lista (deporte - fecha)
@@ -584,6 +581,7 @@ class GameModel with ChangeNotifier {
               while (dateAux.isBefore(dateFilter[1]) ||
                   dateAux.isAtSameMomentAs(dateFilter[1])) {
                 try {
+                  debugPrint('$dateAux');
                   if (idSport == 'NCAAF') {
                     var dataFromResponse = await _getFixturesRunDown(dateAux);
 
@@ -612,8 +610,10 @@ class GameModel with ChangeNotifier {
             }
 
             //Agregar respuesta a lista final de games
+            debugPrint('aqui va 1');
             if (lista != null) {
-              Future.wait(lista.map((game) async {
+              debugPrint('aqui va 2');
+              await Future.wait(lista.map((game) async {
                 String hora24;
                 DateTime fechaFinal = DateTime.parse(game.date);
                 // Convertir hora string a hora 24 (en deportes USA)
@@ -643,10 +643,11 @@ class GameModel with ChangeNotifier {
                 String id = uuid.v1();
                 newGame.id = id;
 
-                // debugPrint('${newGame.toMap()}');
+                //debugPrint('${newGame.toMap()}');
                 //Agregar a DB y lista local
                 int result = await dbHelper.saveGame(newGame);
-                if (result == 0) {
+                debugPrint('Result => ${result.toString()} y $id');
+                if (result != 0) {
                   listaOrig.add(newGame);
                   setColores(newGame.id, 'initial');
                 }
@@ -658,7 +659,7 @@ class GameModel with ChangeNotifier {
     } catch (e) {
       print('ERR fetchGames > ${e.toString()}');
     }
-
+    // notifyListeners();
     return getListaFiltrada();
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:sports_list/helpers/format_date.dart';
 import 'package:sports_list/models/game.dart';
 import 'package:sqflite/sqflite.dart';
@@ -69,10 +70,14 @@ class DatabaseHelper {
   }
 
   Future<int> saveGame(Game oGame) async {
-    Database db = await instance.database;
+    try {
+      Database db = await instance.database;
 
-    var result = await db.insert(tableGames, oGame.toMapDatabase());
-    return result;
+      var result = await db.insert(tableGames, oGame.toMapDatabase());
+      return result;
+    } catch (e) {
+      debugPrint('ERR saveGame -> ${e.toString()}');
+    }
   }
 
   Future<List<Game>> getGames(
