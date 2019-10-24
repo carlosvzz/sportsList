@@ -510,9 +510,11 @@ class GameModel with ChangeNotifier {
   // }
 
   // Buscar JUEGOS, ya sea de la lista Original en memoria, si no del FireStore, y  si no nuevos de SportsFeed/FS Fixtures/RunDown/ApiFB
-  Future<Null> fetchGames() async {
+  Future<List<Game>> fetchGames() async {
+    
     bool isSoccer = idSport.toLowerCase().contains('soccer');
     List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
+    
     try {
       if (idSport.isNotEmpty && idSport != kSportVacio) {
         // Revisar si ya esta cargada la lista (deporte - fecha)
@@ -656,5 +658,7 @@ class GameModel with ChangeNotifier {
     } catch (e) {
       print('ERR fetchGames > ${e.toString()}');
     }
+
+    return getListaFiltrada();
   }
 }
