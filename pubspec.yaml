@@ -43,6 +43,7 @@ dependencies:
   sqflite:
   # Helper para rutas de sistema
   path:
+  path_provider: ^1.4.0
   # Generar uuid / guid
   uuid: 2.0.1
 
