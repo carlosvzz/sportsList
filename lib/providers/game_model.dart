@@ -25,7 +25,6 @@ class GameModel with ChangeNotifier {
 
   bool isLoading = false;
   bool isFiltering = false;
-  bool isDeleting = false;
   bool isUpdating = false;
   // FirestoreService<Game> db = new FirestoreService<Game>('games');
   final dbHelper = DatabaseHelper.instance;
@@ -56,17 +55,20 @@ class GameModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Game>> getListaFiltrada() async {
-    List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
+  List<Game> getListBySport() {
+    // List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
 
-    List<Game> lista = listaOrig
-        .where((Game g) =>
-            g.idSport == idSport &&
-            ((g.date.isAtSameMomentAs(dateFilter[0]) ||
-                    g.date.isAfter(dateFilter[0])) &&
-                (g.date.isAtSameMomentAs(dateFilter[1]) ||
-                    g.date.isBefore(dateFilter[1]))))
-        .toList();
+    // List<Game> lista = listaOrig
+    //     .where((Game g) =>
+    //         g.idSport == idSport &&
+    //         ((g.date.isAtSameMomentAs(dateFilter[0]) ||
+    //                 g.date.isAfter(dateFilter[0])) &&
+    //             (g.date.isAtSameMomentAs(dateFilter[1]) ||
+    //                 g.date.isBefore(dateFilter[1]))))
+    //     .toList();
+
+    List<Game> lista =
+        listaOrig.where((Game g) => g.idSport == idSport).toList();
 
     lista.sort((a, b) {
       var r = a.date.compareTo(b.date);
