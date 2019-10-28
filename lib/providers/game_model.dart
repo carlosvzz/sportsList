@@ -67,6 +67,9 @@ class GameModel with ChangeNotifier {
     //                 g.date.isBefore(dateFilter[1]))))
     //     .toList();
 
+    // isFiltering = true;
+    // notifyListeners();
+
     List<Game> lista =
         listaOrig.where((Game g) => g.idSport == idSport).toList();
 
@@ -79,7 +82,8 @@ class GameModel with ChangeNotifier {
       }
     });
 
-    isFiltering = false;
+    // isFiltering = false;
+    // notifyListeners();
     return lista;
   }
 

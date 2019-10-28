@@ -40,8 +40,23 @@ class _ContenedorJuegosState extends State<ContenedorJuegos> {
   void initState() {
     super.initState();
     oGame = Provider.of<GameModel>(context, listen: false);
-    listaJuegos = oGame.getListBySport();
-    listaFiltrada = listaJuegos;
+    // listaJuegos =
+    //     oGame.listaOrig.where((Game g) => g.idSport == oGame.idSport).toList();
+
+    listaJuegos = oGame.listaOrig;
+
+    // listaJuegos =
+    //     oGame.listaOrig.where((Game g) => g.idSport == oGame.idSport).toList();
+
+    // setState(() {
+    listaFiltrada = listaJuegos.toList();
+    listaFiltrada =
+        listaFiltrada.where((Game g) => g.idSport == oGame.idSport).toList();
+    // });
+
+    // listaFiltrada =
+    //     oGame.listaOrig.where((Game g) => g.idSport == oGame.idSport).toList();
+    // listBySport();
   }
 
   @override
@@ -52,6 +67,12 @@ class _ContenedorJuegosState extends State<ContenedorJuegos> {
 
   @override
   Widget build(BuildContext context) {
+    // listaFiltrada = listaJuegos;
+    // setState(() {
+    //   listaFiltrada =
+    //       listaJuegos.where((Game g) => g.idSport == oGame.idSport).toList();
+    // });
+
     return Column(
       children: <Widget>[
         Row(
@@ -66,25 +87,27 @@ class _ContenedorJuegosState extends State<ContenedorJuegos> {
               width: 10.0,
             ),
             new Expanded(
-              child: new Stack(
-                  alignment: const Alignment(1.0, 1.0),
-                  children: <Widget>[
-                    new TextField(
-                      keyboardType: TextInputType.text,
-                      textCapitalization: TextCapitalization.characters,
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(15.0),
-                          hintText: 'Team'),
-                      onChanged: (texto) {
-                        if (texto == null || texto.isEmpty) {
-                          setState(() {
-                            listaFiltrada = listaJuegos;
-                          });
-                        } else {
-                          _debouncer.run(() {
-                            setState(() {
-                              listaFiltrada = listaJuegos
-                                  .where((u) => (u.awayTeam.abbreviation
+              child: new Stack(alignment: const Alignment(1.0, 1.0), children: <
+                  Widget>[
+                new TextField(
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.characters,
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(15.0), hintText: 'Team'),
+                  onChanged: (texto) {
+                    if (texto == null || texto.isEmpty) {
+                      setState(() {
+                        listaFiltrada = listaJuegos
+                            .where((Game g) => g.idSport == oGame.idSport)
+                            .toList();
+                      });
+                    } else {
+                      _debouncer.run(() {
+                        debugPrint('$texto y ${oGame.idSport}');
+                        setState(() {
+                          listaFiltrada = listaJuegos
+                              .where((u) => (u.idSport == oGame.idSport &&
+                                  (u.awayTeam.abbreviation
                                           .toLowerCase()
                                           .startsWith(texto.toLowerCase()) ||
                                       u.homeTeam.abbreviation
@@ -95,27 +118,30 @@ class _ContenedorJuegosState extends State<ContenedorJuegos> {
                                           .contains(texto.toLowerCase()) ||
                                       u.homeTeam.name
                                           .toLowerCase()
-                                          .contains(texto.toLowerCase())))
-                                  .toList();
-                            });
+                                          .contains(texto.toLowerCase()))))
+                              .toList();
+
+                          debugPrint(
+                              'row > ${listaFiltrada.length.toString()}');
+                        });
+                      });
+                    }
+                  },
+                  controller: _textController,
+                ),
+                _textController.text.length > 0
+                    ? new IconButton(
+                        icon: new Icon(Icons.clear),
+                        onPressed: () {
+                          setState(() {
+                            listaFiltrada = listaJuegos;
+                            _textController.clear();
                           });
-                        }
-                      },
-                      controller: _textController,
-                    ),
-                    _textController.text.length > 0
-                        ? new IconButton(
-                            icon: new Icon(Icons.clear),
-                            onPressed: () {
-                              setState(() {
-                                listaFiltrada = listaJuegos;
-                                _textController.clear();
-                              });
-                            })
-                        : new Container(
-                            height: 0.0,
-                          )
-                  ]),
+                        })
+                    : new Container(
+                        height: 0.0,
+                      )
+              ]),
             ),
           ],
         ),
@@ -123,7 +149,7 @@ class _ContenedorJuegosState extends State<ContenedorJuegos> {
           height: 10.0,
         ),
         Flexible(
-            child: oGame.isLoading
+            child: (oGame.isLoading || oGame.isFiltering)
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
