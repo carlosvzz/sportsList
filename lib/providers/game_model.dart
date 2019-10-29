@@ -427,7 +427,8 @@ class GameModel with ChangeNotifier {
 
     try {
       String miUrl = '${keys.ApiFootballUrl}/v2/fixtures/league/$idLeague/' +
-          formatDate(dateAux, [yyyy, '-', mm, '-', dd]);
+          formatDate(dateAux, [yyyy, '-', mm, '-', dd]) +
+          '?timezone=America/Monterrey';
 
       http.Response response = await http.get(miUrl, headers: {
         'x-rapidapi-host': keys.ApiFootballHost,
@@ -435,7 +436,7 @@ class GameModel with ChangeNotifier {
       });
 
       if (response.statusCode == 200) {
-        //print(response.body);
+        print(response.body);
         return json.decode(response.body);
       } else {
         print(
