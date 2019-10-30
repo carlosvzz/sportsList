@@ -46,7 +46,11 @@ dependencies:
   path_provider: ^1.4.0
   # Generar uuid / guid
   uuid: 2.0.1
-
+  # Consultas Linq
+  queries: ^0.1.12
+  # Seleccion de texto (copy/paste)
+  flutter_selectable_text: ^0.3.1
+  
   flutter_localizations:
     sdk: flutter
 

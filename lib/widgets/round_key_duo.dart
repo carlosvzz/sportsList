@@ -43,6 +43,7 @@ class _RoundKeyDuoState extends State<RoundKeyDuo> {
     return Row(
       children: <Widget>[
         FloatingActionButton(
+          heroTag: null,
           mini: true,
           child: Text(
             '${widget.label.substring(0, 1)}',
@@ -53,6 +54,7 @@ class _RoundKeyDuoState extends State<RoundKeyDuo> {
         ),
         ContadorTexto(_value, widget.color),
         FloatingActionButton(
+          heroTag: null,
           mini: true,
           child: Text(
             '${widget.label.substring(1, 2)}',

@@ -4,7 +4,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
+import 'package:sports_list/providers/filter_model.dart';
 import 'package:sports_list/providers/game_model.dart';
+import 'package:sports_list/screens/filters/screen_filter_config.dart';
+import 'package:sports_list/screens/filters/screen_filter_home.dart';
 // import 'package:sports_list/providers/user_model.dart';
 import 'package:sports_list/screens/homepage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -71,26 +74,32 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OverlaySupport(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Sports Consensus',
-        theme: _myTheme(),
-        home: MultiProvider(providers: [
-          // ChangeNotifierProvider<UserModel>(
-          //   builder: (context) => UserModel(),
-          // ),
-          ChangeNotifierProvider<GameModel>(
-            builder: (context) => GameModel(),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<GameModel>(builder: (context) => GameModel()),
+          ChangeNotifierProvider<FilterModel>(
+            builder: (context) => FilterModel(),
           )
-        ], child: MyHomePage()),
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
         ],
-        supportedLocales: [
-          const Locale('en'), // English
-          const Locale('es', 'MX'), // Spanish
-        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Sports Consensus',
+          theme: _myTheme(),
+          initialRoute: '/',
+          routes: {
+            '/': (context) => MyHomePage(),
+            'filterHome': (context) => ScreenFilterHome(),
+            '/filterConfig': (context) => ScreenFilterConfig(),
+          },
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: [
+            const Locale('en'), // English
+            const Locale('es', 'MX'), // Spanish
+          ],
+        ),
       ),
     );
   }

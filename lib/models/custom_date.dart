@@ -15,6 +15,8 @@ class CustomDate {
   }
 
   String get label => _formatName();
+  String get getLabel => _formatNameSoloFecha();
+  DateTime get getToday => _today;
 
   void initDates() {
     _now = DateTime.now();
@@ -33,5 +35,17 @@ class CustomDate {
     } else {
       return formatDate(date, [D, ' ', dd, '/', mm]);
     }
+  }
+
+  String _formatNameSoloFecha() {
+    // if (date == _today) {
+    //   return 'HOY';
+    // } else if (date == _tomorrow) {
+    //   return 'MAÑANA';
+    // } else if (date == _yesterday) {
+    //   return 'AYER';
+    // } else {
+    return formatDate(date, [D, ' ', dd, '/', mm]);
+    // }
   }
 }

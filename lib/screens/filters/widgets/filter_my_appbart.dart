@@ -1,40 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-// import 'package:sports_list/internals/keys.dart';
-import 'package:sports_list/providers/game_model.dart';
-// import 'package:sports_list/providers/user_model.dart';
+// import 'package:provider/provider.dart';
+// import 'package:sportsfilter/internals/keys.dart';
+// import 'package:sportsfilter/providers/user_model.dart';
 
-class MyAppBar extends StatelessWidget with PreferredSizeWidget {
+class FilterMyAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
-    GameModel oGame = Provider.of<GameModel>(context);
     // UserModel oUser = Provider.of<UserModel>(context);
 
     return AppBar(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Icon(
-            oGame.selectedSport.icono,
-            color: Colors.white70,
-            size: 22.0,
-          ),
-          SizedBox(
-            width: 5.0,
-          ),
-          Text(oGame.selectedSport.nombre ?? ''),
+          Text('Filter bet'),
           Spacer(),
           RaisedButton(
             color: Theme.of(context).accentColor,
             child: Text(
-              'Filters',
+              'X-Sports',
               style: TextStyle(color: Theme.of(context).primaryColor),
             ),
             onPressed: () {
-              Navigator.pushReplacementNamed(context, 'filterHome');
+              Navigator.pushReplacementNamed(context, '/');
             },
           ),
           // (oUser.uid?.isNotEmpty ?? false)
