@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 // import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sports_list/helpers/format_date.dart';
 import 'package:sports_list/models/game.dart';
 import 'package:sqflite/sqflite.dart';
@@ -42,9 +44,10 @@ class DatabaseHelper {
 
   // this opens the database (and creates it if it doesn't exist)
   _initDatabase() async {
-    // Directory databaseDir = await getExternalStorageDirectory();
-    // String databasesPath = databaseDir.path;
-    String databasesPath = await getDatabasesPath();
+    Directory databaseDir = await getExternalStorageDirectory();
+    String databasesPath = databaseDir.path;
+
+    // String databasesPath = await getDatabasesPath();
     String path = join(databasesPath, _databaseName);
 
     debugPrint(path);
