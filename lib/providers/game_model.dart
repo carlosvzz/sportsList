@@ -56,20 +56,6 @@ class GameModel with ChangeNotifier {
   }
 
   List<Game> getListBySport() {
-    // List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
-
-    // List<Game> lista = listaOrig
-    //     .where((Game g) =>
-    //         g.idSport == idSport &&
-    //         ((g.date.isAtSameMomentAs(dateFilter[0]) ||
-    //                 g.date.isAfter(dateFilter[0])) &&
-    //             (g.date.isAtSameMomentAs(dateFilter[1]) ||
-    //                 g.date.isBefore(dateFilter[1]))))
-    //     .toList();
-
-    // isFiltering = true;
-    // notifyListeners();
-
     List<Game> lista =
         listaOrig.where((Game g) => g.idSport == idSport).toList();
 
@@ -82,8 +68,6 @@ class GameModel with ChangeNotifier {
       }
     });
 
-    // isFiltering = false;
-    // notifyListeners();
     return lista;
   }
 
