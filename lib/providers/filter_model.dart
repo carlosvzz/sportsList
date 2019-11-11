@@ -74,7 +74,7 @@ class FilterModel with ChangeNotifier {
         case ORDER_BY.MaxValue:
           var query = Collection(_listaBet)
               .orderByDescending((f) => f.maxValue - f.minValue)
-              .thenByDescending((f) => f.maxValue);
+              .thenBy((f) => f.minValue);
 
           listaFiltrada = query.toList();
           break;
@@ -82,7 +82,7 @@ class FilterModel with ChangeNotifier {
         case ORDER_BY.Draw:
           var query = Collection(_listaBet)
               .orderByDescending((f) => f.maxValue - f.minValue)
-              .thenByDescending((f) => f.maxValue)
+              .thenBy((f) => f.minValue)
               .take(20);
 
           listaFiltrada = query.toList();
@@ -91,7 +91,10 @@ class FilterModel with ChangeNotifier {
         case ORDER_BY.DateTime:
           var query = Collection(_listaBet)
               .orderBy((f) => f.date)
-              .thenBy((f) => f.time);
+              .thenBy((f) => f.time)
+              .thenByDescending((f) => f.maxValue - f.minValue)
+              .thenBy((f) => f.minValue);
+
           listaFiltrada = query.toList();
           break;
 
@@ -99,7 +102,7 @@ class FilterModel with ChangeNotifier {
           var query = Collection(_listaBet)
               .orderBy((f) => enumToString(f.typeBet))
               .thenByDescending((f) => f.maxValue - f.minValue)
-              .thenByDescending((f) => f.maxValue);
+              .thenBy((f) => f.minValue);
           listaFiltrada = query.toList();
           break;
 
