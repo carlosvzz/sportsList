@@ -35,7 +35,7 @@ class CardGameSoccer extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 60,
+                  width: 70,
                   child: Text(
                     '$dateFormat \n ${gameData.time}',
                     style: Theme.of(context).textTheme.display2,

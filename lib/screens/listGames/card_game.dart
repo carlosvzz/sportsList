@@ -73,7 +73,7 @@ class CardGame extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: isAmFoot ? 60 : 45,
+                  width: isAmFoot ? 60 : 50,
                   child: Text(
                     dateFormat,
                     style: Theme.of(context).textTheme.display2,
