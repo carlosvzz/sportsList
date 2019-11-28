@@ -94,7 +94,7 @@ class CardGameSoccer extends StatelessWidget {
                   gameData.countOverUnder, gameData.colorOverUnder),
               Spacer(),
               SizedBox(
-                width: 40,
+                width: 50,
                 child: Text(
                   '$labelExtra',
                   style: Theme.of(context).textTheme.display4,
