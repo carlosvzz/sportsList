@@ -20,7 +20,7 @@ class MyBottomBar extends StatelessWidget {
 
     return BottomAppBar(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           RaisedButton(
             child: Text('clear'),

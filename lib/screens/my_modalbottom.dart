@@ -18,30 +18,35 @@ class MyModalBottom extends StatelessWidget {
     new CustomMenu('Soccer ESP', CustomIcons.soccer_ball),
     new CustomMenu('Soccer ITA', CustomIcons.soccer_ball),
     new CustomMenu('Soccer FRA', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer HOL', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer POR', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer ENG2', CustomIcons.soccer_ball),
-    //new CustomMenu('Soccer MLS', CustomIcons.soccer_ball),
-    new CustomMenu('', CustomIcons.baseball),
-    new CustomMenu('Soccer MEX', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer HOL', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer POR', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer ENG2', CustomIcons.soccer_ball),
+
     new CustomMenu('Soccer CHAMP', CustomIcons.soccer_ball),
     new CustomMenu('Soccer EUR', CustomIcons.soccer_ball),
+    new CustomMenu('', CustomIcons.baseball),
+    new CustomMenu('', CustomIcons.baseball),
+    //new CustomMenu('Soccer MLS', CustomIcons.soccer_ball),
+    new CustomMenu('Soccer MEX', CustomIcons.soccer_ball),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 500,
-      child: new GridView.count(
-          crossAxisCount: 5,
-          childAspectRatio: 1.0,
-          mainAxisSpacing: 5.0,
-          crossAxisSpacing: 5.0,
-          children: _listMenuData.map((CustomMenu data) {
-            return new GridTile(
-              child: new SportContainer(fnSetSport: fnSetSport, data: data),
-            );
-          }).toList()),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Container(
+        height: 320,
+        child: new GridView.count(
+            crossAxisCount: 5,
+            childAspectRatio: 1.0,
+            mainAxisSpacing: 5.0,
+            crossAxisSpacing: 5.0,
+            children: _listMenuData.map((CustomMenu data) {
+              return new GridTile(
+                child: new SportContainer(fnSetSport: fnSetSport, data: data),
+              );
+            }).toList()),
+      ),
     );
   }
 }
