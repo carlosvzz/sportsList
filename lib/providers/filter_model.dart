@@ -386,8 +386,7 @@ class FilterModel with ChangeNotifier {
 
       /////// OVER / UNDER ///////////////////////////////////////////////////////////////////////////
       ///// ALL no lo considera //////
-      if (this.filterOrderBy != ORDER_BY.All &&
-          oGame.countOverUnder.abs() > 2) {
+      if (this.filterOrderBy != ORDER_BY.All && oGame.countOverUnder != 0) {
         GameBet gameBet = new GameBet();
         gameBet.idSport = oGame.idSport;
         gameBet.date = oGame.date;
@@ -413,7 +412,7 @@ class FilterModel with ChangeNotifier {
 
       /////// EXTRA = ML (US) / BTTS (SOCCER) ///////////////////////////////////////////////////////////////////////////
       ///// ALL no lo considera //////
-      if (this.filterOrderBy != ORDER_BY.All && oGame.countExtra.abs() > 2) {
+      if (this.filterOrderBy != ORDER_BY.All && oGame.countExtra != 0) {
         GameBet gameBet = new GameBet();
         gameBet.idSport = oGame.idSport;
         gameBet.date = oGame.date;
