@@ -24,9 +24,13 @@ class _RoundKeyState extends State<RoundKey> {
   Widget build(BuildContext context) {
     Widget content;
 
-    void _updateValue() {
+    void _updateValue(bool isAdd) {
       setState(() {
-        _value++;
+        if (isAdd) {
+          _value++;
+        } else {
+          _value--;
+        }
       });
 
       if (widget.onChanged != null) {
@@ -51,7 +55,8 @@ class _RoundKeyState extends State<RoundKey> {
     // );
 
     content = GestureDetector(
-      onTap: () => _updateValue(),
+      onTap: () => _updateValue(true),
+      onLongPress: () => _updateValue(false),
       child: Container(
         width: 40.0,
         height: 40.0,

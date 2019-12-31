@@ -27,7 +27,7 @@ class FilterModel with ChangeNotifier {
     filterSport = [];
     filterTypeBet = [];
     filterTimeofDay = TIME_OF_DAY.All;
-    filterOrderBy = ORDER_BY.MaxValue;
+    filterOrderBy = ORDER_BY.DateTime;
     isLoading = false;
   }
 
@@ -107,6 +107,7 @@ class FilterModel with ChangeNotifier {
           break;
 
         case ORDER_BY.Sport:
+        case ORDER_BY.All:
           var query = Collection(_listaBet)
               .orderBy((f) => f.idSport)
               .thenBy((f) => f.date)
@@ -156,7 +157,8 @@ class FilterModel with ChangeNotifier {
           idTypeBetAux = enumToString(t.typeBet);
           detalle += '${"*" * 12} $idTypeBetAux ${"*" * 12} \n';
         }
-      } else if (this.filterOrderBy == ORDER_BY.Sport) {
+      } else if (this.filterOrderBy == ORDER_BY.Sport ||
+          this.filterOrderBy == ORDER_BY.All) {
         // Separar por Deporte
         if (idSportAux != t.idSport) {
           idSportAux = t.idSport;
@@ -259,13 +261,17 @@ class FilterModel with ChangeNotifier {
         if (this.filterOrderBy == ORDER_BY.Draw) {
           teamGanador = 0;
           maxValue = oGame.countDraw;
-          minValue = oGame.countHome + oGame.countDraw;
+          minValue = oGame.countHome + oGame.countAway;
 
-          hayDifWin = ((maxValue - minValue).abs() <= 6) && maxValue > 3;
+          //hayDifWin = ((maxValue - minValue).abs() <= 6) && maxValue > 3;
+          hayDifWin = (oGame.countDraw > oGame.countHome &&
+              oGame.countDraw > oGame.countAway);
         } else {
           // DIFERENCIA CON MAS DE +2 VOTOS VS EL RESTO
+          // Actualizacion: DIFERENCIA MAYOR AL 1 AL RESTO
           // Gana visitante
-          if (oGame.countAway - (oGame.countHome + oGame.countDraw) > 2) {
+          if (oGame.countAway > oGame.countHome &&
+              oGame.countAway > oGame.countDraw) {
             teamGanador = 2;
             hayDifWin = true;
             maxValue = oGame.countAway;
@@ -273,7 +279,8 @@ class FilterModel with ChangeNotifier {
           }
           // Gana Local
           if (!hayDifWin &&
-              (oGame.countHome - (oGame.countAway + oGame.countDraw) > 2)) {
+              (oGame.countHome > oGame.countAway &&
+                  oGame.countHome > oGame.countDraw)) {
             teamGanador = 1;
             hayDifWin = true;
             maxValue = oGame.countHome;
@@ -281,29 +288,34 @@ class FilterModel with ChangeNotifier {
           }
           // EMPATE
           if (!hayDifWin &&
-              (oGame.countDraw - (oGame.countAway + oGame.countHome) > 2)) {
+              (oGame.countDraw > oGame.countAway &&
+                  oGame.countDraw > oGame.countHome)) {
             teamGanador = 0;
             hayDifWin = true;
             maxValue = oGame.countDraw;
-            minValue = oGame.countHome + oGame.countDraw;
+            minValue = oGame.countHome + oGame.countAway;
           }
         }
       } else {
-//US Games > Gana cualquiera con +2 diferencia (visitante o local)
+//US Games > Gana cualquiera  (visitante o local)
         // Visitante
-        if ((oGame.countAway - oGame.countHome) > 2) {
+        if (oGame.countAway > oGame.countHome) {
           teamGanador = 2;
           hayDifWin = true;
           maxValue = oGame.countAway;
           minValue = oGame.countHome;
         }
         // Gana Local
-        if (!hayDifWin && (oGame.countHome - oGame.countAway) > 2) {
+        if (!hayDifWin && oGame.countHome > oGame.countAway) {
           teamGanador = 1;
           hayDifWin = true;
           maxValue = oGame.countHome;
           minValue = oGame.countAway;
         }
+      }
+
+      if (filterOrderBy == ORDER_BY.All) {
+        hayDifWin = true;
       }
 
       if (hayDifWin) {
@@ -325,6 +337,7 @@ class FilterModel with ChangeNotifier {
         }
 
         textoFinal = '$datoJuego $etiquetaJuego ';
+
         if (esSoccer) {
           switch (teamGanador) {
             case 0:
@@ -348,8 +361,13 @@ class FilterModel with ChangeNotifier {
           }
         }
         textoFinal += ' (${maxValue.toString()}.${minValue.toString()})';
+
         //Agregar a lista de bets
-        gameBet.label = textoFinal;
+        if (filterOrderBy == ORDER_BY.All) {
+          gameBet.label = datoJuego;
+        } else {
+          gameBet.label = textoFinal;
+        }
 
         if (oGame.idSport.toLowerCase() == 'nba' ||
             oGame.idSport.toLowerCase() == 'nfl' ||
@@ -367,7 +385,9 @@ class FilterModel with ChangeNotifier {
       }
 
       /////// OVER / UNDER ///////////////////////////////////////////////////////////////////////////
-      if (oGame.countOverUnder.abs() > 2) {
+      ///// ALL no lo considera //////
+      if (this.filterOrderBy != ORDER_BY.All &&
+          oGame.countOverUnder.abs() > 2) {
         GameBet gameBet = new GameBet();
         gameBet.idSport = oGame.idSport;
         gameBet.date = oGame.date;
@@ -392,7 +412,8 @@ class FilterModel with ChangeNotifier {
       }
 
       /////// EXTRA = ML (US) / BTTS (SOCCER) ///////////////////////////////////////////////////////////////////////////
-      if (oGame.countExtra.abs() > 2) {
+      ///// ALL no lo considera //////
+      if (this.filterOrderBy != ORDER_BY.All && oGame.countExtra.abs() > 2) {
         GameBet gameBet = new GameBet();
         gameBet.idSport = oGame.idSport;
         gameBet.date = oGame.date;
@@ -407,9 +428,15 @@ class FilterModel with ChangeNotifier {
           textoFinal += 'btts ';
           textoFinal += (oGame.countExtra > 0) ? 'Y' : 'N';
         } else {
-          gameBet.typeBet = TYPE_BET.ML;
-          textoFinal += 'ml ';
-          textoFinal += (oGame.countExtra > 0) ? teamAway : teamHome;
+          if (oGame.idSport.toLowerCase() == 'nhl') {
+            gameBet.typeBet = TYPE_BET.OverUnder;
+            textoFinal += '1P ';
+            textoFinal += (oGame.countExtra > 0) ? 'Y' : 'N';
+          } else {
+            gameBet.typeBet = TYPE_BET.ML;
+            textoFinal += 'ml ';
+            textoFinal += (oGame.countExtra > 0) ? teamAway : teamHome;
+          }
         }
 
         textoFinal +=

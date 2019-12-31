@@ -26,9 +26,10 @@ class _FilterMainContainerState extends State<FilterMainContainer> {
   Widget build(BuildContext context) {
     return new Container(
       alignment: Alignment.center,
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Flexible(
               child: FutureBuilder<String>(
@@ -49,6 +50,7 @@ class _FilterMainContainerState extends State<FilterMainContainer> {
                       child: SelectableText(
                     snapshot.data,
                     style: Theme.of(context).textTheme.body1,
+                    textAlign: TextAlign.left,
                   ));
                 }
               }

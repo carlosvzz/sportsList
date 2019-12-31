@@ -12,6 +12,7 @@ class CardGame extends StatelessWidget {
   Widget build(BuildContext context) {
     String labelMain = 'ML';
     String labelOverUnder = 'o/u';
+    String labelExtraLetter = 'AH';
     String labelExtra = '';
     String dateFormat = gameData.time;
     bool isAmFoot = false;
@@ -29,11 +30,13 @@ class CardGame extends StatelessWidget {
         gameData.idSport.contains('NCAAF')) {
       labelMain = 'SP +/-';
       labelExtra = 'ML';
+    } else if (gameData.idSport.contains('NHL')) {
+      labelExtra = '1P';
+      labelExtraLetter = 'OU';
     }
 
     Widget extraStep() {
-      if (gameData.idSport.contains('NHL') ||
-          gameData.idSport.contains('MLB')) {
+      if (gameData.idSport.contains('MLB')) {
         return Container();
       } else {
         return Row(
@@ -46,8 +49,8 @@ class CardGame extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            CustomStep(gameData.id, 'extra', 'AH', gameData.countExtra,
-                gameData.colorExtra),
+            CustomStep(gameData.id, 'extra', labelExtraLetter,
+                gameData.countExtra, gameData.colorExtra),
           ],
         );
       }
@@ -133,7 +136,7 @@ class CardGame extends StatelessWidget {
               CustomStep(gameData.id, 'overunder', 'OU',
                   gameData.countOverUnder, gameData.colorOverUnder),
               Spacer(),
-              // extra solo en NFL y NBA > NHL y MLB se muestra vacío
+              // extra solo en NFL y NBA y NHL > MLB se muestra vacío
               extraStep(),
             ],
           ),
