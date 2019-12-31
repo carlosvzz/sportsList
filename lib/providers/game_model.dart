@@ -151,36 +151,39 @@ class GameModel with ChangeNotifier {
           if (game.countDraw > valorMax) valorMax = game.countDraw;
           if (game.countHome > valorMax) valorMax = game.countHome;
 
-          // 3+ que la suma del resto para ser verde
-          if (game.countAway - (game.countHome + game.countDraw) > 2) {
+          // Mayor que el resto para ser verde
+          if (game.countAway > game.countHome &&
+              game.countAway > game.countDraw) {
             hayMax = true;
             listaOrig[index].colorAway = Colors.green.shade600;
           }
 
-          if (game.countHome - (game.countAway + game.countDraw) > 2) {
+          if (game.countHome > game.countAway &&
+              game.countHome > game.countDraw) {
             hayMax = true;
             listaOrig[index].colorHome = Colors.green.shade600;
           }
 
-          if (game.countDraw - (game.countHome + game.countAway) > 2) {
+          if (game.countDraw > game.countHome &&
+              game.countDraw > game.countAway) {
             hayMax = true;
             listaOrig[index].colorDraw = Colors.green.shade600;
           }
 
           ///////////////////////
-          /// No se encontro un maximo. Poner amarillo  al maximo y rojo al segundo
+          /// No se encontro un maximo. poner amarillo  al mayor
 
           if (hayMax == false && valorMax > 0) {
             if (game.idSport.toLowerCase().contains('soccer') == false) {
-              // Juegos USA , no hay empate, solo poner amarillo el mayor
-              if (game.countAway == game.countHome) {
-                listaOrig[index].colorAway = Colors.yellowAccent.shade700;
-                listaOrig[index].colorHome = Colors.yellowAccent.shade700;
-              } else if (game.countAway > game.countHome) {
-                listaOrig[index].colorAway = Colors.yellowAccent.shade700;
-              } else {
-                listaOrig[index].colorHome = Colors.yellowAccent.shade700;
-              }
+              // // Juegos USA , no hay empate, solo poner amarillo el mayor
+              // if (game.countAway == game.countHome) {
+              //   listaOrig[index].colorAway = Colors.yellowAccent.shade700;
+              //   listaOrig[index].colorHome = Colors.yellowAccent.shade700;
+              // } else if (game.countAway > game.countHome) {
+              //   listaOrig[index].colorAway = Colors.yellowAccent.shade700;
+              // } else {
+              //   listaOrig[index].colorHome = Colors.yellowAccent.shade700;
+              // }
             } else {
               // Juegos Soccer, considera EMPATE
               //// Maximo AWAY
@@ -194,25 +197,25 @@ class GameModel with ChangeNotifier {
                 if (game.countHome == game.countAway)
                   listaOrig[index].colorHome = Colors.yellowAccent.shade700;
 
-                if (game.countDraw < game.countAway &&
-                    game.countDraw == game.countHome) {
-                  if (listaOrig[index].countDraw > 0)
-                    listaOrig[index].colorDraw = Colors.red.shade600;
-                  if (listaOrig[index].countHome > 0)
-                    listaOrig[index].colorHome = Colors.red.shade600;
-                }
+                // if (game.countDraw < game.countAway &&
+                //     game.countDraw == game.countHome) {
+                //   if (listaOrig[index].countDraw > 0)
+                //     listaOrig[index].colorDraw = Colors.red.shade600;
+                //   if (listaOrig[index].countHome > 0)
+                //     listaOrig[index].colorHome = Colors.red.shade600;
+                // }
 
-                if (game.countDraw < game.countAway &&
-                    game.countDraw > game.countHome) {
-                  if (listaOrig[index].countDraw > 0)
-                    listaOrig[index].colorDraw = Colors.red.shade600;
-                }
+                // if (game.countDraw < game.countAway &&
+                //     game.countDraw > game.countHome) {
+                //   if (listaOrig[index].countDraw > 0)
+                //     listaOrig[index].colorDraw = Colors.red.shade600;
+                // }
 
-                if (game.countHome < game.countAway &&
-                    game.countHome > game.countDraw) {
-                  if (listaOrig[index].countHome > 0)
-                    listaOrig[index].colorHome = Colors.red.shade600;
-                }
+                // if (game.countHome < game.countAway &&
+                //     game.countHome > game.countDraw) {
+                //   if (listaOrig[index].countHome > 0)
+                //     listaOrig[index].colorHome = Colors.red.shade600;
+                // }
               }
 
               //// MAXIMO DRAW
@@ -223,25 +226,25 @@ class GameModel with ChangeNotifier {
                 if (game.countHome == game.countDraw)
                   listaOrig[index].colorHome = Colors.yellowAccent.shade700;
 
-                if (game.countAway < game.countDraw &&
-                    game.countAway == game.countHome) {
-                  if (listaOrig[index].countAway > 0)
-                    listaOrig[index].colorAway = Colors.red.shade600;
-                  if (listaOrig[index].countHome > 0)
-                    listaOrig[index].colorHome = Colors.red.shade600;
-                }
+                // if (game.countAway < game.countDraw &&
+                //     game.countAway == game.countHome) {
+                //   if (listaOrig[index].countAway > 0)
+                //     listaOrig[index].colorAway = Colors.red.shade600;
+                //   if (listaOrig[index].countHome > 0)
+                //     listaOrig[index].colorHome = Colors.red.shade600;
+                // }
 
-                if (game.countAway < game.countDraw &&
-                    game.countAway > game.countHome) {
-                  if (listaOrig[index].countAway > 0)
-                    listaOrig[index].colorAway = Colors.red.shade600;
-                }
+                // if (game.countAway < game.countDraw &&
+                //     game.countAway > game.countHome) {
+                //   if (listaOrig[index].countAway > 0)
+                //     listaOrig[index].colorAway = Colors.red.shade600;
+                // }
 
-                if (game.countHome < game.countDraw &&
-                    game.countHome > game.countAway) {
-                  if (listaOrig[index].countHome > 0)
-                    listaOrig[index].colorHome = Colors.red.shade600;
-                }
+                // if (game.countHome < game.countDraw &&
+                //     game.countHome > game.countAway) {
+                //   if (listaOrig[index].countHome > 0)
+                //     listaOrig[index].colorHome = Colors.red.shade600;
+                // }
               }
 
               //// MAXIMO HOME
@@ -249,25 +252,25 @@ class GameModel with ChangeNotifier {
                 listaOrig[index].colorHome = Colors.yellowAccent.shade700;
 
                 //2do lugar
-                if (game.countAway < game.countHome &&
-                    game.countAway == game.countDraw) {
-                  if (listaOrig[index].countAway > 0)
-                    listaOrig[index].colorAway = Colors.red.shade600;
-                  if (listaOrig[index].countDraw > 0)
-                    listaOrig[index].colorDraw = Colors.red.shade600;
-                }
+                // if (game.countAway < game.countHome &&
+                //     game.countAway == game.countDraw) {
+                //   if (listaOrig[index].countAway > 0)
+                //     listaOrig[index].colorAway = Colors.red.shade600;
+                //   if (listaOrig[index].countDraw > 0)
+                //     listaOrig[index].colorDraw = Colors.red.shade600;
+                // }
 
-                if (game.countAway < game.countHome &&
-                    game.countAway > game.countDraw) {
-                  if (listaOrig[index].countAway > 0)
-                    listaOrig[index].colorAway = Colors.red.shade600;
-                }
+                // if (game.countAway < game.countHome &&
+                //     game.countAway > game.countDraw) {
+                //   if (listaOrig[index].countAway > 0)
+                //     listaOrig[index].colorAway = Colors.red.shade600;
+                // }
 
-                if (game.countDraw < game.countHome &&
-                    game.countDraw > game.countAway) {
-                  if (listaOrig[index].countDraw > 0)
-                    listaOrig[index].colorDraw = Colors.red.shade600;
-                }
+                // if (game.countDraw < game.countHome &&
+                //     game.countDraw > game.countAway) {
+                //   if (listaOrig[index].countDraw > 0)
+                //     listaOrig[index].colorDraw = Colors.red.shade600;
+                // }
               }
             }
           }
@@ -276,18 +279,18 @@ class GameModel with ChangeNotifier {
         if (typeCount == 'initial' ||
             typeCount == 'overunder' ||
             typeCount == 'extra') {
-          // 3+ Verde / -3 Rojo
-          if (listaOrig[index].countOverUnder > 2) {
+          // + Verde / - Rojo
+          if (listaOrig[index].countOverUnder > 0) {
             listaOrig[index].colorOverUnder = Colors.green.shade600;
-          } else if (listaOrig[index].countOverUnder < -2) {
+          } else if (listaOrig[index].countOverUnder < 0) {
             listaOrig[index].colorOverUnder = Colors.red.shade600;
           } else {
             listaOrig[index].colorOverUnder = Colors.blueGrey.shade700;
           }
 
-          if (listaOrig[index].countExtra > 2) {
+          if (listaOrig[index].countExtra > 0) {
             listaOrig[index].colorExtra = Colors.green.shade600;
-          } else if (listaOrig[index].countExtra < -2) {
+          } else if (listaOrig[index].countExtra < 0) {
             listaOrig[index].colorExtra = Colors.red.shade800;
           } else {
             listaOrig[index].colorExtra = Colors.blueGrey.shade700;
@@ -386,15 +389,37 @@ class GameModel with ChangeNotifier {
       case 'Soccer FRA':
         idLeague = "525";
         break;
+      case 'Soccer ENG2':
+        idLeague = "565";
+        break;
+      case 'Soccer GER2':
+        idLeague = "755";
+        break;
+      case 'Soccer ESP2':
+        idLeague = "776";
+        break;
+      case 'Soccer ITA2':
+        idLeague = "902";
+        break;
+      case 'Soccer FRA2':
+        idLeague = "526";
+        break;
+      case 'Soccer ENGL1':
+        idLeague = "581";
+        break;
+      case 'Soccer ENGL2':
+        idLeague = "582";
+        break;
       case 'Soccer HOL':
         idLeague = "566";
+        break;
+      case 'Soccer HOL2':
+        idLeague = "571";
         break;
       case 'Soccer POR':
         idLeague = "766";
         break;
-      case 'Soccer ENG2':
-        idLeague = "565";
-        break;
+
       case 'Soccer MLS':
         idLeague = "294";
         break;

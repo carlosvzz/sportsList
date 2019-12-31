@@ -11,6 +11,7 @@ class MyBottomBar extends StatelessWidget {
 
     void _showModalSheet(BuildContext context) {
       showModalBottomSheet(
+        isScrollControlled: true,
         context: context,
         builder: (builder) {
           return MyModalBottom(oGame.setSelectedSport);
