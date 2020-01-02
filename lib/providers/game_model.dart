@@ -312,9 +312,9 @@ class GameModel with ChangeNotifier {
         'Basic ' + base64Encode(utf8.encode('$_username:$_password'));
 
     String season = 'current';
-    if (this.selectedSport.nombre == 'NFL') {
-      season = '2019-regular';
-    }
+    // if (this.selectedSport.nombre == 'NFL') {
+    //   season = '2019-regular';
+    // }
 
     try {
       String miUrl =
