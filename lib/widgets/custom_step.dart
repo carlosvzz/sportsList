@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sports_list/providers/game_model.dart';
-import 'package:sports_list/widgets/round_key.dart';
-import 'package:sports_list/widgets/round_key_duo.dart';
+import 'package:XSports/providers/game_model.dart';
+import 'package:XSports/widgets/round_key.dart';
+import 'package:XSports/widgets/round_key_duo.dart';
 
 class CustomStep extends StatelessWidget {
   final String id;

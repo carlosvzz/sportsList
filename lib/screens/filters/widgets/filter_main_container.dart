@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
-import 'package:sports_list/providers/filter_model.dart';
+import 'package:XSports/providers/filter_model.dart';
 //import 'package:flutter_selectable_text/flutter_selectable_text.dart';
 
 class FilterMainContainer extends StatefulWidget {

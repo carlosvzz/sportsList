@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sports_list/helpers/rutinas.dart';
-import 'package:sports_list/providers/game_model.dart';
-import 'package:sports_list/screens/my_appbar.dart';
-import 'package:sports_list/screens/my_bottombar.dart';
-import 'package:sports_list/widgets/contenedor_juegos.dart';
-import 'package:sports_list/widgets/main_drawer.dart';
+import 'package:XSports/helpers/rutinas.dart';
+import 'package:XSports/providers/game_model.dart';
+import 'package:XSports/screens/my_appbar.dart';
+import 'package:XSports/screens/my_bottombar.dart';
+import 'package:XSports/widgets/contenedor_juegos.dart';
+import 'package:XSports/widgets/main_drawer.dart';
 
 class MyHomePage extends StatefulWidget {
   @override

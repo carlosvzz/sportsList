@@ -1,4 +1,4 @@
-import 'package:sports_list/helpers/format_date.dart';
+import 'package:XSports/helpers/format_date.dart';
 
 class CustomDate {
   DateTime date;

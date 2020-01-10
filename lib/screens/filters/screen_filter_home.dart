@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sports_list/screens/filters/widgets/filter_main_container.dart';
-import 'package:sports_list/screens/filters/widgets/filter_my_appbart.dart';
+import 'package:XSports/screens/filters/widgets/filter_main_container.dart';
+import 'package:XSports/screens/filters/widgets/filter_my_appbart.dart';
 // import 'package:provider/provider.dart';
 
 class ScreenFilterHome extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sports_list/helpers/format_date.dart';
-import 'package:sports_list/models/game.dart';
-import 'package:sports_list/widgets/custom_step.dart';
+import 'package:XSports/helpers/format_date.dart';
+import 'package:XSports/models/game.dart';
+import 'package:XSports/widgets/custom_step.dart';
 import 'circle_text.dart';
 
 class CardGameSoccer extends StatelessWidget {

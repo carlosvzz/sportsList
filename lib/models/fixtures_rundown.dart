@@ -1,5 +1,5 @@
-import 'package:sports_list/helpers/format_date.dart';
-import 'package:sports_list/models/team.dart';
+import 'package:XSports/helpers/format_date.dart';
+import 'package:XSports/models/team.dart';
 
 import 'fixture_sportsfeed.dart';
 

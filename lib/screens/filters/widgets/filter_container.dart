@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sports_list/helpers/enums.dart';
-import 'package:sports_list/providers/filter_model.dart';
-import 'package:sports_list/screens/filters/widgets/filter_multiselect_chip.dart';
+import 'package:XSports/helpers/enums.dart';
+import 'package:XSports/providers/filter_model.dart';
+import 'package:XSports/screens/filters/widgets/filter_multiselect_chip.dart';
 
 class FilterContainer extends StatefulWidget {
   @override

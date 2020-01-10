@@ -3,11 +3,11 @@ import 'dart:async';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:queries/collections.dart';
-import 'package:sports_list/helpers/database_helper.dart';
-import 'package:sports_list/helpers/enums.dart';
-import 'package:sports_list/models/custom_date.dart';
-import 'package:sports_list/models/game.dart';
-import 'package:sports_list/models/game_bet.dart';
+import 'package:XSports/helpers/database_helper.dart';
+import 'package:XSports/helpers/enums.dart';
+import 'package:XSports/models/custom_date.dart';
+import 'package:XSports/models/game.dart';
+import 'package:XSports/models/game_bet.dart';
 
 class FilterModel with ChangeNotifier {
   int numRegs;

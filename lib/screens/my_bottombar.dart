@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sports_list/helpers/rutinas.dart';
-import 'package:sports_list/providers/game_model.dart';
-import 'package:sports_list/screens/my_modalbottom.dart';
+import 'package:XSports/helpers/rutinas.dart';
+import 'package:XSports/providers/game_model.dart';
+import 'package:XSports/screens/my_modalbottom.dart';
 
 class MyBottomBar extends StatelessWidget {
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sports_list/screens/filters/widgets/filter_container.dart';
+import 'package:XSports/screens/filters/widgets/filter_container.dart';
 
 class ScreenFilterConfig extends StatelessWidget {
   @override

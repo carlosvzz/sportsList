@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sports_list/models/custom_menu.dart';
-import 'package:sports_list/widgets/custom_icons.dart';
+import 'package:XSports/models/custom_menu.dart';
+import 'package:XSports/widgets/custom_icons.dart';
 
 class MyModalBottom extends StatelessWidget {
   final Function fnSetSport;

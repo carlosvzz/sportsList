@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // import 'package:sports_list/internals/keys.dart';
-import 'package:sports_list/providers/game_model.dart';
+import 'package:XSports/providers/game_model.dart';
 // import 'package:sports_list/providers/user_model.dart';
 
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {

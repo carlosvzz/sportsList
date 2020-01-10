@@ -1,4 +1,4 @@
-import 'package:sports_list/models/team.dart';
+import 'package:XSports/models/team.dart';
 
 class FixtureSportsFeed {
   Dailygameschedule dailygameschedule;

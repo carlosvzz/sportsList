@@ -1,4 +1,4 @@
-import 'package:sports_list/helpers/enums.dart';
+import 'package:XSports/helpers/enums.dart';
 
 class GameBet {
   String idSport;

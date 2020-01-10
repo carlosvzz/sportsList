@@ -4,12 +4,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
-import 'package:sports_list/providers/filter_model.dart';
-import 'package:sports_list/providers/game_model.dart';
-import 'package:sports_list/screens/filters/screen_filter_config.dart';
-import 'package:sports_list/screens/filters/screen_filter_home.dart';
-// import 'package:sports_list/providers/user_model.dart';
-import 'package:sports_list/screens/homepage.dart';
+import 'package:XSports/providers/filter_model.dart';
+import 'package:XSports/providers/game_model.dart';
+import 'package:XSports/screens/filters/screen_filter_config.dart';
+import 'package:XSports/screens/filters/screen_filter_home.dart';
+// import 'package:XSports/providers/user_model.dart';
+import 'package:XSports/screens/homepage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sentry/sentry.dart';
 

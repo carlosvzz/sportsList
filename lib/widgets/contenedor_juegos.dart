@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sports_list/models/game.dart';
-import 'package:sports_list/providers/game_model.dart';
-import 'package:sports_list/screens/listGames/card_game.dart';
-import 'package:sports_list/screens/listGames/card_game_soccer.dart';
+import 'package:XSports/models/game.dart';
+import 'package:XSports/providers/game_model.dart';
+import 'package:XSports/screens/listGames/card_game.dart';
+import 'package:XSports/screens/listGames/card_game_soccer.dart';
 // import 'package:sports_list/screens/listGames/list_games.dart';
 
 class ContenedorJuegos extends StatefulWidget {
