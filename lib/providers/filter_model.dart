@@ -406,7 +406,12 @@ class FilterModel with ChangeNotifier {
         if (this.filterOrderBy != ORDER_BY.Draw &&
             (this.filterTypeBet.isEmpty ||
                 this.filterTypeBet.contains(TYPE_BET.OverUnder))) {
-          _addGame(gameBet);
+          // Soccer solo agrega OVER
+          if (esSoccer && oGame.countOverUnder > 0) {
+            _addGame(gameBet);
+          } else {
+            _addGame(gameBet);
+          }
         }
       }
 
@@ -447,7 +452,10 @@ class FilterModel with ChangeNotifier {
           if (esSoccer) {
             if (this.filterTypeBet.isEmpty ||
                 this.filterTypeBet.contains(TYPE_BET.BTTS)) {
-              _addGame(gameBet);
+              //Solo agrega BTTS Y
+              if (oGame.countExtra > 0) {
+                _addGame(gameBet);
+              }
             }
           } else {
             if (this.filterTypeBet.isEmpty ||
