@@ -407,8 +407,8 @@ class FilterModel with ChangeNotifier {
             (this.filterTypeBet.isEmpty ||
                 this.filterTypeBet.contains(TYPE_BET.OverUnder))) {
           // Soccer solo agrega OVER
-          if (esSoccer && oGame.countOverUnder > 0) {
-            _addGame(gameBet);
+          if (esSoccer) {
+            if (oGame.countOverUnder > 0) _addGame(gameBet);
           } else {
             _addGame(gameBet);
           }
