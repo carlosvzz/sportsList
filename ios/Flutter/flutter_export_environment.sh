@@ -1,10 +1,10 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=D:\Desarrollo\flutter"
-export "FLUTTER_APPLICATION_PATH=D:\Desarrollo\MyProjects\Mobile\flutter\sportsList"
+export "FLUTTER_ROOT=C:\Desarrollo\flutter"
+export "FLUTTER_APPLICATION_PATH=C:\Desarrollo\MyProjects\Mobile\flutter\sportsList"
 export "FLUTTER_TARGET=lib\main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build\ios"
-export "FLUTTER_FRAMEWORK_DIR=D:\Desarrollo\flutter\bin\cache\artifacts\engine\ios"
+export "FLUTTER_FRAMEWORK_DIR=C:\Desarrollo\flutter\bin\cache\artifacts\engine\ios"
 export "FLUTTER_BUILD_NAME=1.0.0"
 export "FLUTTER_BUILD_NUMBER=1"

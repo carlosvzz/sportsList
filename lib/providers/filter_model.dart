@@ -238,8 +238,8 @@ class FilterModel with ChangeNotifier {
       esSoccer = oGame.idSport.toLowerCase().contains('soccer');
       etiquetaJuego =
           esSoccer ? oGame.idSport.replaceAll('Soccer', 'FB') : oGame.idSport;
-      if (etiquetaJuego.length > 7) {
-        etiquetaJuego = etiquetaJuego.substring(0, 7);
+      if (etiquetaJuego.length > 8) {
+        etiquetaJuego = etiquetaJuego.substring(0, 8).trim();
       }
 
       String teamAway = oGame.awayTeam.abbreviation.padRight(3);
