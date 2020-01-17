@@ -321,7 +321,7 @@ class GameModel with ChangeNotifier {
           '${keys.SportsFeedUrl}/$idSport/$season/daily_game_schedule.json?fordate=' +
               formatDate(dateAux, [yyyy, mm, dd]);
 
-      //print(miUrl);
+      print(miUrl);
       http.Response response =
           await http.get(miUrl, headers: {'Authorization': _basicAuth});
 

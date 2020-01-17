@@ -41,7 +41,8 @@ class MyModalBottom extends StatelessWidget {
     //new CustomMenu('MLB', CustomIcons.baseball),
     new CustomMenu('', CustomIcons.baseball),
     new CustomMenu('NFL', CustomIcons.football),
-    new CustomMenu('NCAAF', CustomIcons.football),
+    //new CustomMenu('NCAAF', CustomIcons.football),
+    new CustomMenu('', CustomIcons.baseball),
   ];
 
   @override
