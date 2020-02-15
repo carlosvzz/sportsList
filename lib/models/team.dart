@@ -16,9 +16,11 @@ class Team {
   }
 
   Team.fromJsonAPIFootball(Map json) {
-    idTeam = json['team_id'].toString();
-    name = json['team_name'];
-    abbreviation = fnGetTeamAbbreviation(json['team_name']);
+    // idTeam = json['team_id'].toString();
+    // name = json['team_name'];
+    idTeam = json['id'].toString();
+    name = json['name'];
+    abbreviation = fnGetTeamAbbreviation(json['name']);
   }
 
   Map<String, dynamic> toJson() {

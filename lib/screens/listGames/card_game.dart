@@ -30,13 +30,11 @@ class CardGame extends StatelessWidget {
         gameData.idSport.contains('NCAAF')) {
       labelMain = 'SP +/-';
       labelExtra = 'ML';
-    } else if (gameData.idSport.contains('NHL')) {
-      labelExtra = '1P';
-      labelExtraLetter = 'OU';
     }
 
     Widget extraStep() {
-      if (gameData.idSport.contains('MLB')) {
+      if (gameData.idSport.contains('MLB') ||
+          gameData.idSport.contains('NHL')) {
         return Container();
       } else {
         return Row(

@@ -370,74 +370,89 @@ class GameModel with ChangeNotifier {
   }
 
   //para deportes Soccer
-  Future<dynamic> _getFixturesApiFootball(DateTime dateAux) async {
+  Future<dynamic> _getFixturesApiFootball(
+      DateTime dateIni, DateTime dateFin) async {
     String idLeague = "";
 
     switch (idSport) {
       case 'Soccer ENG':
-        idLeague = "524";
+        idLeague = "39"; //""524";
         break;
       case 'Soccer GER':
-        idLeague = "754";
+        idLeague = "78"; //""754";
         break;
       case 'Soccer ESP':
-        idLeague = "775";
+        idLeague = "140"; //""775";
         break;
       case 'Soccer ITA':
-        idLeague = "891";
+        idLeague = "135"; //""891";
         break;
       case 'Soccer FRA':
-        idLeague = "525";
+        idLeague = "61"; //""525";
         break;
       case 'Soccer ENG2':
-        idLeague = "565";
+        idLeague = "40"; //"565";
         break;
       case 'Soccer GER2':
-        idLeague = "755";
+        idLeague = "79"; //""755";
         break;
       case 'Soccer ESP2':
-        idLeague = "776";
+        idLeague = "141"; //""776";
         break;
       case 'Soccer ITA2':
-        idLeague = "902";
+        idLeague = "136"; //""902";
         break;
       case 'Soccer FRA2':
-        idLeague = "526";
+        idLeague = "62"; //""526";
         break;
       case 'Soccer ENGL1':
-        idLeague = "581";
+        idLeague = "41"; //""581";
         break;
       case 'Soccer ENGL2':
-        idLeague = "582";
+        idLeague = "42"; //"582";
         break;
       case 'Soccer HOL':
-        idLeague = "566";
+        idLeague = "88"; //""566";
         break;
       case 'Soccer HOL2':
-        idLeague = "571";
+        idLeague = "89"; //""571";
         break;
       case 'Soccer POR':
-        idLeague = "766";
+        idLeague = "94"; //""766";
         break;
 
       case 'Soccer MLS':
-        idLeague = "294";
+        idLeague = "253"; //"294";
         break;
       case 'Soccer MEX':
-        idLeague = "584";
+        idLeague = "262"; //""584";
         break;
       case 'Soccer CHAMP':
-        idLeague = "530";
+        idLeague = "2"; //"530";
         break;
       case 'Soccer EUR':
-        idLeague = "514";
+        idLeague = "3"; //"514";
         break;
     }
 
     try {
-      String miUrl = '${keys.ApiFootballUrl}/v2/fixtures/league/$idLeague/' +
-          formatDate(dateAux, [yyyy, '-', mm, '-', dd]) +
-          '?timezone=America/Monterrey';
+      // String miUrl = '${keys.ApiFootballUrl}/v2/fixtures/league/$idLeague/' +
+      //     formatDate(dateAux, [yyyy, '-', mm, '-', dd]) +
+      //     '?timezone=America/Monterrey';
+
+      String idSeason = "2019";
+      if (idSport == 'Soccer MLS') {
+        idSeason = "2020";
+      }
+
+      String miUrl = '${keys.ApiFootballUrl}/fixtures?' +
+          'league=$idLeague' +
+          '&season=$idSeason' +
+          '&from=' +
+          formatDate(dateIni, [yyyy, '-', mm, '-', dd]) +
+          '&to=' +
+          formatDate(dateFin, [yyyy, '-', mm, '-', dd]) +
+          '&timezone=America/Monterrey';
 
       http.Response response = await http.get(miUrl, headers: {
         'x-rapidapi-host': keys.ApiFootballHost,
@@ -458,70 +473,6 @@ class GameModel with ChangeNotifier {
       throw Exception('No se pudo obtener los datos del feed. $e');
     }
   }
-
-  // // para deportes Soccer
-  // Future<List<FixtureFireStore>> _getFixturesFirestore() async {
-  //   List<FixtureFireStore> list = new List();
-
-  //   try {
-  //     List<DocumentSnapshot> templist;
-  //     List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
-
-  //     // gameDate en FS es entero con formato yyyymmdd
-  //     String dateIni = formatDate(dateFilter[0], ['yyyy', 'mm', 'dd']);
-  //     String dateFin = formatDate(dateFilter[1], ['yyyy', 'mm', 'dd']);
-
-  //     CollectionReference collectionRef =
-  //         Firestore.instance.collection("fixtures");
-  //     QuerySnapshot collectionSnapshot = await collectionRef
-  //         .where('idSport', isEqualTo: idSport)
-  //         .where('gameDate', isGreaterThanOrEqualTo: int.parse(dateIni))
-  //         .where('gameDate', isLessThanOrEqualTo: int.parse(dateFin))
-  //         .orderBy('gameDate')
-  //         .orderBy('gameTimestamp')
-  //         .getDocuments();
-
-  //     templist = collectionSnapshot.documents;
-  //     list = templist.map((DocumentSnapshot docSnapshot) {
-  //       return new FixtureFireStore.fromJson(docSnapshot.data);
-  //     }).toList();
-  //   } catch (e) {
-  //     print('ERR _getFixturesFirestore > ${e.toString()}');
-  //     throw Exception('Datos no obtenidos. _getGamesFirestore ${e.toString()}');
-  //   }
-
-  //   return list;
-  // }
-
-  // para obtener los juegos finales del FS
-  // Future<List<Game>> _getGamesFirestore() async {
-  //   List<DocumentSnapshot> templist;
-  //   List<Game> list = new List();
-  //   List<DateTime> dateFilter = rutinas.getSportDates(idSport, idDate);
-
-  //   try {
-  //     CollectionReference collectionRef =
-  //         Firestore.instance.collection("games");
-  //     QuerySnapshot collectionSnapshot = await collectionRef
-  //         .where('idSport', isEqualTo: idSport)
-  //         .where('date', isGreaterThanOrEqualTo: dateFilter[0])
-  //         .where('date', isLessThanOrEqualTo: dateFilter[1])
-  //         .orderBy('date')
-  //         .orderBy('time')
-  //         .getDocuments();
-
-  //     templist = collectionSnapshot.documents;
-
-  //     list = templist.map((DocumentSnapshot docSnapshot) {
-  //       return new Game.fromMap(docSnapshot.data);
-  //     }).toList();
-  //   } catch (e) {
-  //     print('ERR _getGamesFirestore > ${e.toString()}');
-  //     throw Exception('Datos no obtenidos. _getGamesFirestore ${e.toString()}');
-  //   }
-
-  //   return list;
-  // }
 
   // Buscar JUEGOS, ya sea de la lista Original en memoria, si no del FireStore, y  si no nuevos de SportsFeed/FS Fixtures/RunDown/ApiFB
   Future<Null> fetchGames() async {
@@ -562,32 +513,24 @@ class GameModel with ChangeNotifier {
             List<Gameentry> lista;
 
             if (isSoccer) {
-              //Soccer sera de Martes-Jueves o Viernes-Lunes, por lo que hay que recorrer el listado por cada día
-              DateTime dateAux = dateFilter[0]; //Rango de inicio
+              //Soccer sera de Martes-Jueves o Viernes-Lunes
               lista = new List<Gameentry>();
 
-              while (dateAux.isBefore(dateFilter[1]) ||
-                  dateAux.isAtSameMomentAs(dateFilter[1])) {
-                try {
-                  var dataFromResponse = await _getFixturesApiFootball(dateAux);
-                  //print('dataFromResponse > $dataFromResponse');
-                  FixturesApiFootball oFix =
-                      FixturesApiFootball.fromJson(dataFromResponse);
-                  if (oFix != null) {
-                    if (oFix.api != null) {
-                      if (oFix.api.results > 0) {
-                        oFix.api.fixtures.forEach((f) {
-                          lista.add(f.toGameentry());
-                        });
-                      }
-                    }
+              try {
+                var dataFromResponse =
+                    await _getFixturesApiFootball(dateFilter[0], dateFilter[1]);
+                //print('dataFromResponse > $dataFromResponse');
+                FixturesApiFootball oFix =
+                    FixturesApiFootball.fromJson(dataFromResponse);
+                if (oFix != null) {
+                  if (oFix.results > 0) {
+                    oFix.response.forEach((f) {
+                      lista.add(f.toGameentry());
+                    });
                   }
-                } catch (e) {
-                  print('ERR fetchGames $e ');
                 }
-
-                //Aumentamos un día para traer partidos
-                dateAux = dateAux.add(Duration(days: 1));
+              } catch (e) {
+                print('ERR fetchGames $e ');
               }
             } else {
               //US games. NFL y NCAAF puede ser varíos días, por lo que hay que recorrer el listado por cada día
