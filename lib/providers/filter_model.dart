@@ -257,21 +257,18 @@ class FilterModel with ChangeNotifier {
       hayDifWin = false;
 
       if (esSoccer) {
-// Draw pondrá los empates (diferencia por lo menos del doble, o sea +-6)
+// Draw pondrá los empates (diferencia por lo menos de +2)
         if (this.filterOrderBy == ORDER_BY.Draw) {
           teamGanador = 0;
           maxValue = oGame.countDraw;
           minValue = oGame.countHome + oGame.countAway;
 
-          //hayDifWin = ((maxValue - minValue).abs() <= 6) && maxValue > 3;
-          hayDifWin = (oGame.countDraw > oGame.countHome &&
-              oGame.countDraw > oGame.countAway);
+          hayDifWin =
+              (oGame.countDraw > (oGame.countHome + oGame.countAway + 1));
         } else {
           // DIFERENCIA CON MAS DE +2 VOTOS VS EL RESTO
-          // Actualizacion: DIFERENCIA MAYOR AL 1 AL RESTO
           // Gana visitante
-          if (oGame.countAway > oGame.countHome &&
-              oGame.countAway > oGame.countDraw) {
+          if (oGame.countAway > (oGame.countHome + oGame.countDraw + 1)) {
             teamGanador = 2;
             hayDifWin = true;
             maxValue = oGame.countAway;
@@ -279,8 +276,7 @@ class FilterModel with ChangeNotifier {
           }
           // Gana Local
           if (!hayDifWin &&
-              (oGame.countHome > oGame.countAway &&
-                  oGame.countHome > oGame.countDraw)) {
+              (oGame.countHome > (oGame.countAway + oGame.countDraw + 1))) {
             teamGanador = 1;
             hayDifWin = true;
             maxValue = oGame.countHome;
@@ -288,8 +284,7 @@ class FilterModel with ChangeNotifier {
           }
           // EMPATE
           if (!hayDifWin &&
-              (oGame.countDraw > oGame.countAway &&
-                  oGame.countDraw > oGame.countHome)) {
+              (oGame.countDraw > (oGame.countAway + oGame.countHome + 1))) {
             teamGanador = 0;
             hayDifWin = true;
             maxValue = oGame.countDraw;
@@ -297,16 +292,16 @@ class FilterModel with ChangeNotifier {
           }
         }
       } else {
-//US Games > Gana cualquiera  (visitante o local)
+//US Games > Gana cualquiera  (visitante o local) con mínimo un +2
         // Visitante
-        if (oGame.countAway > oGame.countHome) {
+        if (oGame.countAway > (oGame.countHome + 1)) {
           teamGanador = 2;
           hayDifWin = true;
           maxValue = oGame.countAway;
           minValue = oGame.countHome;
         }
         // Gana Local
-        if (!hayDifWin && oGame.countHome > oGame.countAway) {
+        if (!hayDifWin && oGame.countHome > (oGame.countAway + 1)) {
           teamGanador = 1;
           hayDifWin = true;
           maxValue = oGame.countHome;
@@ -406,11 +401,14 @@ class FilterModel with ChangeNotifier {
         if (this.filterOrderBy != ORDER_BY.Draw &&
             (this.filterTypeBet.isEmpty ||
                 this.filterTypeBet.contains(TYPE_BET.OverUnder))) {
-          // Soccer solo agrega OVER
+          // Soccer solo agrega OVER (por lo menos 2)
           if (esSoccer) {
-            if (oGame.countOverUnder > 0) _addGame(gameBet);
+            if (oGame.countOverUnder > 1) _addGame(gameBet);
           } else {
-            _addGame(gameBet);
+            // Solo agrega si es mayor a +/- 1 (por lo menos 2)
+            if (gameBet.maxValue > 1) {
+              _addGame(gameBet);
+            }
           }
         }
       }
@@ -432,15 +430,9 @@ class FilterModel with ChangeNotifier {
           textoFinal += 'btts ';
           textoFinal += (oGame.countExtra > 0) ? 'Y' : 'N';
         } else {
-          if (oGame.idSport.toLowerCase() == 'nhl') {
-            gameBet.typeBet = TYPE_BET.OverUnder;
-            textoFinal += '1P ';
-            textoFinal += (oGame.countExtra > 0) ? 'Y' : 'N';
-          } else {
-            gameBet.typeBet = TYPE_BET.ML;
-            textoFinal += 'ml ';
-            textoFinal += (oGame.countExtra > 0) ? teamAway : teamHome;
-          }
+          gameBet.typeBet = TYPE_BET.ML;
+          textoFinal += 'ml ';
+          textoFinal += (oGame.countExtra > 0) ? teamAway : teamHome;
         }
 
         textoFinal +=
@@ -448,19 +440,22 @@ class FilterModel with ChangeNotifier {
         //Agregar a lista de bets
         gameBet.label = textoFinal;
 
+// Solo agrega si es mayor a +/- 1 (por lo menos 2)
         if (this.filterOrderBy != ORDER_BY.Draw) {
           if (esSoccer) {
             if (this.filterTypeBet.isEmpty ||
                 this.filterTypeBet.contains(TYPE_BET.BTTS)) {
               //Solo agrega BTTS Y
-              if (oGame.countExtra > 0) {
+              if (oGame.countExtra > 1) {
                 _addGame(gameBet);
               }
             }
           } else {
             if (this.filterTypeBet.isEmpty ||
                 this.filterTypeBet.contains(TYPE_BET.ML)) {
-              _addGame(gameBet);
+              if (gameBet.maxValue > 1) {
+                _addGame(gameBet);
+              }
             }
           }
         }

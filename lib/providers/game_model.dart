@@ -151,21 +151,18 @@ class GameModel with ChangeNotifier {
           if (game.countDraw > valorMax) valorMax = game.countDraw;
           if (game.countHome > valorMax) valorMax = game.countHome;
 
-          // Mayor que el resto para ser verde
-          if (game.countAway > game.countHome &&
-              game.countAway > game.countDraw) {
+          // Mayor+1 que el resto para ser verde
+          if (game.countAway > (game.countHome + game.countDraw + 1)) {
             hayMax = true;
             listaOrig[index].colorAway = Colors.green.shade600;
           }
 
-          if (game.countHome > game.countAway &&
-              game.countHome > game.countDraw) {
+          if (game.countHome > (game.countAway + game.countDraw + 1)) {
             hayMax = true;
             listaOrig[index].colorHome = Colors.green.shade600;
           }
 
-          if (game.countDraw > game.countHome &&
-              game.countDraw > game.countAway) {
+          if (game.countDraw > (game.countHome + game.countAway + 1)) {
             hayMax = true;
             listaOrig[index].colorDraw = Colors.green.shade600;
           }
@@ -280,17 +277,17 @@ class GameModel with ChangeNotifier {
             typeCount == 'overunder' ||
             typeCount == 'extra') {
           // + Verde / - Rojo
-          if (listaOrig[index].countOverUnder > 0) {
+          if (listaOrig[index].countOverUnder > 1) {
             listaOrig[index].colorOverUnder = Colors.green.shade600;
-          } else if (listaOrig[index].countOverUnder < 0) {
+          } else if (listaOrig[index].countOverUnder < -1) {
             listaOrig[index].colorOverUnder = Colors.red.shade600;
           } else {
             listaOrig[index].colorOverUnder = Colors.blueGrey.shade700;
           }
 
-          if (listaOrig[index].countExtra > 0) {
+          if (listaOrig[index].countExtra > 1) {
             listaOrig[index].colorExtra = Colors.green.shade600;
-          } else if (listaOrig[index].countExtra < 0) {
+          } else if (listaOrig[index].countExtra < -1) {
             listaOrig[index].colorExtra = Colors.red.shade800;
           } else {
             listaOrig[index].colorExtra = Colors.blueGrey.shade700;
