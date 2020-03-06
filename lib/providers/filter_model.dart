@@ -110,8 +110,8 @@ class FilterModel with ChangeNotifier {
         case ORDER_BY.All:
           var query = Collection(_listaBet)
               .orderBy((f) => f.idSport)
-              .thenBy((f) => f.date)
-              .thenBy((f) => f.time);
+              .thenByDescending((f) => f.maxValue - f.minValue)
+              .thenBy((f) => f.minValue);
 
           listaFiltrada = query.toList();
           break;
@@ -401,14 +401,12 @@ class FilterModel with ChangeNotifier {
         if (this.filterOrderBy != ORDER_BY.Draw &&
             (this.filterTypeBet.isEmpty ||
                 this.filterTypeBet.contains(TYPE_BET.OverUnder))) {
-          // Soccer solo agrega OVER (por lo menos 2)
+          // Soccer solo agrega OVER (por lo menos 3)
           if (esSoccer) {
-            if (oGame.countOverUnder > 1) _addGame(gameBet);
+            if (oGame.countOverUnder > 2) _addGame(gameBet);
           } else {
             // Solo agrega si es mayor a +/- 1 (por lo menos 2)
-            if (gameBet.maxValue > 1) {
-              _addGame(gameBet);
-            }
+            if (gameBet.maxValue > 1) _addGame(gameBet);
           }
         }
       }
@@ -445,8 +443,8 @@ class FilterModel with ChangeNotifier {
           if (esSoccer) {
             if (this.filterTypeBet.isEmpty ||
                 this.filterTypeBet.contains(TYPE_BET.BTTS)) {
-              //Solo agrega BTTS Y
-              if (oGame.countExtra > 1) {
+              //Solo agrega BTTS Y (por lo menos 3)
+              if (oGame.countExtra > 2) {
                 _addGame(gameBet);
               }
             }

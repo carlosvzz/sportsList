@@ -133,6 +133,9 @@ class GameModel with ChangeNotifier {
       int index = listaOrig.indexWhere((Game g) => g.id == idFireStore);
 
       if (index != null && index != -1) {
+        Game game = listaOrig[index];
+        bool isSoccer = (game.idSport.toLowerCase().contains('soccer') == true);
+
         // Colores
         if (typeCount == 'initial' ||
             typeCount == 'away' ||
@@ -140,7 +143,6 @@ class GameModel with ChangeNotifier {
             typeCount == 'draw') {
           int valorMax = -1;
           bool hayMax = false;
-          Game game = listaOrig[index];
 
           listaOrig[index].colorAway = Colors.blueGrey.shade700;
           listaOrig[index].colorDraw = Colors.blueGrey.shade700;
@@ -171,7 +173,7 @@ class GameModel with ChangeNotifier {
           /// No se encontro un maximo. poner amarillo  al mayor
 
           if (hayMax == false && valorMax > 0) {
-            if (game.idSport.toLowerCase().contains('soccer') == false) {
+            if (isSoccer == false) {
               // // Juegos USA , no hay empate, solo poner amarillo el mayor
               // if (game.countAway == game.countHome) {
               //   listaOrig[index].colorAway = Colors.yellowAccent.shade700;
@@ -276,18 +278,21 @@ class GameModel with ChangeNotifier {
         if (typeCount == 'initial' ||
             typeCount == 'overunder' ||
             typeCount == 'extra') {
+          int filterValue = 1;
+          if (isSoccer) filterValue = 2;
+
           // + Verde / - Rojo
-          if (listaOrig[index].countOverUnder > 1) {
+          if (listaOrig[index].countOverUnder > filterValue) {
             listaOrig[index].colorOverUnder = Colors.green.shade600;
-          } else if (listaOrig[index].countOverUnder < -1) {
+          } else if (listaOrig[index].countOverUnder < -filterValue) {
             listaOrig[index].colorOverUnder = Colors.red.shade600;
           } else {
             listaOrig[index].colorOverUnder = Colors.blueGrey.shade700;
           }
 
-          if (listaOrig[index].countExtra > 1) {
+          if (listaOrig[index].countExtra > filterValue) {
             listaOrig[index].colorExtra = Colors.green.shade600;
-          } else if (listaOrig[index].countExtra < -1) {
+          } else if (listaOrig[index].countExtra < -filterValue) {
             listaOrig[index].colorExtra = Colors.red.shade800;
           } else {
             listaOrig[index].colorExtra = Colors.blueGrey.shade700;
