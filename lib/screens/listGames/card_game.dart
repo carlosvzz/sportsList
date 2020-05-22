@@ -43,7 +43,7 @@ class CardGame extends StatelessWidget {
               width: 40,
               child: Text(
                 '$labelExtra',
-                style: Theme.of(context).textTheme.display4,
+                style: Theme.of(context).textTheme.headline1,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -67,7 +67,7 @@ class CardGame extends StatelessWidget {
                   width: 120,
                   child: Text(
                     '${gameData.awayTeam.name}',
-                    style: Theme.of(context).textTheme.display4,
+                    style: Theme.of(context).textTheme.headline1,
                     textAlign: TextAlign.left,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -77,7 +77,7 @@ class CardGame extends StatelessWidget {
                   width: isAmFoot ? 70 : 50,
                   child: Text(
                     dateFormat,
-                    style: Theme.of(context).textTheme.display2,
+                    style: Theme.of(context).textTheme.headline3,
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -85,7 +85,7 @@ class CardGame extends StatelessWidget {
                   width: 120,
                   child: Text(
                     '${gameData.homeTeam.name}',
-                    style: Theme.of(context).textTheme.display4,
+                    style: Theme.of(context).textTheme.headline1,
                     textAlign: TextAlign.right,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -106,7 +106,7 @@ class CardGame extends StatelessWidget {
                 width: 40,
                 child: Text(
                   '$labelMain',
-                  style: Theme.of(context).textTheme.display4,
+                  style: Theme.of(context).textTheme.headline1,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -127,7 +127,7 @@ class CardGame extends StatelessWidget {
                 width: 40,
                 child: Text(
                   '$labelOverUnder',
-                  style: Theme.of(context).textTheme.display4,
+                  style: Theme.of(context).textTheme.headline1,
                   textAlign: TextAlign.center,
                 ),
               ),

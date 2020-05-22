@@ -28,7 +28,7 @@ class CardGameSoccer extends StatelessWidget {
                   width: 120,
                   child: Text(
                     '${gameData.homeTeam.name}',
-                    style: Theme.of(context).textTheme.display4,
+                    style: Theme.of(context).textTheme.headline1,
                     textAlign: TextAlign.left,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -38,7 +38,7 @@ class CardGameSoccer extends StatelessWidget {
                   width: 70,
                   child: Text(
                     '$dateFormat \n ${gameData.time}',
-                    style: Theme.of(context).textTheme.display2,
+                    style: Theme.of(context).textTheme.headline3,
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -46,7 +46,7 @@ class CardGameSoccer extends StatelessWidget {
                   width: 120,
                   child: Text(
                     '${gameData.awayTeam.name}',
-                    style: Theme.of(context).textTheme.display4,
+                    style: Theme.of(context).textTheme.headline1,
                     textAlign: TextAlign.right,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -86,7 +86,7 @@ class CardGameSoccer extends StatelessWidget {
                 width: 40,
                 child: Text(
                   '$labelOverUnder',
-                  style: Theme.of(context).textTheme.display4,
+                  style: Theme.of(context).textTheme.headline1,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -97,7 +97,7 @@ class CardGameSoccer extends StatelessWidget {
                 width: 50,
                 child: Text(
                   '$labelExtra',
-                  style: Theme.of(context).textTheme.display4,
+                  style: Theme.of(context).textTheme.headline1,
                   textAlign: TextAlign.center,
                 ),
               ),

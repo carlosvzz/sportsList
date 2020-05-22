@@ -49,7 +49,7 @@ class _FilterMainContainerState extends State<FilterMainContainer> {
                   return SingleChildScrollView(
                       child: SelectableText(
                     snapshot.data,
-                    style: Theme.of(context).textTheme.body1,
+                    style: Theme.of(context).textTheme.bodyText2,
                     textAlign: TextAlign.left,
                   ));
                 }

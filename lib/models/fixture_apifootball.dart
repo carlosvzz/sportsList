@@ -117,7 +117,7 @@ class Response {
         delayedOrPostponedReason: null,
         date: formatDate(dateGame, [yyyy, '-', mm, '-', dd]),
         time: formatDate(dateGame, [HH, ':', nn]),
-        location: this.fixture.venue,
+        location: '', //this.fixture.venue,
         awayTeam: this.teams.away,
         homeTeam: this.teams.home);
   }
@@ -125,7 +125,7 @@ class Response {
 
 class Fixture {
   int id;
-  String venue;
+  // String venue;
   String referee;
   String timezone;
   String date;
@@ -135,7 +135,7 @@ class Fixture {
 
   Fixture(
       {this.id,
-      this.venue,
+      // this.venue,
       this.referee,
       this.timezone,
       this.date,
@@ -145,7 +145,7 @@ class Fixture {
 
   Fixture.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    venue = json['venue'];
+    // venue =  json['venue'];
     referee = json['referee'];
     timezone = json['timezone'];
     date = json['date'];
@@ -159,7 +159,7 @@ class Fixture {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['venue'] = this.venue;
+    // data['venue'] = this.venue;
     data['referee'] = this.referee;
     data['timezone'] = this.timezone;
     data['date'] = this.date;

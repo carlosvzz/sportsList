@@ -456,6 +456,8 @@ class GameModel with ChangeNotifier {
           formatDate(dateFin, [yyyy, '-', mm, '-', dd]) +
           '&timezone=America/Monterrey';
 
+      print(miUrl);
+
       http.Response response = await http.get(miUrl, headers: {
         'x-rapidapi-host': keys.ApiFootballHost,
         'x-rapidapi-key': keys.ApiFootballKey

@@ -72,7 +72,7 @@ class _FilterContainerState extends State<FilterContainer> {
           return AlertDialog(
             title: Text(
               isBets ? "Type of Bet" : "Sports",
-              style: Theme.of(context).accentTextTheme.body1,
+              style: Theme.of(context).accentTextTheme.bodyText2,
             ),
             content: FilterMultiSelectChip(
               listaAux,
@@ -100,7 +100,7 @@ class _FilterContainerState extends State<FilterContainer> {
               FlatButton(
                 child: Text(
                   "OK",
-                  style: Theme.of(context).accentTextTheme.body1,
+                  style: Theme.of(context).accentTextTheme.bodyText2,
                 ),
                 onPressed: () => Navigator.of(context).pop(),
               )
@@ -160,7 +160,7 @@ class _FilterContainerState extends State<FilterContainer> {
                   return DropdownMenuItem(
                     child: Text(
                       enumToString(order),
-                      style: Theme.of(context).textTheme.display1,
+                      style: Theme.of(context).textTheme.headline4,
                     ),
                     value: enumToString(order),
                   );
@@ -187,7 +187,7 @@ class _FilterContainerState extends State<FilterContainer> {
                   return DropdownMenuItem(
                     child: Text(
                       enumToString(time),
-                      style: Theme.of(context).textTheme.display1,
+                      style: Theme.of(context).textTheme.headline4,
                     ),
                     value: enumToString(time),
                   );
