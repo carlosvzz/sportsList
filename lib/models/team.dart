@@ -23,6 +23,12 @@ class Team {
     abbreviation = fnGetTeamAbbreviation(json['name']);
   }
 
+  Team.fromJsonSportsFeed(Map json) {
+    idTeam = json['id'].toString();
+    name = json['abbreviation'];
+    abbreviation = json['abbreviation'];
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['ID'] = this.idTeam;

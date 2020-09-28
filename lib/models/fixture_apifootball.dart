@@ -112,12 +112,8 @@ class Response {
     return new Gameentry(
         id: this.fixture.id.toString(),
         scheduleStatus: 'Normal',
-        originalDate: null,
-        originalTime: null,
-        delayedOrPostponedReason: null,
         date: formatDate(dateGame, [yyyy, '-', mm, '-', dd]),
         time: formatDate(dateGame, [HH, ':', nn]),
-        location: '', //this.fixture.venue,
         awayTeam: this.teams.away,
         homeTeam: this.teams.home);
   }

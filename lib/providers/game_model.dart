@@ -319,9 +319,8 @@ class GameModel with ChangeNotifier {
     // }
 
     try {
-      String miUrl =
-          '${keys.SportsFeedUrl}/$idSport/$season/daily_game_schedule.json?fordate=' +
-              formatDate(dateAux, [yyyy, mm, dd]);
+      String miUrl = '${keys.SportsFeedUrl}/$idSport/$season/games.json?date=' +
+          formatDate(dateAux, [yyyy, mm, dd]);
 
       print(miUrl);
       http.Response response =
@@ -558,10 +557,12 @@ class GameModel with ChangeNotifier {
                     var dataFromResponse =
                         await _getFixturesSportsFeed(dateAux);
 
-                    //print('dataFromResponse > $dataFromResponse');
-                    lista.addAll(FixtureSportsFeed.fromJson(dataFromResponse)
-                        .dailygameschedule
-                        .gameentry);
+                    print('dataFromResponse > $dataFromResponse');
+                    FixtureSportsFeed oFix =
+                        FixtureSportsFeed.fromJson(dataFromResponse);
+                    oFix.games.forEach((f) {
+                      lista.add(f.schedule);
+                    });
                   }
                 } catch (e) {
                   print('ERR fetchGames $e ');
@@ -584,21 +585,20 @@ class GameModel with ChangeNotifier {
                   if (idSport == 'NCAAF') {
                     hora24 = game.time; //NCAAF ya viene en formato 24
                   } else {
-                    String horaGame = game.scheduleStatus == 'Normal'
-                        ? game.time
-                        : game.originalTime;
+                    String horaGame =
+                        game.scheduleStatus == 'Normal' ? game.time : game.time;
                     hora24 = rutinas.convertirHora24(horaGame);
                   }
                 }
 
                 Game newGame = new Game.fromValues(
                     idSport,
-                    int.tryParse(game.iD) ?? 1,
+                    int.tryParse(game.id) ?? 1,
                     fechaFinal,
                     hora24,
                     game.awayTeam,
                     game.homeTeam,
-                    game.location);
+                    '');
                 //Asignar id
                 //var uuid = new Uuid();
                 //String id = uuid.v1();

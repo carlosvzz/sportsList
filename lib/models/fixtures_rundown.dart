@@ -123,12 +123,8 @@ class EventsRunDown {
     return new Gameentry(
         id: (this.teams[0].teamId + this.teams[1].teamId).toString(),
         scheduleStatus: 'Normal',
-        originalDate: null,
-        originalTime: null,
-        delayedOrPostponedReason: null,
         date: formatDate(dateGame, [yyyy, '-', mm, '-', dd]),
         time: formatDate(dateGame, [HH, ':', nn]),
-        location: '',
         awayTeam: awayTeam,
         homeTeam: homeTeam);
   }

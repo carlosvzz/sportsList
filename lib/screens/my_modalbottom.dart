@@ -8,41 +8,42 @@ class MyModalBottom extends StatelessWidget {
 
   static final List<CustomMenu> _listMenuData = [
     // Europe Extras
-    new CustomMenu('Soccer HOL', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer POR', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer HOL2', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer ENGL1', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer ENGL2', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer HOL', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer POR', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer HOL2', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer ENGL1', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer ENGL2', CustomIcons.soccer_ball),
 
     // Europe Second
-    new CustomMenu('Soccer ENG2', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer GER2', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer ESP2', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer ITA2', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer FRA2', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer ENG2', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer GER2', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer ESP2', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer ITA2', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer FRA2', CustomIcons.soccer_ball),
 
     // Europe Main
-    new CustomMenu('Soccer ENG', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer GER', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer ESP', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer ITA', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer FRA', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer ENG', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer GER', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer ESP', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer ITA', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer FRA', CustomIcons.soccer_ball),
 
     // MEX & MLS & ESP
+    new CustomMenu('', CustomIcons.baseball),
     new CustomMenu('Soccer CHAMP', CustomIcons.soccer_ball),
+    new CustomMenu('', CustomIcons.baseball),
     new CustomMenu('Soccer EUR', CustomIcons.soccer_ball),
     new CustomMenu('', CustomIcons.baseball),
-    //new CustomMenu('', CustomIcons.baseball),
-    new CustomMenu('Soccer MLS', CustomIcons.soccer_ball),
-    new CustomMenu('Soccer MEX', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer MLS', CustomIcons.soccer_ball),
+    //new CustomMenu('Soccer MEX', CustomIcons.soccer_ball),
     // US Sports
     new CustomMenu('NBA', CustomIcons.dribbble),
     new CustomMenu('NHL', CustomIcons.hockey),
     new CustomMenu('MLB', CustomIcons.baseball),
-    new CustomMenu('', CustomIcons.baseball),
-    //new CustomMenu('NFL', CustomIcons.football),
-    //new CustomMenu('NCAAF', CustomIcons.football),
-    new CustomMenu('', CustomIcons.baseball),
+    new CustomMenu('NFL', CustomIcons.football),
+    new CustomMenu('NCAAF', CustomIcons.football),
+    //new CustomMenu('', CustomIcons.baseball),
+    //new CustomMenu('', CustomIcons.baseball),
   ];
 
   @override
@@ -50,7 +51,7 @@ class MyModalBottom extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
-        height: 500,
+        height: 210,
         child: new GridView.count(
             crossAxisCount: 5,
             childAspectRatio: 1.0,

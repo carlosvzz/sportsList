@@ -1,114 +1,94 @@
+import 'package:XSports/helpers/format_date.dart';
 import 'package:XSports/models/team.dart';
 
 class FixtureSportsFeed {
-  Dailygameschedule dailygameschedule;
+  String lastUpdatedOn;
+  List<Games> games;
+  References references;
 
-  FixtureSportsFeed({Dailygameschedule dailygameschedule}) {
-    this.dailygameschedule = dailygameschedule;
-  }
+  FixtureSportsFeed({this.lastUpdatedOn, this.games, this.references});
 
   FixtureSportsFeed.fromJson(Map<String, dynamic> json) {
-    dailygameschedule = json['dailygameschedule'] != null
-        ? new Dailygameschedule.fromJson(json['dailygameschedule'])
+    lastUpdatedOn = json['lastUpdatedOn'];
+    if (json['games'] != null) {
+      games = new List<Games>();
+      json['games'].forEach((v) {
+        games.add(new Games.fromJson(v));
+      });
+    }
+    references = json['references'] != null
+        ? new References.fromJson(json['references'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.dailygameschedule != null) {
-      data['dailygameschedule'] = this.dailygameschedule.toJson();
+    data['lastUpdatedOn'] = this.lastUpdatedOn;
+    if (this.games != null) {
+      data['games'] = this.games.map((v) => v.toJson()).toList();
+    }
+    if (this.references != null) {
+      data['references'] = this.references.toJson();
     }
     return data;
   }
 }
 
-class Dailygameschedule {
-  String lastUpdatedOn;
-  List<Gameentry> gameentry;
+class Games {
+  Gameentry schedule;
 
-  Dailygameschedule({String lastUpdatedOn, List<Gameentry> gameentry}) {
-    this.lastUpdatedOn = lastUpdatedOn;
-    this.gameentry = gameentry;
-  }
+  Games({this.schedule});
 
-  Dailygameschedule.fromJson(Map<String, dynamic> json) {
-    lastUpdatedOn = json['lastUpdatedOn'] ?? DateTime.now().toIso8601String();
-    gameentry = new List<Gameentry>();
-
-    if (json['gameentry'] != null) {
-      json['gameentry'].forEach((v) {
-        gameentry.add(new Gameentry.fromJson(v));
-      });
-    }
+  Games.fromJson(Map<String, dynamic> json) {
+    schedule = json['schedule'] != null
+        ? new Gameentry.fromJson(json['schedule'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['lastUpdatedOn'] = this.lastUpdatedOn;
-    if (this.gameentry != null) {
-      data['gameentry'] = this.gameentry.map((v) => v.toJson()).toList();
+    if (this.schedule != null) {
+      data['schedule'] = this.schedule.toJson();
     }
     return data;
   }
 }
 
 class Gameentry {
-  String iD;
-  String scheduleStatus;
-  String originalDate;
-  String originalTime;
-  String delayedOrPostponedReason;
+  String id;
   String date;
   String time;
   Team awayTeam;
   Team homeTeam;
-  String location;
+  String scheduleStatus;
 
   Gameentry(
-      {String id,
-      String scheduleStatus,
-      String originalDate,
-      String originalTime,
-      String delayedOrPostponedReason,
-      String date,
-      String time,
-      Team awayTeam,
-      Team homeTeam,
-      String location}) {
-    this.iD = id;
-    this.scheduleStatus = scheduleStatus;
-    this.originalDate = originalDate;
-    this.originalTime = originalTime;
-    this.delayedOrPostponedReason = delayedOrPostponedReason;
-    this.date = date;
-    this.time = time;
-    this.awayTeam = awayTeam;
-    this.homeTeam = homeTeam;
-    this.location = location;
-  }
+      {this.id,
+      this.date,
+      this.time,
+      this.awayTeam,
+      this.homeTeam,
+      this.scheduleStatus});
 
   Gameentry.fromJson(Map<String, dynamic> json) {
-    iD = json['id'];
+    //event_Date viene como fecha ISO8601 2020-09-27T23:30:00.000Z (en zona UTC)
+    DateTime dateGame = DateTime.parse(json['startTime']).toLocal();
+
+    id = json['id'].toString();
+    date = formatDate(dateGame, [yyyy, '-', mm, '-', dd]);
+    time = formatDate(dateGame, [HH, ':', nn]);
+    awayTeam = json['awayTeam'] != null
+        ? new Team.fromJsonSportsFeed(json['awayTeam'])
+        : null;
+    homeTeam = json['homeTeam'] != null
+        ? new Team.fromJsonSportsFeed(json['homeTeam'])
+        : null;
     scheduleStatus = json['scheduleStatus'];
-    originalDate = json['originalDate'];
-    originalTime = json['originalTime'];
-    delayedOrPostponedReason = json['delayedOrPostponedReason'];
-    date = json['date'];
-    time = json['time'];
-    awayTeam =
-        json['awayTeam'] != null ? new Team.fromJson(json['awayTeam']) : null;
-    homeTeam =
-        json['homeTeam'] != null ? new Team.fromJson(json['homeTeam']) : null;
-    location = json['location'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.iD;
-    data['scheduleStatus'] = this.scheduleStatus;
-    data['originalDate'] = this.originalDate;
-    data['originalTime'] = this.originalTime;
-    data['delayedOrPostponedReason'] = this.delayedOrPostponedReason;
+    data['id'] = this.id;
     data['date'] = this.date;
     data['time'] = this.time;
     if (this.awayTeam != null) {
@@ -117,7 +97,68 @@ class Gameentry {
     if (this.homeTeam != null) {
       data['homeTeam'] = this.homeTeam.toJson();
     }
-    data['location'] = this.location;
+    data['scheduleStatus'] = this.scheduleStatus;
+    return data;
+  }
+}
+
+class References {
+  List<TeamReferences> teamReferences;
+
+  References({this.teamReferences});
+
+  References.fromJson(Map<String, dynamic> json) {
+    if (json['teamReferences'] != null) {
+      teamReferences = new List<TeamReferences>();
+      json['teamReferences'].forEach((v) {
+        teamReferences.add(new TeamReferences.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.teamReferences != null) {
+      data['teamReferences'] =
+          this.teamReferences.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class TeamReferences {
+  int id;
+  String city;
+  String name;
+  String abbreviation;
+  List<String> teamColoursHex;
+  String officialLogoImageSrc;
+
+  TeamReferences(
+      {this.id,
+      this.city,
+      this.name,
+      this.abbreviation,
+      this.teamColoursHex,
+      this.officialLogoImageSrc});
+
+  TeamReferences.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    city = json['city'];
+    name = json['name'];
+    abbreviation = json['abbreviation'];
+    teamColoursHex = json['teamColoursHex'].cast<String>();
+    officialLogoImageSrc = json['officialLogoImageSrc'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['city'] = this.city;
+    data['name'] = this.name;
+    data['abbreviation'] = this.abbreviation;
+    data['teamColoursHex'] = this.teamColoursHex;
+    data['officialLogoImageSrc'] = this.officialLogoImageSrc;
     return data;
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:XSports/helpers/format_date.dart';
-//import 'package:XSports/models/basemodel.dart';
 import 'package:XSports/models/team.dart';
 
 class Game {
