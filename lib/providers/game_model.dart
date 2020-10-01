@@ -547,11 +547,13 @@ class GameModel with ChangeNotifier {
                   if (idSport == 'NCAAF') {
                     var dataFromResponse = await _getFixturesRunDown(dateAux);
 
-                    //print('dataFromResponse > $dataFromResponse');
+                    print('dataFromResponse > $dataFromResponse');
                     FixturesRunDown oFix =
                         FixturesRunDown.fromJson(dataFromResponse);
                     oFix.events.forEach((f) {
-                      lista.add(f.toGameentry());
+                      if (f.teams != null) {
+                        lista.add(f.toGameentry());
+                      }
                     });
                   } else {
                     var dataFromResponse =
